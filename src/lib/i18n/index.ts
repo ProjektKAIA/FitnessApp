@@ -39,12 +39,12 @@ export const setStoredLanguage = async (language: Language): Promise<void> => {
   }
 };
 
-export const initI18n = async (): Promise<void> => {
-  const storedLanguage = await getStoredLanguage();
-
-  await i18n.use(initReactI18next).init({
+// Initialize i18n synchronously with default language
+// This ensures i18n is always available, even during hot-reload
+if (!i18n.isInitialized) {
+  i18n.use(initReactI18next).init({
     resources,
-    lng: storedLanguage || 'de',
+    lng: 'de',
     fallbackLng: 'de',
     interpolation: {
       escapeValue: false,
@@ -53,6 +53,14 @@ export const initI18n = async (): Promise<void> => {
       useSuspense: false,
     },
   });
+}
+
+// Async function to load stored language preference
+export const initI18n = async (): Promise<void> => {
+  const storedLanguage = await getStoredLanguage();
+  if (storedLanguage && storedLanguage !== i18n.language) {
+    await i18n.changeLanguage(storedLanguage);
+  }
 };
 
 export const changeLanguage = async (language: Language): Promise<void> => {

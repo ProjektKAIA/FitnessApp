@@ -8,7 +8,7 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +38,7 @@ export const TrainingPlanEditorScreen: React.FC = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
+  const insets = useSafeAreaInsets();
   const { planId, sportType } = route.params;
 
   const getPlanById = useTrainingPlanStore((state) => state.getPlanById);
@@ -132,7 +133,8 @@ export const TrainingPlanEditorScreen: React.FC = () => {
         setSchedule(plan.weeklySchedule);
       }
     }
-  }, [currentPlanId, getPlanById]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPlanId]);
 
   const getDirectionColor = (direction: string): string => {
     switch (direction) {
@@ -150,8 +152,8 @@ export const TrainingPlanEditorScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <View style={styles.container}>
+      <View style={[styles.header, { paddingTop: insets.top + SPACING.md }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -260,7 +262,7 @@ export const TrainingPlanEditorScreen: React.FC = () => {
           );
         })}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -1,5 +1,5 @@
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence, Auth } from 'firebase/auth';
+import { initializeAuth, getAuth, getReactNativePersistence, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,9 +16,15 @@ if (getApps().length === 0) {
   app = getApps()[0];
 }
 
-auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage)
-});
+// Handle hot-reload: initializeAuth fails if already initialized
+try {
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage)
+  });
+} catch (error: unknown) {
+  // Auth already initialized (happens on hot-reload), get existing instance
+  auth = getAuth(app);
+}
 
 db = getFirestore(app);
 storage = getStorage(app);

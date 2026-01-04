@@ -45,7 +45,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       isAuthenticated: false,
-      isLoading: true,
+      isLoading: false, // Start with false to prevent blocking on hot-reload
       isDevMode: false,
       error: null,
 

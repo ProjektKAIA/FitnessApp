@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
@@ -15,9 +16,11 @@ import { useAICoachStore } from '@/stores';
 import { RootStackParamList } from '@/types';
 
 type ChatDetailRouteProp = RouteProp<RootStackParamList, 'ChatDetail'>;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const ChatDetailScreen: React.FC = () => {
   const { t } = useTranslation();
+  const navigation = useNavigation<NavigationProp>();
   const route = useRoute<ChatDetailRouteProp>();
   const { chatId } = route.params;
   const importedChats = useAICoachStore((state) => state.importedChats);
@@ -27,6 +30,16 @@ export const ChatDetailScreen: React.FC = () => {
   if (!chat) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.backButtonText}>←</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>{t('aiCoach.title')}</Text>
+          <View style={styles.headerSpacer} />
+        </View>
         <View style={styles.notFound}>
           <Text style={styles.notFoundText}>{t('aiCoach.chatNotFound')}</Text>
         </View>
@@ -44,12 +57,22 @@ export const ChatDetailScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.backButtonText}>←</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle} numberOfLines={1}>{chat.title}</Text>
+        <View style={styles.headerSpacer} />
+      </View>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>{chat.title}</Text>
         <Text style={styles.messageCount}>
           {t('aiCoach.messageCount', { count: chat.messages.length })}
         </Text>
@@ -100,6 +123,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.gray[100],
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.md,
+    backgroundColor: COLORS.gray[100],
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.gray[200],
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backButtonText: {
+    fontSize: 24,
+    color: COLORS.primary,
+  },
+  headerTitle: {
+    flex: 1,
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '600',
+    color: COLORS.gray[900],
+    textAlign: 'center',
+    marginHorizontal: SPACING.sm,
+  },
+  headerSpacer: {
+    width: 40,
+  },
   scrollView: {
     flex: 1,
   },
@@ -116,16 +170,10 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.lg,
     color: COLORS.gray[500],
   },
-  title: {
-    fontSize: FONT_SIZES['2xl'],
-    fontWeight: '700',
-    color: COLORS.gray[900],
-    marginTop: SPACING.lg,
-  },
   messageCount: {
     fontSize: FONT_SIZES.sm,
     color: COLORS.gray[500],
-    marginTop: SPACING.xs,
+    marginTop: SPACING.md,
     marginBottom: SPACING.xl,
   },
   planCard: {

@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react';
+// Initialize i18n FIRST before any other imports that might use translations
+import i18n from '@/lib/i18n';
+
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -6,7 +9,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, I18nextProvider } from 'react-i18next';
 
 import {
   HomeScreen,
@@ -82,7 +85,6 @@ const MainTabs: React.FC = () => {
 
 export default function App() {
   const { t } = useTranslation();
-  const [i18nReady, setI18nReady] = useState(false);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
   const initializeAuthListener = useAuthStore((state) => state.initializeAuthListener);
@@ -94,40 +96,41 @@ export default function App() {
   const hasCompletedConsent = hasAcceptedPrivacyPolicy && hasAcceptedTerms && hasRespondedToTracking;
 
   useEffect(() => {
-    const init = async () => {
-      await initI18n();
-      await initializeLanguage();
-      setI18nReady(true);
-    };
-    init();
+    // Load stored language preference (i18n is already initialized synchronously)
+    initI18n();
+    initializeLanguage();
   }, []);
 
   useEffect(() => {
     const unsubscribe = initializeAuthListener();
     return () => unsubscribe();
-  }, [initializeAuthListener]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  if (!i18nReady || isLoading) {
+  if (isLoading) {
     return (
       <GestureHandlerRootView style={styles.container}>
-        <SafeAreaProvider>
-          <LoadingScreen message={i18nReady ? t('common.loading') : 'Loading...'} />
-        </SafeAreaProvider>
+        <I18nextProvider i18n={i18n}>
+          <SafeAreaProvider>
+            <LoadingScreen message={t('common.loading')} />
+          </SafeAreaProvider>
+        </I18nextProvider>
       </GestureHandlerRootView>
     );
   }
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <SafeAreaProvider>
-        <ErrorBoundary>
-          <NavigationContainer>
-          <StatusBar style="light" />
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
+      <I18nextProvider i18n={i18n}>
+        <SafeAreaProvider>
+          <ErrorBoundary>
+            <NavigationContainer>
+              <StatusBar style="light" />
+              <Stack.Navigator
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
             {!isAuthenticated ? (
               <Stack.Screen
                 name="Auth"
@@ -261,10 +264,11 @@ export default function App() {
                 />
               </>
             )}
-          </Stack.Navigator>
-          </NavigationContainer>
-        </ErrorBoundary>
-      </SafeAreaProvider>
+            </Stack.Navigator>
+            </NavigationContainer>
+          </ErrorBoundary>
+        </SafeAreaProvider>
+      </I18nextProvider>
     </GestureHandlerRootView>
   );
 }

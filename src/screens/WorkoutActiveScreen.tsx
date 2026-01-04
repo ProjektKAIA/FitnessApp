@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import * as Haptics from 'expo-haptics';
@@ -24,6 +24,7 @@ export const WorkoutActiveScreen: React.FC = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<WorkoutActiveRouteProp>();
+  const insets = useSafeAreaInsets();
   const user = useUserStore((state) => state.user);
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
   const startWorkout = useWorkoutStore((state) => state.startWorkout);
@@ -133,8 +134,8 @@ export const WorkoutActiveScreen: React.FC = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <View style={styles.container}>
+      <View style={[styles.header, { paddingTop: insets.top + SPACING.md }]}>
         <TouchableOpacity onPress={() => setShowEndModal(true)}>
           <Text style={styles.cancelText}>{t('workoutActive.cancel')}</Text>
         </TouchableOpacity>
@@ -283,7 +284,7 @@ export const WorkoutActiveScreen: React.FC = () => {
           />
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 

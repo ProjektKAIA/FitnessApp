@@ -85,12 +85,22 @@ export const ChatGPTImportScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.backButtonText}>←</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>{t('aiCoach.importTitle')}</Text>
+        <View style={styles.headerSpacer} />
+      </View>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>{t('aiCoach.importTitle')}</Text>
         <Text style={styles.subtitle}>{t('aiCoach.importSubtitle')}</Text>
 
         <Card style={styles.instructionCard}>
@@ -207,6 +217,34 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.gray[100],
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.md,
+    backgroundColor: COLORS.gray[100],
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.gray[200],
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backButtonText: {
+    fontSize: 24,
+    color: COLORS.primary,
+  },
+  headerTitle: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '600',
+    color: COLORS.gray[900],
+  },
+  headerSpacer: {
+    width: 40,
+  },
   scrollView: {
     flex: 1,
   },
@@ -214,16 +252,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingBottom: SPACING['3xl'],
   },
-  title: {
-    fontSize: FONT_SIZES['2xl'],
-    fontWeight: '700',
-    color: COLORS.gray[900],
-    marginTop: SPACING.lg,
-  },
   subtitle: {
     fontSize: FONT_SIZES.base,
     color: COLORS.gray[500],
-    marginTop: SPACING.xs,
+    marginTop: SPACING.md,
     marginBottom: SPACING.xl,
   },
   instructionCard: {
