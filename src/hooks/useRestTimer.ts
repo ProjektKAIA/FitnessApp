@@ -3,14 +3,12 @@ import * as Haptics from 'expo-haptics';
 import { useWorkoutStore, useUserStore } from '@/stores';
 
 export const useRestTimer = () => {
-  const { user } = useUserStore();
-  const {
-    restTimerActive,
-    restTimeRemaining,
-    startRestTimer,
-    stopRestTimer,
-    updateRestTimer,
-  } = useWorkoutStore();
+  const user = useUserStore((state) => state.user);
+  const restTimerActive = useWorkoutStore((state) => state.restTimerActive);
+  const restTimeRemaining = useWorkoutStore((state) => state.restTimeRemaining);
+  const startRestTimer = useWorkoutStore((state) => state.startRestTimer);
+  const stopRestTimer = useWorkoutStore((state) => state.stopRestTimer);
+  const updateRestTimer = useWorkoutStore((state) => state.updateRestTimer);
 
   useEffect(() => {
     if (!restTimerActive) return;

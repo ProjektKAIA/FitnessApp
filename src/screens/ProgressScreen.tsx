@@ -1,29 +1,37 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
 import { useStatsStore } from '@/stores';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
 type TimeRange = 'week' | 'month' | 'year';
 
-const SAMPLE_CHART_DATA = [
-  { label: 'Mon', value: 45 },
-  { label: 'Tue', value: 60 },
-  { label: 'Wed', value: 0 },
-  { label: 'Thu', value: 75 },
-  { label: 'Fri', value: 50 },
-  { label: 'Sat', value: 30 },
-  { label: 'Sun', value: 0 },
-];
-
 export const ProgressScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [timeRange, setTimeRange] = useState<TimeRange>('week');
-  const { stats } = useStatsStore();
+  const stats = useStatsStore((state) => state.stats);
+  const { width: screenWidth } = useWindowDimensions();
+
+  const SAMPLE_CHART_DATA = [
+    { label: t('days.mon'), value: 45 },
+    { label: t('days.tue'), value: 60 },
+    { label: t('days.wed'), value: 0 },
+    { label: t('days.thu'), value: 75 },
+    { label: t('days.fri'), value: 50 },
+    { label: t('days.sat'), value: 30 },
+    { label: t('days.sun'), value: 0 },
+  ];
 
   const maxValue = Math.max(...SAMPLE_CHART_DATA.map((d) => d.value));
+  const statCardWidth = (screenWidth - SPACING.lg * 2 - SPACING.md) / 2 - 1;
+
+  const timeRangeLabels: Record<TimeRange, string> = {
+    week: t('progress.week'),
+    month: t('progress.month'),
+    year: t('progress.year'),
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -32,8 +40,8 @@ export const ProgressScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Progress</Text>
-        <Text style={styles.subtitle}>Track your fitness journey</Text>
+        <Text style={styles.title}>{t('progress.title')}</Text>
+        <Text style={styles.subtitle}>{t('progress.subtitle')}</Text>
 
         <View style={styles.timeRangeContainer}>
           {(['week', 'month', 'year'] as TimeRange[]).map((range) => (
@@ -51,15 +59,15 @@ export const ProgressScreen: React.FC = () => {
                   timeRange === range && styles.timeRangeTextActive,
                 ]}
               >
-                {range.charAt(0).toUpperCase() + range.slice(1)}
+                {timeRangeLabels[range]}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
 
         <Card style={styles.chartCard} elevated>
-          <Text style={styles.chartTitle}>Workout Duration</Text>
-          <Text style={styles.chartSubtitle}>Minutes per day</Text>
+          <Text style={styles.chartTitle}>{t('progress.workoutDuration')}</Text>
+          <Text style={styles.chartSubtitle}>{t('progress.minutesPerDay')}</Text>
 
           <View style={styles.chart}>
             {SAMPLE_CHART_DATA.map((data, index) => (
@@ -83,34 +91,34 @@ export const ProgressScreen: React.FC = () => {
         </Card>
 
         <View style={styles.statsGrid}>
-          <Card style={styles.statCard}>
+          <Card style={[styles.statCard, { width: statCardWidth }]}>
             <Text style={styles.statIcon}>💪</Text>
             <Text style={styles.statValue}>{stats.totalWorkouts}</Text>
-            <Text style={styles.statLabel}>Total Workouts</Text>
+            <Text style={styles.statLabel}>{t('progress.totalWorkouts')}</Text>
           </Card>
 
-          <Card style={styles.statCard}>
+          <Card style={[styles.statCard, { width: statCardWidth }]}>
             <Text style={styles.statIcon}>🔥</Text>
             <Text style={styles.statValue}>{stats.currentStreak}</Text>
-            <Text style={styles.statLabel}>Day Streak</Text>
+            <Text style={styles.statLabel}>{t('progress.dayStreak')}</Text>
           </Card>
 
-          <Card style={styles.statCard}>
+          <Card style={[styles.statCard, { width: statCardWidth }]}>
             <Text style={styles.statIcon}>🏋️</Text>
             <Text style={styles.statValue}>
               {Math.round(stats.totalVolume / 1000)}k
             </Text>
-            <Text style={styles.statLabel}>Total Volume (kg)</Text>
+            <Text style={styles.statLabel}>{t('progress.totalVolume')}</Text>
           </Card>
 
-          <Card style={styles.statCard}>
+          <Card style={[styles.statCard, { width: statCardWidth }]}>
             <Text style={styles.statIcon}>🏆</Text>
             <Text style={styles.statValue}>{stats.longestStreak}</Text>
-            <Text style={styles.statLabel}>Best Streak</Text>
+            <Text style={styles.statLabel}>{t('progress.bestStreak')}</Text>
           </Card>
         </View>
 
-        <Text style={styles.sectionTitle}>Personal Records</Text>
+        <Text style={styles.sectionTitle}>{t('progress.personalRecords')}</Text>
 
         {stats.personalRecords.length > 0 ? (
           stats.personalRecords.map((pr, index) => (
@@ -130,31 +138,29 @@ export const ProgressScreen: React.FC = () => {
         ) : (
           <Card style={styles.emptyCard}>
             <Text style={styles.emptyIcon}>🏆</Text>
-            <Text style={styles.emptyTitle}>No Personal Records Yet</Text>
-            <Text style={styles.emptyText}>
-              Complete workouts to start tracking your personal records
-            </Text>
+            <Text style={styles.emptyTitle}>{t('progress.noRecordsYet')}</Text>
+            <Text style={styles.emptyText}>{t('progress.noRecordsText')}</Text>
           </Card>
         )}
 
-        <Text style={styles.sectionTitle}>Body Stats</Text>
+        <Text style={styles.sectionTitle}>{t('progress.bodyStats')}</Text>
 
         <Card style={styles.bodyStatsCard}>
           <View style={styles.bodyStatRow}>
             <View style={styles.bodyStat}>
-              <Text style={styles.bodyStatLabel}>Weight</Text>
+              <Text style={styles.bodyStatLabel}>{t('progress.weight')}</Text>
               <Text style={styles.bodyStatValue}>--</Text>
               <Text style={styles.bodyStatUnit}>kg</Text>
             </View>
             <View style={styles.bodyStatDivider} />
             <View style={styles.bodyStat}>
-              <Text style={styles.bodyStatLabel}>Body Fat</Text>
+              <Text style={styles.bodyStatLabel}>{t('progress.bodyFat')}</Text>
               <Text style={styles.bodyStatValue}>--</Text>
               <Text style={styles.bodyStatUnit}>%</Text>
             </View>
           </View>
           <TouchableOpacity style={styles.addBodyStatButton}>
-            <Text style={styles.addBodyStatText}>+ Add Measurement</Text>
+            <Text style={styles.addBodyStatText}>{t('progress.addMeasurement')}</Text>
           </TouchableOpacity>
         </Card>
       </ScrollView>
@@ -254,7 +260,6 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.xl,
   },
   statCard: {
-    width: (SCREEN_WIDTH - SPACING.lg * 2 - SPACING.md) / 2 - 1,
     alignItems: 'center',
     paddingVertical: SPACING.xl,
   },

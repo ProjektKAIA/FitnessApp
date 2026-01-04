@@ -8,11 +8,14 @@ import {
   Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useConsentStore } from '@/stores';
 
 export const ConsentScreen: React.FC = () => {
-  const { acceptAllLegal, setTrackingResponse } = useConsentStore();
+  const { t } = useTranslation();
+  const acceptAllLegal = useConsentStore((state) => state.acceptAllLegal);
+  const setTrackingResponse = useConsentStore((state) => state.setTrackingResponse);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
@@ -43,13 +46,11 @@ export const ConsentScreen: React.FC = () => {
           <Text style={styles.icon}>🏋️</Text>
         </View>
 
-        <Text style={styles.title}>Willkommen bei FitnessApp</Text>
-        <Text style={styles.subtitle}>
-          Bevor du loslegst, brauchen wir deine Zustimmung zu einigen wichtigen Punkten.
-        </Text>
+        <Text style={styles.title}>{t('consent.title')}</Text>
+        <Text style={styles.subtitle}>{t('consent.subtitle')}</Text>
 
         <View style={styles.consentSection}>
-          <Text style={styles.sectionTitle}>Rechtliche Hinweise</Text>
+          <Text style={styles.sectionTitle}>{t('consent.legalSection')}</Text>
 
           <TouchableOpacity
             style={styles.checkboxRow}
@@ -59,14 +60,14 @@ export const ConsentScreen: React.FC = () => {
               {privacyAccepted && <Text style={styles.checkmark}>✓</Text>}
             </View>
             <Text style={styles.checkboxLabel}>
-              Ich habe die{' '}
+              {t('consent.privacyCheckbox').split(t('consent.privacyPolicy'))[0]}
               <Text
                 style={styles.link}
                 onPress={() => Linking.openURL('https://example.com/privacy')}
               >
-                Datenschutzerklärung
-              </Text>{' '}
-              gelesen und akzeptiere sie.
+                {t('consent.privacyPolicy')}
+              </Text>
+              {t('consent.privacyCheckbox').split(t('consent.privacyPolicy'))[1]}
             </Text>
           </TouchableOpacity>
 
@@ -78,28 +79,22 @@ export const ConsentScreen: React.FC = () => {
               {termsAccepted && <Text style={styles.checkmark}>✓</Text>}
             </View>
             <Text style={styles.checkboxLabel}>
-              Ich akzeptiere die{' '}
+              {t('consent.termsCheckbox').split(t('consent.termsOfService'))[0]}
               <Text
                 style={styles.link}
                 onPress={() => Linking.openURL('https://example.com/terms')}
               >
-                Allgemeinen Geschäftsbedingungen
+                {t('consent.termsOfService')}
               </Text>
-              .
+              {t('consent.termsCheckbox').split(t('consent.termsOfService'))[1]}
             </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.trackingSection}>
-          <Text style={styles.sectionTitle}>App-Tracking</Text>
-          <Text style={styles.trackingDescription}>
-            Wir möchten deine Aktivität über Apps und Websites anderer Unternehmen hinweg
-            verfolgen, um dir personalisierte Werbung anzuzeigen. Dies hilft uns, die App
-            kostenlos anzubieten.
-          </Text>
-          <Text style={styles.trackingNote}>
-            Du kannst diese Einstellung jederzeit in den Systemeinstellungen ändern.
-          </Text>
+          <Text style={styles.sectionTitle}>{t('consent.trackingSection')}</Text>
+          <Text style={styles.trackingDescription}>{t('consent.trackingDescription')}</Text>
+          <Text style={styles.trackingNote}>{t('consent.trackingNote')}</Text>
         </View>
       </ScrollView>
 
@@ -110,7 +105,7 @@ export const ConsentScreen: React.FC = () => {
           disabled={!canContinue}
         >
           <Text style={[styles.buttonText, styles.denyButtonText]}>
-            App nicht erlauben zu tracken
+            {t('consent.denyTracking')}
           </Text>
         </TouchableOpacity>
 
@@ -119,7 +114,9 @@ export const ConsentScreen: React.FC = () => {
           onPress={handleAllowTracking}
           disabled={!canContinue}
         >
-          <Text style={[styles.buttonText, styles.allowButtonText]}>Erlauben</Text>
+          <Text style={[styles.buttonText, styles.allowButtonText]}>
+            {t('consent.allowTracking')}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

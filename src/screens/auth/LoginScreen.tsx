@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants/theme';
 import { DEV_LOGIN_ENABLED } from '@/constants/config';
@@ -20,6 +21,7 @@ import { DEV_LOGIN_ENABLED } from '@/constants/config';
 type AuthMode = 'login' | 'register' | 'forgot';
 
 export const LoginScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<AuthMode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,38 +29,43 @@ export const LoginScreen: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { login, register, forgotPassword, devLogin, isLoading, error, clearError } =
-    useAuthStore();
+  const login = useAuthStore((state) => state.login);
+  const register = useAuthStore((state) => state.register);
+  const forgotPassword = useAuthStore((state) => state.forgotPassword);
+  const devLogin = useAuthStore((state) => state.devLogin);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const error = useAuthStore((state) => state.error);
+  const clearError = useAuthStore((state) => state.clearError);
 
   const handleSubmit = async () => {
     clearError();
 
     if (!email.trim()) {
-      Alert.alert('Fehler', 'Bitte E-Mail eingeben');
+      Alert.alert(t('common.error'), t('auth.errorEmailRequired'));
       return;
     }
 
     if (mode === 'forgot') {
       const result = await forgotPassword(email);
       if (result.success) {
-        Alert.alert('Erfolg', 'Passwort-Reset E-Mail wurde gesendet');
+        Alert.alert(t('common.success'), t('auth.successResetEmail'));
         setMode('login');
       }
       return;
     }
 
     if (!password) {
-      Alert.alert('Fehler', 'Bitte Passwort eingeben');
+      Alert.alert(t('common.error'), t('auth.errorPasswordRequired'));
       return;
     }
 
     if (mode === 'register') {
       if (password.length < 6) {
-        Alert.alert('Fehler', 'Passwort muss mindestens 6 Zeichen haben');
+        Alert.alert(t('common.error'), t('auth.errorPasswordLength'));
         return;
       }
       if (password !== confirmPassword) {
-        Alert.alert('Fehler', 'Passwörter stimmen nicht überein');
+        Alert.alert(t('common.error'), t('auth.errorPasswordMismatch'));
         return;
       }
       await register(email, password);
@@ -70,7 +77,7 @@ export const LoginScreen: React.FC = () => {
   const handleSocialLogin = (provider: 'google' | 'facebook' | 'apple') => {
     Alert.alert(
       'Social Login',
-      `${provider.charAt(0).toUpperCase() + provider.slice(1)} Login wird nach der Firebase-Konfiguration verfügbar sein.`
+      t('auth.socialLoginMessage', { provider: provider.charAt(0).toUpperCase() + provider.slice(1) })
     );
   };
 
@@ -82,20 +89,20 @@ export const LoginScreen: React.FC = () => {
 
   const renderHeader = () => {
     const titles = {
-      login: 'Willkommen zurück',
-      register: 'Konto erstellen',
-      forgot: 'Passwort vergessen',
+      login: t('auth.welcomeBack'),
+      register: t('auth.createAccount'),
+      forgot: t('auth.forgotPassword'),
     };
 
     const subtitles = {
-      login: 'Melde dich an, um fortzufahren',
-      register: 'Erstelle ein kostenloses Konto',
-      forgot: 'Wir senden dir einen Reset-Link',
+      login: t('auth.loginSubtitle'),
+      register: t('auth.registerSubtitle'),
+      forgot: t('auth.forgotSubtitle'),
     };
 
     return (
       <View style={styles.header}>
-        <Text style={styles.logo}>FitTrack</Text>
+        <Text style={styles.logo}>{t('auth.logo')}</Text>
         <Text style={styles.title}>{titles[mode]}</Text>
         <Text style={styles.subtitle}>{subtitles[mode]}</Text>
       </View>
@@ -105,10 +112,10 @@ export const LoginScreen: React.FC = () => {
   const renderInputs = () => (
     <View style={styles.inputContainer}>
       <View style={styles.inputWrapper}>
-        <Text style={styles.inputLabel}>E-Mail</Text>
+        <Text style={styles.inputLabel}>{t('auth.email')}</Text>
         <TextInput
           style={styles.input}
-          placeholder="deine@email.de"
+          placeholder={t('auth.emailPlaceholder')}
           placeholderTextColor={COLORS.gray[400]}
           value={email}
           onChangeText={setEmail}
@@ -120,11 +127,11 @@ export const LoginScreen: React.FC = () => {
 
       {mode !== 'forgot' && (
         <View style={styles.inputWrapper}>
-          <Text style={styles.inputLabel}>Passwort</Text>
+          <Text style={styles.inputLabel}>{t('auth.password')}</Text>
           <View style={styles.passwordContainer}>
             <TextInput
               style={styles.passwordInput}
-              placeholder="Dein Passwort"
+              placeholder={t('auth.passwordPlaceholder')}
               placeholderTextColor={COLORS.gray[400]}
               value={password}
               onChangeText={setPassword}
@@ -144,11 +151,11 @@ export const LoginScreen: React.FC = () => {
 
       {mode === 'register' && (
         <View style={styles.inputWrapper}>
-          <Text style={styles.inputLabel}>Passwort bestätigen</Text>
+          <Text style={styles.inputLabel}>{t('auth.confirmPassword')}</Text>
           <View style={styles.passwordContainer}>
             <TextInput
               style={styles.passwordInput}
-              placeholder="Passwort wiederholen"
+              placeholder={t('auth.confirmPasswordPlaceholder')}
               placeholderTextColor={COLORS.gray[400]}
               value={confirmPassword}
               onChangeText={setConfirmPassword}
@@ -167,7 +174,7 @@ export const LoginScreen: React.FC = () => {
 
       {mode === 'login' && (
         <TouchableOpacity style={styles.forgotLink} onPress={() => setMode('forgot')}>
-          <Text style={styles.forgotText}>Passwort vergessen?</Text>
+          <Text style={styles.forgotText}>{t('auth.forgotLink')}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -184,9 +191,9 @@ export const LoginScreen: React.FC = () => {
 
   const renderSubmitButton = () => {
     const buttonTexts = {
-      login: 'Anmelden',
-      register: 'Registrieren',
-      forgot: 'Reset-Link senden',
+      login: t('auth.login'),
+      register: t('auth.register'),
+      forgot: t('auth.sendResetLink'),
     };
 
     return (
@@ -218,7 +225,7 @@ export const LoginScreen: React.FC = () => {
       <View style={styles.socialContainer}>
         <View style={styles.divider}>
           <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>oder</Text>
+          <Text style={styles.dividerText}>{t('common.or')}</Text>
           <View style={styles.dividerLine} />
         </View>
 
@@ -258,7 +265,7 @@ export const LoginScreen: React.FC = () => {
       return (
         <View style={styles.modeSwitch}>
           <TouchableOpacity onPress={() => setMode('login')}>
-            <Text style={styles.modeSwitchLink}>Zurück zur Anmeldung</Text>
+            <Text style={styles.modeSwitchLink}>{t('auth.backToLogin')}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -267,11 +274,11 @@ export const LoginScreen: React.FC = () => {
     return (
       <View style={styles.modeSwitch}>
         <Text style={styles.modeSwitchText}>
-          {mode === 'login' ? 'Noch kein Konto?' : 'Bereits ein Konto?'}
+          {mode === 'login' ? t('auth.noAccount') : t('auth.hasAccount')}
         </Text>
         <TouchableOpacity onPress={() => setMode(mode === 'login' ? 'register' : 'login')}>
           <Text style={styles.modeSwitchLink}>
-            {mode === 'login' ? 'Registrieren' : 'Anmelden'}
+            {mode === 'login' ? t('auth.register') : t('auth.login')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -283,7 +290,7 @@ export const LoginScreen: React.FC = () => {
 
     return (
       <TouchableOpacity style={styles.devButton} onPress={handleDevLogin}>
-        <Text style={styles.devButtonText}>DEV LOGIN (Skip Auth)</Text>
+        <Text style={styles.devButtonText}>{t('auth.devLogin')}</Text>
       </TouchableOpacity>
     );
   };

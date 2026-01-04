@@ -11,52 +11,52 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, REST_TIMER_DEFAULT } from '@/constants';
-import { Button, Card, Modal } from '@/components/common';
+import { Button, Card, Modal, LoadingScreen } from '@/components/common';
 import { useWorkoutStore, useUserStore } from '@/stores';
-import { RootStackParamList, IExercise, ISet } from '@/types';
+import { RootStackParamList } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type WorkoutActiveRouteProp = RouteProp<RootStackParamList, 'WorkoutActive'>;
 
-const SAMPLE_EXERCISES = [
-  { name: 'Bench Press', muscleGroup: 'chest' as const },
-  { name: 'Incline Dumbbell Press', muscleGroup: 'chest' as const },
-  { name: 'Cable Flyes', muscleGroup: 'chest' as const },
-  { name: 'Overhead Press', muscleGroup: 'shoulders' as const },
-  { name: 'Lateral Raises', muscleGroup: 'shoulders' as const },
-  { name: 'Tricep Pushdowns', muscleGroup: 'triceps' as const },
-];
-
 export const WorkoutActiveScreen: React.FC = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<WorkoutActiveRouteProp>();
-  const { user } = useUserStore();
-  const {
-    activeWorkout,
-    startWorkout,
-    endWorkout,
-    cancelWorkout,
-    addExercise,
-    addSet,
-    updateSet,
-    completeSet,
-    restTimerActive,
-    restTimeRemaining,
-    startRestTimer,
-    stopRestTimer,
-    updateRestTimer,
-  } = useWorkoutStore();
+  const user = useUserStore((state) => state.user);
+  const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
+  const startWorkout = useWorkoutStore((state) => state.startWorkout);
+  const endWorkout = useWorkoutStore((state) => state.endWorkout);
+  const cancelWorkout = useWorkoutStore((state) => state.cancelWorkout);
+  const addExercise = useWorkoutStore((state) => state.addExercise);
+  const addSet = useWorkoutStore((state) => state.addSet);
+  const updateSet = useWorkoutStore((state) => state.updateSet);
+  const completeSet = useWorkoutStore((state) => state.completeSet);
+  const restTimerActive = useWorkoutStore((state) => state.restTimerActive);
+  const restTimeRemaining = useWorkoutStore((state) => state.restTimeRemaining);
+  const startRestTimer = useWorkoutStore((state) => state.startRestTimer);
+  const stopRestTimer = useWorkoutStore((state) => state.stopRestTimer);
+  const updateRestTimer = useWorkoutStore((state) => state.updateRestTimer);
 
   const [showExerciseModal, setShowExerciseModal] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
 
+  const SAMPLE_EXERCISES = [
+    { nameKey: 'exercises.benchPress', muscleGroup: 'chest' as const },
+    { nameKey: 'exercises.inclineDumbbellPress', muscleGroup: 'chest' as const },
+    { nameKey: 'exercises.cableFlyes', muscleGroup: 'chest' as const },
+    { nameKey: 'exercises.overheadPress', muscleGroup: 'shoulders' as const },
+    { nameKey: 'exercises.lateralRaises', muscleGroup: 'shoulders' as const },
+    { nameKey: 'exercises.tricepPushdowns', muscleGroup: 'triceps' as const },
+  ];
+
   useEffect(() => {
     if (!activeWorkout && route.params?.workoutId === 'new') {
       startWorkout({
         userId: user?.id || 'guest',
-        name: 'New Workout',
+        name: t('workoutActive.newWorkout'),
         direction: 'gym',
         exercises: [],
         duration: 0,
@@ -101,9 +101,9 @@ export const WorkoutActiveScreen: React.FC = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleAddExercise = (exercise: { name: string; muscleGroup: 'chest' | 'shoulders' | 'triceps' }) => {
+  const handleAddExercise = (exercise: { nameKey: string; muscleGroup: 'chest' | 'shoulders' | 'triceps' }) => {
     addExercise({
-      name: exercise.name,
+      name: t(exercise.nameKey),
       muscleGroup: exercise.muscleGroup,
       sets: [{ id: '1', weight: 0, reps: 0, completed: false }],
     });
@@ -129,37 +129,31 @@ export const WorkoutActiveScreen: React.FC = () => {
   };
 
   if (!activeWorkout) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      </SafeAreaView>
-    );
+    return <LoadingScreen message={t('workoutActive.loadingWorkout')} backgroundColor={COLORS.gray[100]} />;
   }
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => setShowEndModal(true)}>
-          <Text style={styles.cancelText}>Cancel</Text>
+          <Text style={styles.cancelText}>{t('workoutActive.cancel')}</Text>
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           <Text style={styles.workoutName}>{activeWorkout.name}</Text>
           <Text style={styles.timer}>{formatTime(elapsedTime)}</Text>
         </View>
         <TouchableOpacity onPress={handleEndWorkout}>
-          <Text style={styles.finishText}>Finish</Text>
+          <Text style={styles.finishText}>{t('workoutActive.finish')}</Text>
         </TouchableOpacity>
       </View>
 
       {restTimerActive && (
         <View style={styles.restTimerBar}>
           <Text style={styles.restTimerText}>
-            Rest: {formatTime(restTimeRemaining)}
+            {t('workoutActive.rest', { time: formatTime(restTimeRemaining) })}
           </Text>
           <TouchableOpacity onPress={stopRestTimer}>
-            <Text style={styles.skipText}>Skip</Text>
+            <Text style={styles.skipText}>{t('workoutActive.skip')}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -169,15 +163,15 @@ export const WorkoutActiveScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {activeWorkout.exercises.map((exercise, exerciseIndex) => (
+        {activeWorkout.exercises.map((exercise) => (
           <Card key={exercise.id} style={styles.exerciseCard}>
             <Text style={styles.exerciseName}>{exercise.name}</Text>
-            <Text style={styles.muscleGroup}>{exercise.muscleGroup}</Text>
+            <Text style={styles.muscleGroup}>{t(`muscles.${exercise.muscleGroup}`)}</Text>
 
             <View style={styles.setsHeader}>
-              <Text style={styles.setHeaderText}>SET</Text>
-              <Text style={styles.setHeaderText}>KG</Text>
-              <Text style={styles.setHeaderText}>REPS</Text>
+              <Text style={styles.setHeaderText}>{t('workoutActive.set')}</Text>
+              <Text style={styles.setHeaderText}>{t('workoutActive.kg')}</Text>
+              <Text style={styles.setHeaderText}>{t('workoutActive.reps')}</Text>
               <View style={{ width: 44 }} />
             </View>
 
@@ -231,13 +225,13 @@ export const WorkoutActiveScreen: React.FC = () => {
                 addSet(exercise.id, { weight: 0, reps: 0, completed: false })
               }
             >
-              <Text style={styles.addSetText}>+ Add Set</Text>
+              <Text style={styles.addSetText}>{t('workoutActive.addSet')}</Text>
             </TouchableOpacity>
           </Card>
         ))}
 
         <Button
-          title="+ Add Exercise"
+          title={t('workoutActive.addExercise')}
           variant="outline"
           fullWidth
           onPress={() => setShowExerciseModal(true)}
@@ -247,7 +241,7 @@ export const WorkoutActiveScreen: React.FC = () => {
       <Modal
         visible={showExerciseModal}
         onClose={() => setShowExerciseModal(false)}
-        title="Add Exercise"
+        title={t('workoutActive.addExerciseTitle')}
       >
         <ScrollView style={styles.exerciseList}>
           {SAMPLE_EXERCISES.map((exercise, index) => (
@@ -256,8 +250,8 @@ export const WorkoutActiveScreen: React.FC = () => {
               style={styles.exerciseItem}
               onPress={() => handleAddExercise(exercise)}
             >
-              <Text style={styles.exerciseItemName}>{exercise.name}</Text>
-              <Text style={styles.exerciseItemMuscle}>{exercise.muscleGroup}</Text>
+              <Text style={styles.exerciseItemName}>{t(exercise.nameKey)}</Text>
+              <Text style={styles.exerciseItemMuscle}>{t(`muscles.${exercise.muscleGroup}`)}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -266,26 +260,24 @@ export const WorkoutActiveScreen: React.FC = () => {
       <Modal
         visible={showEndModal}
         onClose={() => setShowEndModal(false)}
-        title="End Workout?"
+        title={t('workoutActive.endWorkout')}
       >
-        <Text style={styles.modalText}>
-          Are you sure you want to end this workout? Your progress will be saved.
-        </Text>
+        <Text style={styles.modalText}>{t('workoutActive.endWorkoutMessage')}</Text>
         <View style={styles.modalButtons}>
           <Button
-            title="Cancel"
+            title={t('common.cancel')}
             variant="outline"
             onPress={() => setShowEndModal(false)}
             style={styles.modalButton}
           />
           <Button
-            title="Discard"
+            title={t('workoutActive.discard')}
             variant="secondary"
             onPress={handleCancelWorkout}
             style={styles.modalButton}
           />
           <Button
-            title="Save"
+            title={t('common.save')}
             onPress={handleEndWorkout}
             style={styles.modalButton}
           />
@@ -299,15 +291,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.gray[100],
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: FONT_SIZES.lg,
-    color: COLORS.gray[500],
   },
   header: {
     flexDirection: 'row',

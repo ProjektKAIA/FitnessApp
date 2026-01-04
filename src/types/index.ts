@@ -1,5 +1,74 @@
 export type TDirection = 'gym' | 'calisthenics' | 'cardio' | 'yoga' | 'mobility' | 'custom';
 
+export type TSportType =
+  | 'fitness'
+  | 'running'
+  | 'cycling'
+  | 'martial_arts'
+  | 'swimming'
+  | 'yoga'
+  | 'custom';
+
+export type TTrainingDay = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+
+export type TPlanSource = 'manual' | 'ai_generated' | 'imported' | 'template';
+
+export interface ITrainingPlan {
+  id: string;
+  userId: string;
+  name: string;
+  sportType: TSportType;
+  description?: string;
+  weeklySchedule: IWeeklySchedule;
+  isActive: boolean;
+  source: TPlanSource;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IWeeklySchedule {
+  mon: IPlannedWorkout | null;
+  tue: IPlannedWorkout | null;
+  wed: IPlannedWorkout | null;
+  thu: IPlannedWorkout | null;
+  fri: IPlannedWorkout | null;
+  sat: IPlannedWorkout | null;
+  sun: IPlannedWorkout | null;
+}
+
+export interface IPlannedWorkout {
+  id: string;
+  name: string;
+  direction: TDirection;
+  exercises: IPlannedExercise[];
+  estimatedDuration?: number;
+  notes?: string;
+}
+
+export interface IPlannedExercise {
+  id: string;
+  exerciseId?: string;
+  name: string;
+  muscleGroup: TMuscleGroup;
+  targetSets: number;
+  targetReps: string;
+  targetWeight?: number;
+  restTime?: number;
+  notes?: string;
+  order: number;
+}
+
+export interface IExerciseTemplate {
+  id: string;
+  name: string;
+  muscleGroup: TMuscleGroup;
+  direction: TDirection[];
+  category: string;
+  equipment?: string[];
+  description?: string;
+  isCustom: boolean;
+}
+
 export type TMuscleGroup =
   | 'chest'
   | 'back'
@@ -29,8 +98,19 @@ export interface IUser {
   email: string;
   name: string;
   avatarUrl?: string;
+  birthday?: string;
+  weight?: number;
+  height?: number;
   createdAt: Date;
   settings: IUserSettings;
+}
+
+export interface IUserProfile {
+  name: string;
+  avatarUrl?: string;
+  birthday?: string;
+  weight?: number;
+  height?: number;
 }
 
 export interface ISet {
@@ -151,9 +231,19 @@ export type RootStackParamList = {
   ExerciseDetail: { exerciseId: string };
   Settings: undefined;
   Profile: undefined;
+  ProfileEdit: undefined;
   Impressum: undefined;
   PrivacyPolicy: undefined;
   TermsOfService: undefined;
+  Language: undefined;
+  AICoach: undefined;
+  ChatGPTImport: undefined;
+  ChatDetail: { chatId: string };
+  SportSelection: undefined;
+  TrainingPlanList: { sportType: TSportType };
+  TrainingPlanEditor: { planId?: string; sportType: TSportType };
+  WorkoutDayEditor: { planId: string; day: TTrainingDay };
+  ExercisePicker: { planId: string; day: TTrainingDay; workoutId: string };
 };
 
 export type AuthStackParamList = {

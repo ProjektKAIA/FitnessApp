@@ -1,33 +1,83 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useTranslation } from 'react-i18next';
+import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
 import { Card } from '@/components/common';
+import { useTrainingPlanStore } from '@/stores';
+import { RootStackParamList, TTrainingDay, ITrainingPlan } from '@/types';
 
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-interface ScheduledWorkout {
-  id: string;
-  day: string;
-  name: string;
-  direction: string;
-  time?: string;
-}
-
-const SAMPLE_SCHEDULE: ScheduledWorkout[] = [
-  { id: '1', day: 'Mon', name: 'Push Day', direction: 'gym', time: '07:00' },
-  { id: '2', day: 'Tue', name: 'Pull Day', direction: 'gym', time: '07:00' },
-  { id: '3', day: 'Wed', name: 'Rest / Cardio', direction: 'cardio' },
-  { id: '4', day: 'Thu', name: 'Leg Day', direction: 'gym', time: '07:00' },
-  { id: '5', day: 'Fri', name: 'Upper Body', direction: 'gym', time: '07:00' },
-  { id: '6', day: 'Sat', name: 'Active Recovery', direction: 'yoga' },
-  { id: '7', day: 'Sun', name: 'Rest', direction: 'custom' },
-];
+const DAYS: TTrainingDay[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
 export const PlanScreen: React.FC = () => {
-  const [selectedDay, setSelectedDay] = useState<string>('Mon');
+  const { t } = useTranslation();
+  const navigation = useNavigation<NavigationProp>();
 
-  const selectedWorkout = SAMPLE_SCHEDULE.find((w) => w.day === selectedDay);
+  const activePlan = useTrainingPlanStore((state) => state.getActivePlan());
+  const plans = useTrainingPlanStore((state) => state.plans);
+
+  const handleCreatePlan = () => {
+    navigation.navigate('SportSelection');
+  };
+
+  const handleEditPlan = () => {
+    if (activePlan) {
+      navigation.navigate('TrainingPlanEditor', {
+        planId: activePlan.id,
+        sportType: activePlan.sportType,
+      });
+    }
+  };
+
+  const handleManagePlans = () => {
+    navigation.navigate('SportSelection');
+  };
+
+  const handleStartWorkout = (day: TTrainingDay) => {
+    if (activePlan) {
+      const workout = activePlan.weeklySchedule[day];
+      if (workout) {
+        navigation.navigate('WorkoutActive', { workoutId: workout.id });
+      }
+    }
+  };
+
+  const handleNavigateToAI = () => {
+    navigation.navigate('AICoach');
+  };
+
+  const getDirectionColor = (direction: string): string => {
+    switch (direction) {
+      case 'gym':
+        return COLORS.primary;
+      case 'cardio':
+        return COLORS.accent;
+      case 'yoga':
+        return COLORS.purple;
+      case 'calisthenics':
+        return COLORS.success;
+      default:
+        return COLORS.gray[400];
+    }
+  };
+
+  const getTodayKey = (): TTrainingDay => {
+    const days: TTrainingDay[] = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    return days[new Date().getDay()];
+  };
+
+  const todayKey = getTodayKey();
+  const todayWorkout = activePlan?.weeklySchedule[todayKey];
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -36,132 +86,192 @@ export const PlanScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Training Plan</Text>
-        <Text style={styles.subtitle}>Your weekly schedule</Text>
+        <Text style={styles.title}>{t('plan.title')}</Text>
+        <Text style={styles.subtitle}>{t('plan.subtitle')}</Text>
 
-        <View style={styles.weekContainer}>
-          {DAYS.map((day) => {
-            const workout = SAMPLE_SCHEDULE.find((w) => w.day === day);
-            const isSelected = selectedDay === day;
-            const hasWorkout = workout && workout.name !== 'Rest';
-
-            return (
-              <TouchableOpacity
-                key={day}
-                style={[
-                  styles.dayButton,
-                  isSelected && styles.dayButtonSelected,
-                  hasWorkout && styles.dayButtonHasWorkout,
-                ]}
-                onPress={() => setSelectedDay(day)}
-              >
-                <Text
-                  style={[
-                    styles.dayText,
-                    isSelected && styles.dayTextSelected,
-                  ]}
+        {activePlan ? (
+          <>
+            <Card style={styles.activePlanCard} elevated>
+              <View style={styles.activePlanHeader}>
+                <View style={styles.activePlanInfo}>
+                  <Text style={styles.activePlanLabel}>{t('plan.activePlan')}</Text>
+                  <Text style={styles.activePlanName}>{activePlan.name}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.editPlanButton}
+                  onPress={handleEditPlan}
                 >
-                  {day}
+                  <Text style={styles.editPlanText}>{t('common.edit')}</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.weekContainer}>
+                {DAYS.map((day) => {
+                  const workout = activePlan.weeklySchedule[day];
+                  const isToday = day === todayKey;
+                  const hasWorkout = workout !== null;
+
+                  return (
+                    <TouchableOpacity
+                      key={day}
+                      style={[
+                        styles.dayButton,
+                        isToday && styles.dayButtonToday,
+                        hasWorkout && styles.dayButtonHasWorkout,
+                      ]}
+                      onPress={() => hasWorkout && handleStartWorkout(day)}
+                      disabled={!hasWorkout}
+                    >
+                      <Text
+                        style={[
+                          styles.dayText,
+                          isToday && styles.dayTextToday,
+                        ]}
+                      >
+                        {t(`days.short.${day}`)}
+                      </Text>
+                      {hasWorkout && (
+                        <View
+                          style={[
+                            styles.workoutIndicator,
+                            { backgroundColor: getDirectionColor(workout.direction) },
+                          ]}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </Card>
+
+            {todayWorkout && (
+              <Card style={styles.todayCard}>
+                <View style={styles.todayHeader}>
+                  <Text style={styles.todayLabel}>{t('plan.today')}</Text>
+                  <View
+                    style={[
+                      styles.directionBadge,
+                      { backgroundColor: getDirectionColor(todayWorkout.direction) },
+                    ]}
+                  >
+                    <Text style={styles.directionText}>
+                      {t(`directions.${todayWorkout.direction}`)}
+                    </Text>
+                  </View>
+                </View>
+                <Text style={styles.todayWorkoutName}>{todayWorkout.name}</Text>
+                <Text style={styles.todayExerciseCount}>
+                  {t('plan.exerciseCount', { count: todayWorkout.exercises.length })}
                 </Text>
-                {hasWorkout && !isSelected && <View style={styles.workoutDot} />}
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-
-        {selectedWorkout && (
-          <Card style={styles.workoutCard} elevated>
-            <View style={styles.workoutHeader}>
-              <View
-                style={[
-                  styles.directionBadge,
-                  { backgroundColor: getDirectionColor(selectedWorkout.direction) },
-                ]}
-              >
-                <Text style={styles.directionText}>{selectedWorkout.direction}</Text>
-              </View>
-              {selectedWorkout.time && (
-                <Text style={styles.timeText}>{selectedWorkout.time}</Text>
-              )}
-            </View>
-            <Text style={styles.workoutName}>{selectedWorkout.name}</Text>
-
-            {selectedWorkout.name !== 'Rest' && (
-              <View style={styles.workoutActions}>
-                <TouchableOpacity style={styles.actionButton}>
-                  <Text style={styles.actionIcon}>✏️</Text>
-                  <Text style={styles.actionText}>Edit</Text>
+                <TouchableOpacity
+                  style={styles.startButton}
+                  onPress={() => handleStartWorkout(todayKey)}
+                >
+                  <Text style={styles.startButtonText}>{t('plan.startWorkout')}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
-                  <Text style={styles.actionIcon}>🔄</Text>
-                  <Text style={styles.actionText}>Swap</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
-                  <Text style={styles.actionIcon}>⏭️</Text>
-                  <Text style={styles.actionText}>Skip</Text>
-                </TouchableOpacity>
-              </View>
+              </Card>
             )}
+
+            <Text style={styles.sectionTitle}>{t('plan.thisWeek')}</Text>
+
+            {DAYS.map((day) => {
+              const workout = activePlan.weeklySchedule[day];
+              const isToday = day === todayKey;
+
+              return (
+                <TouchableOpacity
+                  key={day}
+                  style={[styles.scheduleItem, isToday && styles.scheduleItemToday]}
+                  onPress={() => workout && handleStartWorkout(day)}
+                  disabled={!workout}
+                >
+                  <View style={styles.scheduleDay}>
+                    <Text
+                      style={[
+                        styles.scheduleDayText,
+                        isToday && styles.scheduleDayTextToday,
+                      ]}
+                    >
+                      {t(`days.short.${day}`)}
+                    </Text>
+                  </View>
+                  <View style={styles.scheduleInfo}>
+                    {workout ? (
+                      <>
+                        <Text style={styles.scheduleName}>{workout.name}</Text>
+                        <Text style={styles.scheduleExercises}>
+                          {t('plan.exerciseCount', { count: workout.exercises.length })}
+                        </Text>
+                      </>
+                    ) : (
+                      <Text style={styles.scheduleRest}>{t('plan.restDay')}</Text>
+                    )}
+                  </View>
+                  {workout && (
+                    <View
+                      style={[
+                        styles.scheduleIndicator,
+                        { backgroundColor: getDirectionColor(workout.direction) },
+                      ]}
+                    />
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </>
+        ) : (
+          <Card style={styles.emptyCard}>
+            <Text style={styles.emptyIcon}>📋</Text>
+            <Text style={styles.emptyTitle}>{t('plan.noPlan')}</Text>
+            <Text style={styles.emptySubtitle}>{t('plan.noPlanDescription')}</Text>
+
+            <View style={styles.createOptions}>
+              <TouchableOpacity
+                style={styles.createOptionButton}
+                onPress={handleCreatePlan}
+              >
+                <Text style={styles.createOptionIcon}>✏️</Text>
+                <Text style={styles.createOptionTitle}>{t('plan.createManually')}</Text>
+                <Text style={styles.createOptionDesc}>{t('plan.createManuallyDesc')}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.createOptionButton}
+                onPress={handleNavigateToAI}
+              >
+                <Text style={styles.createOptionIcon}>🤖</Text>
+                <Text style={styles.createOptionTitle}>{t('plan.createWithAI')}</Text>
+                <Text style={styles.createOptionDesc}>{t('plan.createWithAIDesc')}</Text>
+              </TouchableOpacity>
+            </View>
           </Card>
         )}
 
-        <Text style={styles.sectionTitle}>This Week</Text>
-
-        {SAMPLE_SCHEDULE.map((workout) => (
+        {plans.length > 0 && (
           <TouchableOpacity
-            key={workout.id}
-            style={styles.scheduleItem}
-            onPress={() => setSelectedDay(workout.day)}
+            style={styles.managePlansButton}
+            onPress={handleManagePlans}
           >
-            <View style={styles.scheduleDay}>
-              <Text style={styles.scheduleDayText}>{workout.day}</Text>
-            </View>
-            <View style={styles.scheduleInfo}>
-              <Text style={styles.scheduleName}>{workout.name}</Text>
-              {workout.time && (
-                <Text style={styles.scheduleTime}>{workout.time}</Text>
-              )}
-            </View>
-            <View
-              style={[
-                styles.scheduleIndicator,
-                { backgroundColor: getDirectionColor(workout.direction) },
-              ]}
-            />
+            <Text style={styles.managePlansText}>
+              {t('plan.managePlans', { count: plans.length })}
+            </Text>
+            <Text style={styles.managePlansArrow}>→</Text>
           </TouchableOpacity>
-        ))}
+        )}
 
         <Card style={styles.aiCard}>
           <View style={styles.aiHeader}>
             <Text style={styles.aiIcon}>🤖</Text>
-            <Text style={styles.aiTitle}>AI Coach</Text>
+            <Text style={styles.aiTitle}>{t('plan.aiCoach')}</Text>
           </View>
-          <Text style={styles.aiDescription}>
-            Let our AI create a personalized training plan based on your goals and
-            preferences.
-          </Text>
-          <TouchableOpacity style={styles.aiButton}>
-            <Text style={styles.aiButtonText}>Generate Plan</Text>
+          <Text style={styles.aiDescription}>{t('plan.aiDescription')}</Text>
+          <TouchableOpacity style={styles.aiButton} onPress={handleNavigateToAI}>
+            <Text style={styles.aiButtonText}>{t('plan.openAICoach')}</Text>
           </TouchableOpacity>
         </Card>
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-const getDirectionColor = (direction: string): string => {
-  switch (direction) {
-    case 'gym':
-      return COLORS.primary;
-    case 'cardio':
-      return COLORS.accent;
-    case 'yoga':
-      return COLORS.purple;
-    case 'calisthenics':
-      return COLORS.success;
-    default:
-      return COLORS.gray[400];
-  }
 };
 
 const styles = StyleSheet.create({
@@ -188,53 +298,92 @@ const styles = StyleSheet.create({
     marginTop: SPACING.xs,
     marginBottom: SPACING.xl,
   },
+  activePlanCard: {
+    marginBottom: SPACING.lg,
+  },
+  activePlanHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: SPACING.md,
+  },
+  activePlanInfo: {
+    flex: 1,
+  },
+  activePlanLabel: {
+    fontSize: FONT_SIZES.xs,
+    color: COLORS.gray[500],
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  activePlanName: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '600',
+    color: COLORS.gray[900],
+    marginTop: 2,
+  },
+  editPlanButton: {
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    backgroundColor: COLORS.gray[100],
+    borderRadius: BORDER_RADIUS.md,
+  },
+  editPlanText: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.primary,
+    fontWeight: '500',
+  },
   weekContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: SPACING.xl,
   },
   dayButton: {
-    width: 44,
-    height: 56,
-    borderRadius: BORDER_RADIUS.lg,
-    backgroundColor: COLORS.white,
+    width: 40,
+    height: 52,
+    borderRadius: BORDER_RADIUS.md,
+    backgroundColor: COLORS.gray[100],
     justifyContent: 'center',
     alignItems: 'center',
   },
-  dayButtonSelected: {
+  dayButtonToday: {
     backgroundColor: COLORS.primary,
   },
   dayButtonHasWorkout: {
     borderWidth: 1,
-    borderColor: COLORS.primary,
+    borderColor: COLORS.gray[300],
   },
   dayText: {
-    fontSize: FONT_SIZES.sm,
+    fontSize: FONT_SIZES.xs,
     fontWeight: '500',
-    color: COLORS.gray[700],
+    color: COLORS.gray[600],
   },
-  dayTextSelected: {
+  dayTextToday: {
     color: COLORS.white,
   },
-  workoutDot: {
+  workoutIndicator: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: COLORS.primary,
     marginTop: 4,
   },
-  workoutCard: {
+  todayCard: {
     marginBottom: SPACING.xl,
+    backgroundColor: COLORS.gray[800],
   },
-  workoutHeader: {
+  todayHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
+  },
+  todayLabel: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.gray[400],
+    fontWeight: '500',
   },
   directionBadge: {
     paddingHorizontal: SPACING.sm,
-    paddingVertical: SPACING.xs,
+    paddingVertical: 2,
     borderRadius: BORDER_RADIUS.sm,
   },
   directionText: {
@@ -243,33 +392,27 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'uppercase',
   },
-  timeText: {
-    fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[500],
-  },
-  workoutName: {
+  todayWorkoutName: {
     fontSize: FONT_SIZES.xl,
     fontWeight: '700',
-    color: COLORS.gray[900],
-    marginBottom: SPACING.lg,
-  },
-  workoutActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderTopWidth: 1,
-    borderTopColor: COLORS.gray[200],
-    paddingTop: SPACING.md,
-  },
-  actionButton: {
-    alignItems: 'center',
-  },
-  actionIcon: {
-    fontSize: 20,
+    color: COLORS.white,
     marginBottom: 4,
   },
-  actionText: {
-    fontSize: FONT_SIZES.xs,
-    color: COLORS.gray[600],
+  todayExerciseCount: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.gray[400],
+    marginBottom: SPACING.md,
+  },
+  startButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.lg,
+    alignItems: 'center',
+  },
+  startButtonText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    color: COLORS.white,
   },
   sectionTitle: {
     fontSize: FONT_SIZES.lg,
@@ -285,9 +428,13 @@ const styles = StyleSheet.create({
     padding: SPACING.md,
     marginBottom: SPACING.sm,
   },
+  scheduleItemToday: {
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+  },
   scheduleDay: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     borderRadius: BORDER_RADIUS.md,
     backgroundColor: COLORS.gray[100],
     justifyContent: 'center',
@@ -299,6 +446,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.gray[700],
   },
+  scheduleDayTextToday: {
+    color: COLORS.primary,
+  },
   scheduleInfo: {
     flex: 1,
   },
@@ -307,15 +457,87 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: COLORS.gray[900],
   },
-  scheduleTime: {
+  scheduleExercises: {
     fontSize: FONT_SIZES.sm,
     color: COLORS.gray[500],
     marginTop: 2,
+  },
+  scheduleRest: {
+    fontSize: FONT_SIZES.base,
+    color: COLORS.gray[400],
+    fontStyle: 'italic',
   },
   scheduleIndicator: {
     width: 4,
     height: 32,
     borderRadius: 2,
+  },
+  emptyCard: {
+    alignItems: 'center',
+    paddingVertical: SPACING.xl,
+  },
+  emptyIcon: {
+    fontSize: 64,
+    marginBottom: SPACING.md,
+  },
+  emptyTitle: {
+    fontSize: FONT_SIZES.xl,
+    fontWeight: '600',
+    color: COLORS.gray[900],
+    marginBottom: SPACING.xs,
+  },
+  emptySubtitle: {
+    fontSize: FONT_SIZES.base,
+    color: COLORS.gray[500],
+    textAlign: 'center',
+    marginBottom: SPACING.xl,
+    paddingHorizontal: SPACING.lg,
+  },
+  createOptions: {
+    width: '100%',
+    gap: SPACING.md,
+  },
+  createOptionButton: {
+    width: '100%',
+    padding: SPACING.lg,
+    backgroundColor: COLORS.gray[50],
+    borderRadius: BORDER_RADIUS.lg,
+    borderWidth: 1,
+    borderColor: COLORS.gray[200],
+  },
+  createOptionIcon: {
+    fontSize: 28,
+    marginBottom: SPACING.sm,
+  },
+  createOptionTitle: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    color: COLORS.gray[900],
+    marginBottom: 4,
+  },
+  createOptionDesc: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.gray[500],
+  },
+  managePlansButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: COLORS.white,
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.lg,
+    marginTop: SPACING.lg,
+    marginBottom: SPACING.lg,
+    ...SHADOWS.sm,
+  },
+  managePlansText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '500',
+    color: COLORS.gray[700],
+  },
+  managePlansArrow: {
+    fontSize: FONT_SIZES.lg,
+    color: COLORS.gray[400],
   },
   aiCard: {
     marginTop: SPACING.lg,

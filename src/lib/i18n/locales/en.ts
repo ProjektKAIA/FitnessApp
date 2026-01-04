@@ -1,0 +1,525 @@
+const en = {
+  // Common
+  common: {
+    loading: 'Loading...',
+    error: 'Error',
+    success: 'Success',
+    cancel: 'Cancel',
+    save: 'Save',
+    delete: 'Delete',
+    edit: 'Edit',
+    remove: 'Remove',
+    back: 'Back',
+    next: 'Next',
+    done: 'Done',
+    ok: 'OK',
+    yes: 'Yes',
+    no: 'No',
+    or: 'or',
+    and: 'and',
+    workouts: 'workouts',
+    exercises: 'exercises',
+  },
+
+  // Navigation
+  nav: {
+    home: 'Home',
+    workout: 'Workout',
+    plan: 'Plan',
+    progress: 'Progress',
+    more: 'More',
+  },
+
+  // Home Screen
+  home: {
+    greeting: 'Good Morning',
+    greetingAfternoon: 'Good Afternoon',
+    greetingEvening: 'Good Evening',
+    readyToTrain: 'Ready to train?',
+    startWorkout: 'Start Workout',
+    thisWeek: 'This Week',
+    totalVolume: 'Total Volume',
+    weeklyGoal: 'Weekly Goal',
+    trainingDirections: 'Training Directions',
+    totalWorkouts: 'Total Workouts',
+    thisMonth: 'This Month',
+    premium: {
+      title: 'Premium Supplements',
+      description: 'Get 20% off your first order',
+      cta: 'Shop Now',
+    },
+  },
+
+  // Workout Screen
+  workout: {
+    title: 'Start Workout',
+    subtitle: 'Choose a template or create your own',
+    inProgress: 'IN PROGRESS',
+    exerciseCount: '{{count}} exercises',
+    continueWorkout: 'Continue Workout',
+    quickStart: 'Quick Start',
+    empty: 'Empty',
+    last: 'Last',
+    ai: 'AI',
+    templates: 'Templates',
+    startWorkout: 'Start Workout',
+  },
+
+  // Workout Active Screen
+  workoutActive: {
+    cancel: 'Cancel',
+    finish: 'Finish',
+    rest: 'Rest: {{time}}',
+    skip: 'Skip',
+    set: 'SET',
+    kg: 'KG',
+    reps: 'REPS',
+    addSet: '+ Add Set',
+    addExercise: '+ Add Exercise',
+    addExerciseTitle: 'Add Exercise',
+    endWorkout: 'End Workout?',
+    endWorkoutMessage: 'Are you sure you want to end this workout? Your progress will be saved.',
+    discard: 'Discard',
+    newWorkout: 'New Workout',
+    loadingWorkout: 'Loading workout...',
+  },
+
+  // Plan Screen
+  plan: {
+    title: 'Training Plan',
+    subtitle: 'Your weekly schedule',
+    thisWeek: 'This Week',
+    edit: 'Edit',
+    swap: 'Swap',
+    skip: 'Skip',
+    aiCoach: 'AI Coach',
+    aiDescription: 'Let our AI create a personalized training plan based on your goals and preferences.',
+    generatePlan: 'Generate Plan',
+    rest: 'Rest',
+    activePlan: 'Active Plan',
+    today: 'Today',
+    exerciseCount: '{{count}} exercises',
+    startWorkout: 'Start Workout',
+    restDay: 'Rest Day',
+    noPlan: 'No Training Plan',
+    noPlanDescription: 'Create your first training plan manually or let our AI help you.',
+    createManually: 'Create Manually',
+    createManuallyDesc: 'Build your plan step by step',
+    createWithAI: 'Create with AI',
+    createWithAIDesc: 'Get a personalized plan generated',
+    managePlans: 'Manage {{count}} plan(s)',
+    openAICoach: 'Open AI Coach',
+  },
+
+  // Progress Screen
+  progress: {
+    title: 'Progress',
+    subtitle: 'Track your fitness journey',
+    week: 'Week',
+    month: 'Month',
+    year: 'Year',
+    workoutDuration: 'Workout Duration',
+    minutesPerDay: 'Minutes per day',
+    totalWorkouts: 'Total Workouts',
+    dayStreak: 'Day Streak',
+    totalVolume: 'Total Volume (kg)',
+    bestStreak: 'Best Streak',
+    personalRecords: 'Personal Records',
+    noRecordsYet: 'No Personal Records Yet',
+    noRecordsText: 'Complete workouts to start tracking your personal records',
+    bodyStats: 'Body Stats',
+    weight: 'Weight',
+    bodyFat: 'Body Fat',
+    addMeasurement: '+ Add Measurement',
+  },
+
+  // More Screen (Settings)
+  more: {
+    title: 'More',
+    guestUser: 'Guest User',
+    notLoggedIn: 'Not logged in',
+    edit: 'Edit',
+
+    // Sections
+    account: 'Account',
+    preferences: 'Preferences',
+    aiCoach: 'AI Coach',
+    data: 'Data',
+    support: 'Support',
+    legal: 'Legal',
+
+    // Account items
+    profile: 'Profile',
+    profileSubtitle: 'Edit your profile',
+    security: 'Security',
+    securitySubtitle: 'Password & 2FA',
+    subscription: 'Subscription',
+    subscriptionSubtitle: 'Free Plan',
+    logout: 'Sign Out',
+    logoutSubtitle: 'Sign out of your account',
+    logoutTitle: 'Sign Out',
+    logoutMessage: 'Are you sure you want to sign out?',
+
+    // Preferences items
+    notifications: 'Notifications',
+    hapticFeedback: 'Haptic Feedback',
+    units: 'Units',
+    unitsMetric: 'Metric (kg, km)',
+    unitsImperial: 'Imperial (lb, mi)',
+    appearance: 'Appearance',
+    appearanceSystem: 'System',
+    language: 'Language',
+    languageSubtitle: 'Change app language',
+
+    // AI Coach items
+    aiSettings: 'AI Settings',
+    aiSettingsSubtitle: 'Configure your AI coach',
+    openaiKey: 'OpenAI API Key',
+    openaiKeySubtitle: 'Bring your own key',
+    chatgptImport: 'ChatGPT Import',
+    chatgptImportSubtitle: 'Import from ChatGPT',
+
+    // Data items
+    exportData: 'Export Data',
+    exportDataSubtitle: 'Download your workouts',
+    importData: 'Import Data',
+    importDataSubtitle: 'Import from other apps',
+    deleteAccount: 'Delete Account',
+    deleteAccountSubtitle: 'Permanently delete',
+
+    // Support items
+    helpCenter: 'Help Center',
+    contactUs: 'Contact Us',
+    rateApp: 'Rate App',
+
+    // Legal items
+    terms: 'Terms of Service',
+    termsSubtitle: 'Terms and Conditions',
+    privacy: 'Privacy Policy',
+    privacySubtitle: 'Data Protection',
+    impressum: 'Imprint',
+    impressumSubtitle: 'Legal Information',
+
+    // Footer
+    version: 'Version {{version}}',
+    madeWith: 'Made by Kaia Shapes Web- und AppAgentur',
+  },
+
+  // Language Selection
+  language: {
+    title: 'Language',
+    subtitle: 'Choose your preferred language',
+    german: 'German',
+    english: 'English',
+    current: 'Current language',
+  },
+
+  // Profile
+  profile: {
+    editTitle: 'Edit Profile',
+    personalInfo: 'Personal Information',
+    bodyStats: 'Body Stats',
+    name: 'Name',
+    namePlaceholder: 'Your name',
+    nameRequired: 'Please enter a name',
+    birthday: 'Birthday',
+    birthdayPlaceholder: 'Select date',
+    years: 'years',
+    weight: 'Weight',
+    height: 'Height',
+    bmi: 'BMI',
+    changePhoto: 'Change Photo',
+    chooseOption: 'Choose an option',
+    takePhoto: 'Take Photo',
+    chooseFromLibrary: 'Choose from Library',
+    tapToChange: 'Tap to change',
+    permissionRequired: 'Permission Required',
+    permissionMessage: 'Please allow access to your photos in settings.',
+    cameraPermissionMessage: 'Please allow access to the camera in settings.',
+    saveError: 'Error saving. Please try again.',
+  },
+
+  // Auth Screen
+  auth: {
+    logo: 'FitTrack',
+    welcomeBack: 'Welcome back',
+    createAccount: 'Create Account',
+    forgotPassword: 'Forgot Password',
+    loginSubtitle: 'Sign in to continue',
+    registerSubtitle: 'Create a free account',
+    forgotSubtitle: 'We will send you a reset link',
+    email: 'Email',
+    emailPlaceholder: 'your@email.com',
+    password: 'Password',
+    passwordPlaceholder: 'Your password',
+    confirmPassword: 'Confirm Password',
+    confirmPasswordPlaceholder: 'Repeat password',
+    forgotLink: 'Forgot password?',
+    login: 'Sign In',
+    register: 'Register',
+    sendResetLink: 'Send Reset Link',
+    noAccount: 'No account yet?',
+    hasAccount: 'Already have an account?',
+    backToLogin: 'Back to login',
+    devLogin: 'DEV LOGIN (Skip Auth)',
+
+    // Errors
+    errorEmailRequired: 'Please enter email',
+    errorPasswordRequired: 'Please enter password',
+    errorPasswordLength: 'Password must be at least 6 characters',
+    errorPasswordMismatch: 'Passwords do not match',
+    successResetEmail: 'Password reset email has been sent',
+
+    // Social
+    socialLoginMessage: '{{provider}} login will be available after Firebase configuration.',
+  },
+
+  // Consent Screen
+  consent: {
+    title: 'Welcome to FitnessApp',
+    subtitle: 'Before you start, we need your consent to some important points.',
+    legalSection: 'Legal Information',
+    privacyCheckbox: 'I have read and accept the Privacy Policy.',
+    termsCheckbox: 'I accept the Terms and Conditions.',
+    trackingSection: 'App Tracking',
+    trackingDescription: 'We would like to track your activity across apps and websites of other companies to show you personalized advertising. This helps us keep the app free.',
+    trackingNote: 'You can change this setting at any time in the system settings.',
+    denyTracking: 'Do not allow tracking',
+    allowTracking: 'Allow',
+    privacyPolicy: 'Privacy Policy',
+    termsOfService: 'Terms and Conditions',
+  },
+
+  // Legal Screens
+  legal: {
+    termsTitle: 'Terms',
+    termsHeader: 'Terms of Service',
+    privacyTitle: 'Privacy',
+    privacyHeader: 'Privacy Policy',
+    impressumTitle: 'Imprint',
+    back: 'Back',
+    lastUpdated: 'Last updated: January 2025',
+  },
+
+  // Days
+  days: {
+    mon: 'Monday',
+    tue: 'Tuesday',
+    wed: 'Wednesday',
+    thu: 'Thursday',
+    fri: 'Friday',
+    sat: 'Saturday',
+    sun: 'Sunday',
+    short: {
+      mon: 'Mon',
+      tue: 'Tue',
+      wed: 'Wed',
+      thu: 'Thu',
+      fri: 'Fri',
+      sat: 'Sat',
+      sun: 'Sun',
+    },
+    monday: 'Monday',
+    tuesday: 'Tuesday',
+    wednesday: 'Wednesday',
+    thursday: 'Thursday',
+    friday: 'Friday',
+    saturday: 'Saturday',
+    sunday: 'Sunday',
+  },
+
+  // Training Directions
+  directions: {
+    gym: 'Gym',
+    calisthenics: 'Calisthenics',
+    cardio: 'Cardio',
+    yoga: 'Yoga',
+    mobility: 'Mobility',
+    custom: 'Custom',
+  },
+
+  // Workout Templates
+  templates: {
+    pushDay: 'Push Day',
+    pullDay: 'Pull Day',
+    legDay: 'Leg Day',
+    upperBody: 'Upper Body',
+    fullBodyHiit: 'Full Body HIIT',
+    morningYoga: 'Morning Yoga',
+    activeRecovery: 'Active Recovery',
+    restCardio: 'Rest / Cardio',
+  },
+
+  // Muscle Groups
+  muscles: {
+    chest: 'Chest',
+    back: 'Back',
+    shoulders: 'Shoulders',
+    biceps: 'Biceps',
+    triceps: 'Triceps',
+    arms: 'Arms',
+    legs: 'Legs',
+    glutes: 'Glutes',
+    core: 'Core',
+    fullBody: 'Full Body',
+  },
+
+  muscleGroups: {
+    all: 'All',
+    chest: 'Chest',
+    back: 'Back',
+    shoulders: 'Shoulders',
+    biceps: 'Biceps',
+    triceps: 'Triceps',
+    arms: 'Arms',
+    legs: 'Legs',
+    glutes: 'Glutes',
+    core: 'Core',
+    full_body: 'Full Body',
+  },
+
+  // Sport Types
+  sportTypes: {
+    fitness: 'Fitness',
+    running: 'Running',
+    cycling: 'Cycling',
+    martial_arts: 'Martial Arts',
+    swimming: 'Swimming',
+    yoga: 'Yoga',
+    custom: 'Custom',
+  },
+
+  // Sport Selection Screen
+  sportSelection: {
+    title: 'Choose Sport',
+    subtitle: 'Select the sport type for your training plan',
+    comingSoon: 'Coming Soon',
+  },
+
+  // Plan List Screen
+  planList: {
+    emptyTitle: 'No Plans',
+    emptySubtitle: 'Create your first training plan',
+    createFirst: 'Create Plan',
+    createNew: 'Create New Plan',
+    active: 'Active',
+    sourceManual: 'Manual',
+    sourceAI: 'AI Generated',
+    sourceImported: 'Imported',
+    sourceTemplate: 'Template',
+    workoutsPerWeek: '{{count}} workouts/week',
+    activate: 'Activate',
+    edit: 'Edit',
+    duplicate: 'Duplicate',
+    deleteTitle: 'Delete Plan',
+    deleteMessage: 'Do you really want to delete "{{name}}"?',
+  },
+
+  // Plan Editor Screen
+  planEditor: {
+    createTitle: 'New Plan',
+    editTitle: 'Edit Plan',
+    planName: 'Plan Name',
+    planNamePlaceholder: 'e.g. Push-Pull-Legs',
+    description: 'Description (optional)',
+    descriptionPlaceholder: 'Describe your training plan...',
+    weeklySchedule: 'Weekly Schedule',
+    restDay: 'Rest Day',
+    exerciseCount: '{{count}} exercises',
+    addWorkout: 'Add Workout',
+    error: 'Error',
+    nameRequired: 'Please enter a name for the plan',
+    nameRequiredFirst: 'Please enter a name for the plan first',
+    removeWorkoutTitle: 'Remove Workout',
+    removeWorkoutMessage: 'Do you really want to remove this workout?',
+  },
+
+  // Workout Day Editor Screen
+  workoutEditor: {
+    workoutName: 'Workout Name',
+    workoutNamePlaceholder: 'e.g. Push Day',
+    direction: 'Training Type',
+    exercises: 'Exercises',
+    exerciseCount: '{{count}} exercises',
+    noExercises: 'No exercises yet',
+    addFirstExercise: 'Add First Exercise',
+    addExercise: 'Add Exercise',
+    sets: 'Sets',
+    reps: 'Reps',
+    rest: 'Rest (s)',
+    error: 'Error',
+    nameRequired: 'Please enter a name for the workout',
+    nameRequiredFirst: 'Please enter a name first',
+    removeExerciseTitle: 'Remove Exercise',
+    removeExerciseMessage: 'Do you really want to remove this exercise?',
+  },
+
+  // Exercise Picker Screen
+  exercisePicker: {
+    title: 'Select Exercise',
+    searchPlaceholder: 'Search exercises...',
+    noResults: 'No exercises found',
+  },
+
+  // Exercise Categories
+  exerciseCategories: {
+    compound: 'Compound',
+    isolation: 'Isolation',
+  },
+
+  // Exercises
+  exercises: {
+    benchPress: 'Bench Press',
+    inclineDumbbellPress: 'Incline Dumbbell Press',
+    cableFlyes: 'Cable Flyes',
+    overheadPress: 'Overhead Press',
+    lateralRaises: 'Lateral Raises',
+    tricepPushdowns: 'Tricep Pushdowns',
+  },
+
+  // AI Coach
+  aiCoach: {
+    title: 'AI Coach',
+    subtitle: 'Your personal fitness assistant',
+    howItWorks: 'How it works',
+    howItWorksText: 'Import your ChatGPT conversations about fitness and training plans. The app automatically extracts relevant information and can use it for your training.',
+    importFromChatGPT: 'Import from ChatGPT',
+    importDescription: 'Export your chats and import them here',
+    importedChats: 'Imported Chats',
+    active: 'Active',
+    importedOn: 'Imported on {{date}}',
+    messageCount: '{{count}} messages',
+    hasPlan: 'Training plan detected',
+    viewChat: 'View Chat',
+    noChatsYet: 'No Chats Yet',
+    noChatsDescription: 'Import your ChatGPT conversations to activate your AI Coach.',
+    removeChat: 'Remove Chat',
+    removeChatConfirm: 'Do you really want to remove "{{title}}"?',
+    chatNotFound: 'Chat not found',
+    extractedPlan: 'Extracted Training Plan',
+    usePlan: 'Use Plan',
+    conversation: 'Conversation',
+    you: 'You',
+
+    // Import Screen
+    importTitle: 'ChatGPT Import',
+    importSubtitle: 'Import your ChatGPT conversations',
+    howToExport: 'How to export from ChatGPT:',
+    step1: 'Open ChatGPT at chat.openai.com',
+    step2: 'Go to Settings → Data Controls',
+    step3: 'Click on "Export Data"',
+    step4: 'Download the ZIP file and select it here',
+    selectFile: 'Select File',
+    importError: 'Import Error',
+    unknownError: 'An unknown error occurred',
+    importSuccess: 'Import Successful',
+    chatImported: '"{{title}}" has been imported',
+    foundConversations: '{{count}} conversations found',
+    fitnessOnly: 'Fitness Only',
+    noFitnessChats: 'No fitness-related chats found',
+    showAllChats: 'Show all chats',
+    imported: 'Imported',
+  },
+} as const;
+
+export default en;

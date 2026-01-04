@@ -11,3 +11,13 @@ export {
   PrivacyPolicyScreen,
   TermsOfServiceScreen,
 } from './legal';
+export { LanguageScreen } from './settings/LanguageScreen';
+export { ProfileEditScreen } from './settings/ProfileEditScreen';
+export { AICoachScreen, ChatGPTImportScreen, ChatDetailScreen } from './ai';
+export {
+  SportSelectionScreen,
+  TrainingPlanListScreen,
+  TrainingPlanEditorScreen,
+  WorkoutDayEditorScreen,
+  ExercisePickerScreen,
+} from './plan';

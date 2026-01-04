@@ -1,21 +1,20 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
+  useWindowDimensions,
   ImageBackground,
   ViewStyle,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, TILE } from '@/constants';
 import { TTileSize } from '@/types';
+import { scaleFont } from '@/lib';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const TILE_GAP = TILE.gap;
 const PADDING = SPACING.lg;
-const TILE_WIDTH = (SCREEN_WIDTH - PADDING * 2 - TILE_GAP) / TILE.columns;
 
 interface Props {
   size?: TTileSize;
@@ -40,22 +39,29 @@ export const BaseTile: React.FC<Props> = ({
   children,
   style,
 }) => {
+  const { width: screenWidth } = useWindowDimensions();
+
+  // Berechne Tile-Breite dynamisch basierend auf aktueller Bildschirmbreite
+  const tileWidth = useMemo(() => {
+    return (screenWidth - PADDING * 2 - TILE_GAP) / TILE.columns;
+  }, [screenWidth]);
+
   const getTileStyle = (): ViewStyle => {
     switch (size) {
       case '2x1':
         return {
-          width: TILE_WIDTH * 2 + TILE_GAP,
+          width: tileWidth * 2 + TILE_GAP,
           height: TILE.height,
         };
       case '2x2':
         return {
-          width: TILE_WIDTH * 2 + TILE_GAP,
+          width: tileWidth * 2 + TILE_GAP,
           height: TILE.height * 2 + TILE_GAP,
         };
       case '1x1':
       default:
         return {
-          width: TILE_WIDTH,
+          width: tileWidth,
           height: TILE.height,
         };
     }
@@ -154,5 +160,22 @@ const styles = StyleSheet.create({
   },
 });
 
-export const getTileWidth = () => TILE_WIDTH;
+// Utility-Funktion für Tile-Breite (für Nicht-Komponenten-Kontexte)
+export const getTileWidth = (screenWidth?: number): number => {
+  const width = screenWidth ?? require('react-native').Dimensions.get('window').width;
+  return (width - PADDING * 2 - TILE_GAP) / TILE.columns;
+};
+
 export const getTileGap = () => TILE_GAP;
+
+// Hook für reaktive Tile-Dimensionen
+export const useTileDimensions = () => {
+  const { width: screenWidth } = useWindowDimensions();
+
+  return useMemo(() => ({
+    tileWidth: (screenWidth - PADDING * 2 - TILE_GAP) / TILE.columns,
+    tileHeight: TILE.height,
+    tileGap: TILE_GAP,
+    fullWidth: screenWidth - PADDING * 2,
+  }), [screenWidth]);
+};

@@ -1,33 +1,36 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Button, Card } from '@/components/common';
 import { useWorkoutStore } from '@/stores';
 import { TDirection } from '@/types';
 
-const WORKOUT_TEMPLATES = [
-  { id: '1', name: 'Push Day', direction: 'gym' as TDirection, exercises: 6 },
-  { id: '2', name: 'Pull Day', direction: 'gym' as TDirection, exercises: 6 },
-  { id: '3', name: 'Leg Day', direction: 'gym' as TDirection, exercises: 5 },
-  { id: '4', name: 'Upper Body', direction: 'gym' as TDirection, exercises: 8 },
-  { id: '5', name: 'Full Body HIIT', direction: 'cardio' as TDirection, exercises: 10 },
-  { id: '6', name: 'Morning Yoga', direction: 'yoga' as TDirection, exercises: 12 },
-];
-
 export const WorkoutScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const { startWorkout, activeWorkout } = useWorkoutStore();
+  const startWorkout = useWorkoutStore((state) => state.startWorkout);
+  const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
+
+  const WORKOUT_TEMPLATES = [
+    { id: '1', nameKey: 'templates.pushDay', direction: 'gym' as TDirection, exercises: 6 },
+    { id: '2', nameKey: 'templates.pullDay', direction: 'gym' as TDirection, exercises: 6 },
+    { id: '3', nameKey: 'templates.legDay', direction: 'gym' as TDirection, exercises: 5 },
+    { id: '4', nameKey: 'templates.upperBody', direction: 'gym' as TDirection, exercises: 8 },
+    { id: '5', nameKey: 'templates.fullBodyHiit', direction: 'cardio' as TDirection, exercises: 10 },
+    { id: '6', nameKey: 'templates.morningYoga', direction: 'yoga' as TDirection, exercises: 12 },
+  ];
 
   const handleStartWorkout = () => {
     if (!selectedTemplate) return;
 
-    const template = WORKOUT_TEMPLATES.find((t) => t.id === selectedTemplate);
+    const template = WORKOUT_TEMPLATES.find((temp) => temp.id === selectedTemplate);
     if (!template) return;
 
     startWorkout({
       userId: 'user-1',
-      name: template.name,
+      name: t(template.nameKey),
       direction: template.direction,
       exercises: [],
       duration: 0,
@@ -42,21 +45,21 @@ export const WorkoutScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Start Workout</Text>
-        <Text style={styles.subtitle}>Choose a template or create your own</Text>
+        <Text style={styles.title}>{t('workout.title')}</Text>
+        <Text style={styles.subtitle}>{t('workout.subtitle')}</Text>
 
         {activeWorkout && (
           <Card style={styles.activeWorkoutCard} elevated>
             <View style={styles.activeWorkoutHeader}>
-              <Text style={styles.activeWorkoutLabel}>IN PROGRESS</Text>
+              <Text style={styles.activeWorkoutLabel}>{t('workout.inProgress')}</Text>
               <View style={styles.activeDot} />
             </View>
             <Text style={styles.activeWorkoutName}>{activeWorkout.name}</Text>
             <Text style={styles.activeWorkoutInfo}>
-              {activeWorkout.exercises.length} exercises
+              {t('workout.exerciseCount', { count: activeWorkout.exercises.length })}
             </Text>
             <Button
-              title="Continue Workout"
+              title={t('workout.continueWorkout')}
               onPress={() => {}}
               fullWidth
               style={styles.continueButton}
@@ -64,24 +67,24 @@ export const WorkoutScreen: React.FC = () => {
           </Card>
         )}
 
-        <Text style={styles.sectionTitle}>Quick Start</Text>
+        <Text style={styles.sectionTitle}>{t('workout.quickStart')}</Text>
 
         <View style={styles.quickStartRow}>
           <TouchableOpacity style={styles.quickStartButton}>
             <Text style={styles.quickStartIcon}>⚡</Text>
-            <Text style={styles.quickStartText}>Empty</Text>
+            <Text style={styles.quickStartText}>{t('workout.empty')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.quickStartButton}>
             <Text style={styles.quickStartIcon}>📋</Text>
-            <Text style={styles.quickStartText}>Last</Text>
+            <Text style={styles.quickStartText}>{t('workout.last')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.quickStartButton}>
             <Text style={styles.quickStartIcon}>🤖</Text>
-            <Text style={styles.quickStartText}>AI</Text>
+            <Text style={styles.quickStartText}>{t('workout.ai')}</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.sectionTitle}>Templates</Text>
+        <Text style={styles.sectionTitle}>{t('workout.templates')}</Text>
 
         {WORKOUT_TEMPLATES.map((template) => (
           <TouchableOpacity
@@ -93,9 +96,9 @@ export const WorkoutScreen: React.FC = () => {
             onPress={() => setSelectedTemplate(template.id)}
           >
             <View style={styles.templateInfo}>
-              <Text style={styles.templateName}>{template.name}</Text>
+              <Text style={styles.templateName}>{t(template.nameKey)}</Text>
               <Text style={styles.templateMeta}>
-                {template.direction} • {template.exercises} exercises
+                {t(`directions.${template.direction}`)} • {template.exercises} {t('common.exercises')}
               </Text>
             </View>
             <View
@@ -112,7 +115,7 @@ export const WorkoutScreen: React.FC = () => {
         ))}
 
         <Button
-          title="Start Workout"
+          title={t('workout.startWorkout')}
           onPress={handleStartWorkout}
           disabled={!selectedTemplate}
           fullWidth

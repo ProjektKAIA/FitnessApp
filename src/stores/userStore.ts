@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { IUser, IUserSettings } from '@/types';
+import { IUser, IUserSettings, IUserProfile } from '@/types';
 
 interface UserState {
   user: IUser | null;
@@ -9,6 +9,7 @@ interface UserState {
   isLoading: boolean;
   setUser: (user: IUser | null) => void;
   updateSettings: (settings: Partial<IUserSettings>) => void;
+  updateProfile: (profile: Partial<IUserProfile>) => void;
   logout: () => void;
 }
 
@@ -39,6 +40,16 @@ export const useUserStore = create<UserState>()(
             ? {
                 ...state.user,
                 settings: { ...state.user.settings, ...newSettings },
+              }
+            : null,
+        })),
+
+      updateProfile: (profile) =>
+        set((state) => ({
+          user: state.user
+            ? {
+                ...state.user,
+                ...profile,
               }
             : null,
         })),

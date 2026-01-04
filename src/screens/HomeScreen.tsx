@@ -3,6 +3,7 @@ import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useTranslation } from 'react-i18next';
 import {
   WorkoutTile,
   StatTile,
@@ -18,10 +19,18 @@ import { RootStackParamList } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
+const getGreeting = (t: (key: string) => string): string => {
+  const hour = new Date().getHours();
+  if (hour < 12) return t('home.greeting');
+  if (hour < 18) return t('home.greetingAfternoon');
+  return t('home.greetingEvening');
+};
+
 export const HomeScreen: React.FC = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
-  const { stats } = useStatsStore();
-  const { activeWorkout } = useWorkoutStore();
+  const stats = useStatsStore((state) => state.stats);
+  const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
 
   const handleStartWorkout = () => {
     navigation.navigate('WorkoutActive', { workoutId: 'new' });
@@ -35,14 +44,14 @@ export const HomeScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <Text style={styles.greeting}>Good Morning</Text>
-          <Text style={styles.title}>Ready to train?</Text>
+          <Text style={styles.greeting}>{getGreeting(t)}</Text>
+          <Text style={styles.title}>{t('home.readyToTrain')}</Text>
         </View>
 
         <View style={styles.tilesContainer}>
           <WorkoutTile
             size="2x1"
-            workoutName={activeWorkout?.name || 'Start Workout'}
+            workoutName={activeWorkout?.name || t('home.startWorkout')}
             isActive={!!activeWorkout}
             onPress={handleStartWorkout}
           />
@@ -53,9 +62,9 @@ export const HomeScreen: React.FC = () => {
               longestStreak={stats.longestStreak}
             />
             <StatTile
-              label="This Week"
+              label={t('home.thisWeek')}
               value={stats.thisWeekWorkouts}
-              unit="workouts"
+              unit={t('common.workouts')}
               icon="📅"
               color={COLORS.primary}
             />
@@ -63,13 +72,13 @@ export const HomeScreen: React.FC = () => {
 
           <View style={styles.row}>
             <ProgressTile
-              title="Weekly Goal"
+              title={t('home.weeklyGoal')}
               current={stats.thisWeekWorkouts}
               target={5}
               color={COLORS.success}
             />
             <StatTile
-              label="Total Volume"
+              label={t('home.totalVolume')}
               value={Math.round(stats.totalVolume / 1000)}
               unit="k kg"
               icon="🏋️"
@@ -77,7 +86,7 @@ export const HomeScreen: React.FC = () => {
             />
           </View>
 
-          <Text style={styles.sectionTitle}>Training Directions</Text>
+          <Text style={styles.sectionTitle}>{t('home.trainingDirections')}</Text>
 
           <View style={styles.row}>
             <DirectionTile
@@ -103,24 +112,24 @@ export const HomeScreen: React.FC = () => {
           </View>
 
           <AdTile
-            title="Premium Supplements"
-            description="Get 20% off your first order"
-            ctaText="Shop Now"
+            title={t('home.premium.title')}
+            description={t('home.premium.description')}
+            ctaText={t('home.premium.cta')}
             onPress={() => {}}
             onClose={() => {}}
           />
 
           <View style={styles.row}>
             <StatTile
-              label="Total Workouts"
+              label={t('home.totalWorkouts')}
               value={stats.totalWorkouts}
               icon="💪"
               color={COLORS.success}
             />
             <StatTile
-              label="This Month"
+              label={t('home.thisMonth')}
               value={stats.thisMonthWorkouts}
-              unit="workouts"
+              unit={t('common.workouts')}
               icon="📊"
               color={COLORS.purple}
             />

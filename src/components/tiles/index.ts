@@ -1,4 +1,4 @@
-export { BaseTile, getTileWidth, getTileGap } from './BaseTile';
+export { BaseTile, getTileWidth, getTileGap, useTileDimensions } from './BaseTile';
 export { WorkoutTile } from './WorkoutTile';
 export { StatTile } from './StatTile';
 export { DirectionTile } from './DirectionTile';

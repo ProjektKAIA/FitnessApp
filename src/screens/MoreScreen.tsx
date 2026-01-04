@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, APP_VERSION } from '@/constants';
 import { Card } from '@/components/common';
-import { useUserStore } from '@/stores';
+import { useUserStore, useLanguageStore, SUPPORTED_LANGUAGES } from '@/stores';
 import { RootStackParamList } from '@/types';
 
 interface MenuItemProps {
@@ -38,9 +39,17 @@ const MenuItem: React.FC<MenuItemProps> = ({
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const MoreScreen: React.FC = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
-  const { user, updateSettings } = useUserStore();
+  const user = useUserStore((state) => state.user);
+  const updateSettings = useUserStore((state) => state.updateSettings);
+  const logout = useUserStore((state) => state.logout);
   const settings = user?.settings;
+  const currentLanguage = useLanguageStore((state) => state.language);
+
+  const currentLanguageName = SUPPORTED_LANGUAGES.find(
+    (lang) => lang.code === currentLanguage
+  )?.nativeName;
 
   const handleToggleNotifications = () => {
     if (settings) {
@@ -54,6 +63,24 @@ export const MoreScreen: React.FC = () => {
     }
   };
 
+  const handleLogout = () => {
+    Alert.alert(
+      t('more.logoutTitle'),
+      t('more.logoutMessage'),
+      [
+        {
+          text: t('common.cancel'),
+          style: 'cancel',
+        },
+        {
+          text: t('more.logout'),
+          style: 'destructive',
+          onPress: () => logout(),
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView
@@ -61,35 +88,52 @@ export const MoreScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>More</Text>
+        <Text style={styles.title}>{t('more.title')}</Text>
 
         <Card style={styles.profileCard}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {user?.name?.charAt(0).toUpperCase() || '?'}
-            </Text>
-          </View>
+          {user?.avatarUrl ? (
+            <Image source={{ uri: user.avatarUrl }} style={styles.avatarImage} />
+          ) : (
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>
+                {user?.name?.charAt(0).toUpperCase() || '?'}
+              </Text>
+            </View>
+          )}
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>{user?.name || 'Guest User'}</Text>
-            <Text style={styles.profileEmail}>{user?.email || 'Not logged in'}</Text>
+            <Text style={styles.profileName}>{user?.name || t('more.guestUser')}</Text>
+            <Text style={styles.profileEmail}>{user?.email || t('more.notLoggedIn')}</Text>
           </View>
-          <TouchableOpacity style={styles.editButton}>
-            <Text style={styles.editButtonText}>Edit</Text>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => navigation.navigate('ProfileEdit')}
+          >
+            <Text style={styles.editButtonText}>{t('more.edit')}</Text>
           </TouchableOpacity>
         </Card>
 
-        <Text style={styles.sectionTitle}>Account</Text>
+        <Text style={styles.sectionTitle}>{t('more.account')}</Text>
         <Card style={styles.menuCard}>
-          <MenuItem icon="👤" title="Profile" subtitle="Edit your profile" />
-          <MenuItem icon="🔐" title="Security" subtitle="Password & 2FA" />
-          <MenuItem icon="💳" title="Subscription" subtitle="Free Plan" />
+          <MenuItem
+            icon="👤"
+            title={t('more.profile')}
+            subtitle={t('more.profileSubtitle')}
+            onPress={() => navigation.navigate('ProfileEdit')}
+          />
+          <MenuItem icon="🔐" title={t('more.security')} subtitle={t('more.securitySubtitle')} />
+          <MenuItem
+            icon="🚪"
+            title={t('more.logout')}
+            subtitle={t('more.logoutSubtitle')}
+            onPress={handleLogout}
+          />
         </Card>
 
-        <Text style={styles.sectionTitle}>Preferences</Text>
+        <Text style={styles.sectionTitle}>{t('more.preferences')}</Text>
         <Card style={styles.menuCard}>
           <MenuItem
             icon="🔔"
-            title="Notifications"
+            title={t('more.notifications')}
             showArrow={false}
             rightElement={
               <Switch
@@ -101,7 +145,7 @@ export const MoreScreen: React.FC = () => {
           />
           <MenuItem
             icon="📳"
-            title="Haptic Feedback"
+            title={t('more.hapticFeedback')}
             showArrow={false}
             rightElement={
               <Switch
@@ -113,58 +157,77 @@ export const MoreScreen: React.FC = () => {
           />
           <MenuItem
             icon="📏"
-            title="Units"
-            subtitle={settings?.units === 'metric' ? 'Metric (kg, km)' : 'Imperial (lb, mi)'}
+            title={t('more.units')}
+            subtitle={settings?.units === 'metric' ? t('more.unitsMetric') : t('more.unitsImperial')}
           />
-          <MenuItem icon="🌙" title="Appearance" subtitle="System" />
+          <MenuItem
+            icon="🌙"
+            title={t('more.appearance')}
+            subtitle={t('more.appearanceSystem')}
+          />
+          <MenuItem
+            icon="🌐"
+            title={t('more.language')}
+            subtitle={currentLanguageName}
+            onPress={() => navigation.navigate('Language')}
+          />
         </Card>
 
-        <Text style={styles.sectionTitle}>AI Coach</Text>
+        <Text style={styles.sectionTitle}>{t('more.aiCoach')}</Text>
         <Card style={styles.menuCard}>
-          <MenuItem icon="🤖" title="AI Settings" subtitle="Configure your AI coach" />
-          <MenuItem icon="🔑" title="OpenAI API Key" subtitle="Bring your own key" />
-          <MenuItem icon="💬" title="ChatGPT Import" subtitle="Import from ChatGPT" />
+          <MenuItem
+            icon="🤖"
+            title={t('more.aiSettings')}
+            subtitle={t('more.aiSettingsSubtitle')}
+            onPress={() => navigation.navigate('AICoach')}
+          />
+          <MenuItem
+            icon="💬"
+            title={t('more.chatgptImport')}
+            subtitle={t('more.chatgptImportSubtitle')}
+            onPress={() => navigation.navigate('ChatGPTImport')}
+          />
         </Card>
 
-        <Text style={styles.sectionTitle}>Data</Text>
+        <Text style={styles.sectionTitle}>{t('more.data')}</Text>
         <Card style={styles.menuCard}>
-          <MenuItem icon="📤" title="Export Data" subtitle="Download your workouts" />
-          <MenuItem icon="📥" title="Import Data" subtitle="Import from other apps" />
-          <MenuItem icon="🗑️" title="Delete Account" subtitle="Permanently delete" />
+          <MenuItem icon="📤" title={t('more.exportData')} subtitle={t('more.exportDataSubtitle')} />
+          <MenuItem icon="📥" title={t('more.importData')} subtitle={t('more.importDataSubtitle')} />
+          <MenuItem icon="🗑️" title={t('more.deleteAccount')} subtitle={t('more.deleteAccountSubtitle')} />
         </Card>
 
-        <Text style={styles.sectionTitle}>Support</Text>
+        <Text style={styles.sectionTitle}>{t('more.support')}</Text>
         <Card style={styles.menuCard}>
-          <MenuItem icon="❓" title="Help Center" />
-          <MenuItem icon="📧" title="Contact Us" />
-          <MenuItem icon="⭐" title="Rate App" />
+          <MenuItem icon="❓" title={t('more.helpCenter')} />
+          <MenuItem icon="📧" title={t('more.contactUs')} />
+          <MenuItem icon="⭐" title={t('more.rateApp')} />
         </Card>
 
-        <Text style={styles.sectionTitle}>Rechtliches</Text>
+        <Text style={styles.sectionTitle}>{t('more.legal')}</Text>
         <Card style={styles.menuCard}>
           <MenuItem
             icon="📋"
-            title="AGB"
-            subtitle="Allgemeine Geschäftsbedingungen"
+            title={t('more.terms')}
+            subtitle={t('more.termsSubtitle')}
             onPress={() => navigation.navigate('TermsOfService')}
           />
           <MenuItem
             icon="🔒"
-            title="Datenschutz"
-            subtitle="Datenschutzerklärung"
+            title={t('more.privacy')}
+            subtitle={t('more.privacySubtitle')}
             onPress={() => navigation.navigate('PrivacyPolicy')}
           />
           <MenuItem
             icon="ℹ️"
-            title="Impressum"
-            subtitle="Rechtliche Angaben"
+            title={t('more.impressum')}
+            subtitle={t('more.impressumSubtitle')}
             onPress={() => navigation.navigate('Impressum')}
           />
         </Card>
 
         <View style={styles.footer}>
-          <Text style={styles.version}>Version {APP_VERSION}</Text>
-          <Text style={styles.copyright}>Made with 💪 for fitness lovers</Text>
+          <Text style={styles.version}>{t('more.version', { version: APP_VERSION })}</Text>
+          <Text style={styles.copyright}>{t('more.madeWith')}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -202,6 +265,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  avatarImage: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
   },
   avatarText: {
     fontSize: FONT_SIZES.xl,

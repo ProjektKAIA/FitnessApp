@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS, FONT_SIZES, SPACING } from '@/constants';
+import { scale, scaleFont, MIN_TOUCH_TARGET } from '@/lib';
 
 const TAB_ICONS: Record<string, { active: string; inactive: string }> = {
   Home: { active: '🏠', inactive: '🏠' },
@@ -16,8 +18,13 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
   descriptors,
   navigation,
 }) => {
+  const insets = useSafeAreaInsets();
+
+  // Dynamisches Padding basierend auf SafeArea (für iPhones mit Home-Indicator)
+  const bottomPadding = Math.max(insets.bottom, SPACING.md);
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingBottom: bottomPadding }]}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel ?? options.title ?? route.name;
@@ -45,6 +52,7 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
             accessibilityLabel={options.tabBarAccessibilityLabel}
             onPress={onPress}
             style={styles.tab}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <View
               style={[
@@ -58,6 +66,7 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
             </View>
             <Text
               style={[styles.label, isFocused && styles.labelActive]}
+              numberOfLines={1}
             >
               {typeof label === 'string' ? label : route.name}
             </Text>
@@ -68,37 +77,56 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
   );
 };
 
+// Skalierte Werte für verschiedene Bildschirmgrößen
+const ICON_SIZE = scale(26);
+const ICON_CONTAINER_SIZE = scale(56);
+const LABEL_SIZE = scaleFont(11);
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: COLORS.white,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.gray[200],
-    paddingBottom: SPACING.lg,
-    paddingTop: SPACING.sm,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: COLORS.gray[300],
+    paddingTop: SPACING.md,
+    // Schatten für bessere visuelle Trennung
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
   tab: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: MIN_TOUCH_TARGET,
+    paddingVertical: SPACING.xs,
   },
   iconContainer: {
-    width: 40,
-    height: 32,
+    width: ICON_CONTAINER_SIZE,
+    height: scale(36),
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 16,
+    borderRadius: scale(18),
   },
   iconContainerActive: {
-    backgroundColor: COLORS.primary + '15',
+    backgroundColor: COLORS.primary + '18',
   },
   icon: {
-    fontSize: 20,
+    fontSize: ICON_SIZE,
   },
   label: {
-    fontSize: FONT_SIZES.xs,
-    color: COLORS.gray[500],
-    marginTop: 2,
+    fontSize: LABEL_SIZE,
+    color: COLORS.gray[600],
+    marginTop: SPACING.xs,
+    fontWeight: '500',
   },
   labelActive: {
     color: COLORS.primary,
