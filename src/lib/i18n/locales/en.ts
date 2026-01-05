@@ -176,6 +176,10 @@ const en = {
     language: 'Language',
     languageSubtitle: 'Change app language',
 
+    // Health Data
+    healthData: 'Health Data',
+    healthDataSubtitle: 'Apple Health & Health Connect',
+
     // AI Coach items
     aiSettings: 'AI Settings',
     aiSettingsSubtitle: 'Configure your AI coach',
@@ -527,6 +531,135 @@ const en = {
     tip1: 'Train at the same time every day to build a routine.',
     tip2: 'Even short workouts count - 15 minutes is better than nothing.',
     tip3: 'Plan your workouts in advance in your calendar.',
+  },
+
+  // Health Integration
+  health: {
+    title: 'Health Data',
+    settings: 'Settings',
+    dashboard: 'Dashboard',
+    enable: 'Enable Health Data',
+    enabled: 'Enabled',
+    disabled: 'Disabled',
+    connected: 'Connected',
+    notConnected: 'Not connected',
+    connectNow: 'Connect Now',
+
+    // Permissions
+    permissions: {
+      title: 'Permissions',
+      subtitle: 'Choose the data we can access',
+      granted: 'Granted',
+      denied: 'Denied',
+      notDetermined: 'Not determined',
+      request: 'Request Permission',
+      openSettings: 'Open Settings',
+    },
+
+    // Data Types
+    dataTypes: {
+      steps: 'Steps',
+      distance: 'Distance',
+      calories: 'Calories',
+      activeCalories: 'Active Calories',
+      heartRate: 'Heart Rate',
+      restingHeartRate: 'Resting Heart Rate',
+      workouts: 'Workouts',
+    },
+
+    // Summary
+    summary: {
+      today: 'Today',
+      steps: 'Steps',
+      stepsGoal: 'Steps Goal',
+      distance: 'Distance',
+      calories: 'Calories',
+      activeCalories: 'Active Cal.',
+      burned: 'burned',
+      km: 'km',
+      m: 'm',
+      kcal: 'kcal',
+    },
+
+    // Heart Rate
+    heartRate: {
+      title: 'Heart Rate',
+      current: 'Current',
+      resting: 'Resting',
+      average: 'Average',
+      min: 'Min',
+      max: 'Max',
+      bpm: 'BPM',
+      zones: 'HR Zones',
+      zone: {
+        rest: 'Rest',
+        fatBurn: 'Fat Burn',
+        cardio: 'Cardio',
+        peak: 'Peak',
+        max: 'Maximum',
+      },
+    },
+
+    // Training Load
+    trainingLoad: {
+      title: 'Training Load',
+      acute: 'Acute (7 days)',
+      chronic: 'Chronic (28 days)',
+      ratio: 'Ratio',
+      level: {
+        low: 'Low',
+        moderate: 'Moderate',
+        high: 'High',
+        veryHigh: 'Very High',
+      },
+      recommendation: {
+        low: 'You can increase intensity',
+        moderate: 'Good balance, keep it up!',
+        high: 'Make sure to get enough rest',
+        veryHigh: 'Increased injury risk - take more breaks',
+      },
+    },
+
+    // Sync
+    sync: {
+      now: 'Sync Now',
+      syncing: 'Syncing...',
+      lastSync: 'Last Sync',
+      never: 'Never',
+      success: 'Synced successfully',
+      error: 'Sync failed',
+    },
+
+    // Privacy
+    privacy: {
+      title: 'Privacy Notice',
+      description: 'Your health data is stored only locally on your device and never transmitted to our servers.',
+      learnMore: 'Learn more',
+    },
+
+    // Activity Chart
+    activity: {
+      title: 'Activity',
+      week: 'Week',
+      month: 'Month',
+      noData: 'No data available',
+    },
+
+    // Workouts from Health
+    workouts: {
+      title: 'Recent Workouts',
+      fromHealth: 'From Health App',
+      noWorkouts: 'No workouts',
+      duration: 'Duration',
+      calories: 'Calories',
+      heartRate: 'Heart Rate',
+    },
+
+    // Platforms
+    platform: {
+      appleHealth: 'Apple Health',
+      healthConnect: 'Health Connect',
+    },
   },
 
   // AI Coach

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, APP_VERSION } from '@/constants';
 import { Card } from '@/components/common';
 import { useUserStore, useLanguageStore, SUPPORTED_LANGUAGES } from '@/stores';
+import { useHealthStore } from '@/stores/healthStore';
 import { RootStackParamList } from '@/types';
 
 interface MenuItemProps {
@@ -50,6 +51,8 @@ export const MoreScreen: React.FC = () => {
   const currentLanguageName = SUPPORTED_LANGUAGES.find(
     (lang) => lang.code === currentLanguage
   )?.nativeName;
+
+  const healthEnabled = useHealthStore((state) => state.settings.enabled);
 
   const handleToggleNotifications = () => {
     if (settings) {
@@ -170,6 +173,12 @@ export const MoreScreen: React.FC = () => {
             title={t('more.language')}
             subtitle={currentLanguageName}
             onPress={() => navigation.navigate('Language')}
+          />
+          <MenuItem
+            icon="❤️"
+            title={t('more.healthData')}
+            subtitle={healthEnabled ? t('health.connected') : t('health.notConnected')}
+            onPress={() => navigation.navigate('HealthSettings')}
           />
         </Card>
 

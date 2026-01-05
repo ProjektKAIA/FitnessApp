@@ -24,3 +24,4 @@ export {
   WorkoutDayEditorScreen,
   ExercisePickerScreen,
 } from './plan';
+export { HealthSettingsScreen, HealthDashboardScreen } from './health';

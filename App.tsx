@@ -36,6 +36,8 @@ import {
   TrainingPlanEditorScreen,
   WorkoutDayEditorScreen,
   ExercisePickerScreen,
+  HealthSettingsScreen,
+  HealthDashboardScreen,
 } from '@/screens';
 import { BottomNav } from '@/components/navigation';
 import { ErrorBoundary, LoadingScreen } from '@/components/common';
@@ -287,6 +289,22 @@ export default function App() {
                   options={{
                     presentation: 'modal',
                     animation: 'slide_from_bottom',
+                  }}
+                />
+                <Stack.Screen
+                  name="HealthSettings"
+                  component={HealthSettingsScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="HealthDashboard"
+                  component={HealthDashboardScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
                   }}
                 />
               </>

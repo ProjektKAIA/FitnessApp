@@ -6,3 +6,4 @@ export { useConsentStore } from './consentStore';
 export { useLanguageStore, SUPPORTED_LANGUAGES, type Language } from './languageStore';
 export { useAICoachStore, type ImportedChat } from './aiCoachStore';
 export { useTrainingPlanStore, GYM_EXERCISES } from './trainingPlanStore';
+export { useHealthStore } from './healthStore';

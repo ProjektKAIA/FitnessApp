@@ -1,18 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
+import { HealthSummaryCard, HeartRateCard } from '@/components/health';
 import { useStatsStore } from '@/stores';
+import { useHealthStore } from '@/stores/healthStore';
+import { RootStackParamList } from '@/types';
 
 type TimeRange = 'week' | 'month' | 'year';
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const ProgressScreen: React.FC = () => {
   const { t } = useTranslation();
+  const navigation = useNavigation<NavigationProp>();
   const [timeRange, setTimeRange] = useState<TimeRange>('week');
   const stats = useStatsStore((state) => state.stats);
   const { width: screenWidth } = useWindowDimensions();
+
+  // Health Data
+  const healthSettings = useHealthStore((state) => state.settings);
+  const todaySummary = useHealthStore((state) => state.todaySummary);
+  const isHealthEnabled = healthSettings.enabled && healthSettings.permissionsGranted;
 
   const SAMPLE_CHART_DATA = [
     { label: t('days.mon'), value: 45 },
@@ -117,6 +129,25 @@ export const ProgressScreen: React.FC = () => {
             <Text style={styles.statLabel}>{t('progress.bestStreak')}</Text>
           </Card>
         </View>
+
+        {/* Health Section */}
+        {isHealthEnabled && (
+          <>
+            <Text style={styles.sectionTitle}>{t('health.title')}</Text>
+            <HealthSummaryCard
+              summary={todaySummary}
+              stepsGoal={healthSettings.stepsGoal}
+              onPress={() => navigation.navigate('HealthDashboard')}
+            />
+            {healthSettings.dataTypes.heartRate && (
+              <HeartRateCard
+                restingHeartRate={todaySummary?.restingHeartRate}
+                averageHeartRate={todaySummary?.averageHeartRate}
+                compact
+              />
+            )}
+          </>
+        )}
 
         <Text style={styles.sectionTitle}>{t('progress.personalRecords')}</Text>
 

@@ -91,6 +91,10 @@ export interface IUserSettings {
   hapticFeedback: boolean;
   openaiApiKey?: string;
   chatgptThreadId?: string;
+  healthIntegration?: {
+    enabled: boolean;
+    lastSyncAt?: string;
+  };
 }
 
 export interface IUser {
@@ -247,6 +251,8 @@ export type RootStackParamList = {
   TrainingPlanEditor: { planId?: string; sportType: TSportType };
   WorkoutDayEditor: { planId: string; day: TTrainingDay };
   ExercisePicker: { planId: string; day: TTrainingDay; workoutId: string };
+  HealthSettings: undefined;
+  HealthDashboard: undefined;
 };
 
 export type AuthStackParamList = {
