@@ -19,6 +19,8 @@ const de = {
     and: 'und',
     workouts: 'Workouts',
     exercises: 'Übungen',
+    settings: 'Einstellungen',
+    viewAll: 'Alle anzeigen',
   },
 
   // Navigation
@@ -123,19 +125,32 @@ const de = {
     week: 'Woche',
     month: 'Monat',
     year: 'Jahr',
+    today: 'Heute',
+    activity: 'Aktivität',
+    overview: 'Übersicht',
+    weeklyActivity: 'Wöchentliche Aktivität',
     workoutDuration: 'Workout-Dauer',
     minutesPerDay: 'Minuten pro Tag',
-    totalWorkouts: 'Gesamt Workouts',
+    totalWorkouts: 'Workouts',
+    currentStreak: 'Streak',
     dayStreak: 'Tage Streak',
-    totalVolume: 'Gesamtvolumen (kg)',
+    totalVolume: 'Volumen',
     bestStreak: 'Bester Streak',
     personalRecords: 'Persönliche Rekorde',
     noRecordsYet: 'Noch keine persönlichen Rekorde',
     noRecordsText: 'Schließe Workouts ab, um deine persönlichen Rekorde zu tracken',
-    bodyStats: 'Körperstatistiken',
+    bodyStats: 'Körperdaten',
     weight: 'Gewicht',
     bodyFat: 'Körperfett',
-    addMeasurement: '+ Messung hinzufügen',
+    muscle: 'Muskelmasse',
+    addMeasurement: 'Messung hinzufügen',
+    allTime: 'Gesamt',
+    days: 'Tage',
+    rings: {
+      move: 'Bewegen',
+      exercise: 'Trainieren',
+      stand: 'Stehen',
+    },
   },
 
   // More Screen (Settings)
@@ -579,6 +594,13 @@ const de = {
       km: 'km',
       m: 'm',
       kcal: 'kcal',
+      active: 'Aktiv',
+    },
+
+    // Connect
+    connect: {
+      title: 'Health verbinden',
+      description: 'Verbinde Apple Health oder Health Connect für detaillierte Aktivitätsdaten',
     },
 
     // Heart Rate

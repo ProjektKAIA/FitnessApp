@@ -13,11 +13,13 @@ import {
   ProgressTile,
   StreakTile,
   AdTile,
+  HealthTile,
   getTileGap,
 } from '@/components/tiles';
 import { WeeklyGoalModal } from '@/components/common';
 import { COLORS, FONT_SIZES, SPACING } from '@/constants';
 import { useStatsStore, useWorkoutStore } from '@/stores';
+import { useHealthStore } from '@/stores/healthStore';
 import { RootStackParamList, MainTabParamList, TDirection } from '@/types';
 
 type NavigationProp = CompositeNavigationProp<
@@ -40,6 +42,11 @@ export const HomeScreen: React.FC = () => {
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
   const getWorkoutHistory = useWorkoutStore((state) => state.getWorkoutHistory);
   const [isWeeklyGoalModalVisible, setWeeklyGoalModalVisible] = useState(false);
+
+  // Health Data
+  const healthSettings = useHealthStore((state) => state.settings);
+  const todaySummary = useHealthStore((state) => state.todaySummary);
+  const isHealthEnabled = healthSettings.enabled && healthSettings.permissionsGranted;
 
   // Calculate workout counts per direction
   const directionCounts = useMemo(() => {
@@ -89,6 +96,11 @@ export const HomeScreen: React.FC = () => {
     navigation.navigate('WorkoutHistory', { direction });
   };
 
+  // Health Tile Handler
+  const handleHealthPress = () => {
+    navigation.navigate('Progress');
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView
@@ -123,6 +135,26 @@ export const HomeScreen: React.FC = () => {
               onPress={handleWeeklyGoalPress}
             />
           </View>
+
+          {/* Health Widget - Activity Rings */}
+          {isHealthEnabled && (
+            <View style={styles.row}>
+              <HealthTile
+                size="2x1"
+                steps={todaySummary?.steps?.count ?? 0}
+                stepsGoal={healthSettings.stepsGoal}
+                calories={todaySummary?.calories?.active ?? 0}
+                activeMinutes={todaySummary?.activeMinutes ?? 0}
+                onPress={handleHealthPress}
+              />
+              <StatTile
+                label={t('home.thisMonth')}
+                value={stats.thisMonthWorkouts}
+                icon="📊"
+                onPress={handleNavigateToProgress}
+              />
+            </View>
+          )}
 
           {/* Row 2: Volume, Total Workouts, This Month */}
           <View style={styles.row}>

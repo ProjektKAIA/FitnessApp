@@ -19,6 +19,8 @@ const en = {
     and: 'and',
     workouts: 'workouts',
     exercises: 'exercises',
+    settings: 'Settings',
+    viewAll: 'View All',
   },
 
   // Navigation
@@ -123,11 +125,16 @@ const en = {
     week: 'Week',
     month: 'Month',
     year: 'Year',
+    today: 'Today',
+    activity: 'Activity',
+    overview: 'Overview',
+    weeklyActivity: 'Weekly Activity',
     workoutDuration: 'Workout Duration',
     minutesPerDay: 'Minutes per day',
-    totalWorkouts: 'Total Workouts',
+    totalWorkouts: 'Workouts',
+    currentStreak: 'Streak',
     dayStreak: 'Day Streak',
-    totalVolume: 'Total Volume (kg)',
+    totalVolume: 'Volume',
     bestStreak: 'Best Streak',
     personalRecords: 'Personal Records',
     noRecordsYet: 'No Personal Records Yet',
@@ -135,7 +142,15 @@ const en = {
     bodyStats: 'Body Stats',
     weight: 'Weight',
     bodyFat: 'Body Fat',
-    addMeasurement: '+ Add Measurement',
+    muscle: 'Muscle Mass',
+    addMeasurement: 'Add Measurement',
+    allTime: 'All Time',
+    days: 'days',
+    rings: {
+      move: 'Move',
+      exercise: 'Exercise',
+      stand: 'Stand',
+    },
   },
 
   // More Screen (Settings)
@@ -579,6 +594,13 @@ const en = {
       km: 'km',
       m: 'm',
       kcal: 'kcal',
+      active: 'Active',
+    },
+
+    // Connect
+    connect: {
+      title: 'Connect Health',
+      description: 'Connect Apple Health or Health Connect for detailed activity data',
     },
 
     // Heart Rate

@@ -5,3 +5,4 @@ export { DirectionTile } from './DirectionTile';
 export { ProgressTile } from './ProgressTile';
 export { StreakTile } from './StreakTile';
 export { AdTile } from './AdTile';
+export { HealthTile } from './HealthTile';

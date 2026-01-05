@@ -92,6 +92,7 @@ export interface IDailyHealthSummary {
   averageHeartRate: IAverageHeartRateData | null;
   heartRateZones: IHeartRateZoneData[];
   workouts: IHealthWorkout[];
+  activeMinutes?: number;
 }
 
 // Health Trends
