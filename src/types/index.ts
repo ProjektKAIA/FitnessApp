@@ -228,6 +228,9 @@ export type RootStackParamList = {
   Consent: undefined;
   Main: undefined;
   WorkoutActive: { workoutId: string };
+  WorkoutHistory: { direction?: TDirection } | undefined;
+  WorkoutDetail: { workoutId: string };
+  StreakDetail: undefined;
   ExerciseDetail: { exerciseId: string };
   Settings: undefined;
   Profile: undefined;

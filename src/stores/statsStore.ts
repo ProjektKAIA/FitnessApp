@@ -7,6 +7,7 @@ interface StatsState {
   stats: IStats;
   weeklyProgress: IWeeklyProgress[];
   bodyStats: IBodyStats[];
+  weeklyGoal: number;
 
   updateStats: (stats: Partial<IStats>) => void;
   incrementStreak: () => void;
@@ -15,6 +16,7 @@ interface StatsState {
   addWeeklyProgress: (progress: IWeeklyProgress) => void;
   addBodyStats: (stats: Omit<IBodyStats, 'id'>) => void;
   updateBodyStats: (id: string, updates: Partial<IBodyStats>) => void;
+  setWeeklyGoal: (goal: number) => void;
 }
 
 const generateId = () => Math.random().toString(36).substring(2, 15);
@@ -35,6 +37,7 @@ export const useStatsStore = create<StatsState>()(
       stats: defaultStats,
       weeklyProgress: [],
       bodyStats: [],
+      weeklyGoal: 5,
 
       updateStats: (newStats) =>
         set((state) => ({
@@ -98,6 +101,9 @@ export const useStatsStore = create<StatsState>()(
             bs.id === id ? { ...bs, ...updates } : bs
           ),
         })),
+
+      setWeeklyGoal: (goal) =>
+        set({ weeklyGoal: goal }),
     }),
     {
       name: 'stats-storage',

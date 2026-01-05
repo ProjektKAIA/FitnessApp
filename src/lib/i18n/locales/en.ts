@@ -40,6 +40,11 @@ const en = {
     thisWeek: 'This Week',
     totalVolume: 'Total Volume',
     weeklyGoal: 'Weekly Goal',
+    weeklyGoalSettings: 'Set Weekly Goal',
+    weeklyGoalDescription: 'How many workouts do you want to complete per week?',
+    workoutsPerWeek: 'Workouts per week',
+    directionPressed: 'Training Direction',
+    comingSoon: 'Coming soon',
     trainingDirections: 'Training Directions',
     totalWorkouts: 'Total Workouts',
     thisMonth: 'This Month',
@@ -475,6 +480,53 @@ const en = {
     overheadPress: 'Overhead Press',
     lateralRaises: 'Lateral Raises',
     tricepPushdowns: 'Tricep Pushdowns',
+  },
+
+  // Workout History
+  workoutHistory: {
+    title: 'Workout History',
+    emptyTitle: 'No Workouts Yet',
+    emptyText: 'Start your first workout to see your history',
+    emptyFilteredTitle: 'No Workouts Found',
+    emptyFilteredText: 'You have no {{direction}} workouts yet',
+    duration: 'Duration',
+    volume: 'Volume',
+    all: 'All',
+    filteredResults: '{{count}} workout(s) found',
+    clearFilter: 'Clear Filter',
+  },
+
+  // Workout Detail
+  workoutDetail: {
+    title: 'Workout Details',
+    notFound: 'Workout not found',
+    duration: 'Duration',
+    totalKg: 'Total (kg)',
+    exercises: 'Exercises',
+    set: 'Set',
+    weight: 'Weight',
+    reps: 'Reps',
+    volume: 'Volume',
+    totalVolume: 'Total',
+    notes: 'Notes',
+  },
+
+  // Streak Detail
+  streakDetail: {
+    title: 'Your Streak',
+    currentStreak: 'Days in a row',
+    longestStreak: 'Longest Streak',
+    thisWeek: 'This Week',
+    thisMonth: 'This Month',
+    last12Weeks: 'Last 12 Weeks',
+    less: 'Less',
+    more: 'More',
+    daysUntilRecord: '{{days}} more days to beat your record!',
+    newRecord: 'New Record! Keep it up!',
+    tips: 'Tips for your streak',
+    tip1: 'Train at the same time every day to build a routine.',
+    tip2: 'Even short workouts count - 15 minutes is better than nothing.',
+    tip3: 'Plan your workouts in advance in your calendar.',
   },
 
   // AI Coach

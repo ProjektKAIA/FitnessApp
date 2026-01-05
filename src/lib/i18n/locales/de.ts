@@ -40,6 +40,11 @@ const de = {
     thisWeek: 'Diese Woche',
     totalVolume: 'Gesamtvolumen',
     weeklyGoal: 'Wochenziel',
+    weeklyGoalSettings: 'Wochenziel einstellen',
+    weeklyGoalDescription: 'Wie viele Workouts möchtest du pro Woche absolvieren?',
+    workoutsPerWeek: 'Workouts pro Woche',
+    directionPressed: 'Trainingsrichtung',
+    comingSoon: 'Demnächst verfügbar',
     trainingDirections: 'Trainingsrichtungen',
     totalWorkouts: 'Gesamt Workouts',
     thisMonth: 'Diesen Monat',
@@ -475,6 +480,53 @@ const de = {
     overheadPress: 'Schulterdrücken',
     lateralRaises: 'Seitheben',
     tricepPushdowns: 'Trizeps Pushdowns',
+  },
+
+  // Workout History
+  workoutHistory: {
+    title: 'Workout-Verlauf',
+    emptyTitle: 'Noch keine Workouts',
+    emptyText: 'Starte dein erstes Workout, um deinen Verlauf zu sehen',
+    emptyFilteredTitle: 'Keine Workouts gefunden',
+    emptyFilteredText: 'Du hast noch keine {{direction}}-Workouts absolviert',
+    duration: 'Dauer',
+    volume: 'Volumen',
+    all: 'Alle',
+    filteredResults: '{{count}} Workout(s) gefunden',
+    clearFilter: 'Filter zurücksetzen',
+  },
+
+  // Workout Detail
+  workoutDetail: {
+    title: 'Workout Details',
+    notFound: 'Workout nicht gefunden',
+    duration: 'Dauer',
+    totalKg: 'Gesamt (kg)',
+    exercises: 'Übungen',
+    set: 'Satz',
+    weight: 'Gewicht',
+    reps: 'Wdhl.',
+    volume: 'Volumen',
+    totalVolume: 'Gesamt',
+    notes: 'Notizen',
+  },
+
+  // Streak Detail
+  streakDetail: {
+    title: 'Deine Streak',
+    currentStreak: 'Tage in Folge',
+    longestStreak: 'Längste Streak',
+    thisWeek: 'Diese Woche',
+    thisMonth: 'Dieser Monat',
+    last12Weeks: 'Letzte 12 Wochen',
+    less: 'Weniger',
+    more: 'Mehr',
+    daysUntilRecord: 'Noch {{days}} Tage bis zum Rekord!',
+    newRecord: 'Neuer Rekord! Weiter so!',
+    tips: 'Tipps für deine Streak',
+    tip1: 'Trainiere jeden Tag zur gleichen Zeit, um eine Routine aufzubauen.',
+    tip2: 'Auch kurze Workouts zählen - 15 Minuten sind besser als nichts.',
+    tip3: 'Plane deine Workouts im Voraus in deinem Kalender.',
   },
 
   // AI Coach

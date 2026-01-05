@@ -18,6 +18,9 @@ import {
   ProgressScreen,
   MoreScreen,
   WorkoutActiveScreen,
+  WorkoutHistoryScreen,
+  WorkoutDetailScreen,
+  StreakDetailScreen,
   LoginScreen,
   ConsentScreen,
   ImpressumScreen,
@@ -156,6 +159,30 @@ export default function App() {
                   options={{
                     presentation: 'fullScreenModal',
                     animation: 'slide_from_bottom',
+                  }}
+                />
+                <Stack.Screen
+                  name="WorkoutHistory"
+                  component={WorkoutHistoryScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="WorkoutDetail"
+                  component={WorkoutDetailScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="StreakDetail"
+                  component={StreakDetailScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
                   }}
                 />
                 <Stack.Screen
