@@ -13,11 +13,13 @@ interface Props {
   onClose?: () => void;
 }
 
+const AD_IMAGE = 'https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&q=80';
+
 export const AdTile: React.FC<Props> = ({
-  size = '2x1',
-  title = 'Premium Partner',
-  description = 'Discover amazing fitness products',
-  ctaText = 'Learn More',
+  size = '3x1',
+  title = 'Premium',
+  description = 'Alle Features freischalten',
+  ctaText = 'Mehr',
   onPress,
   onClose,
 }) => {
@@ -25,7 +27,8 @@ export const AdTile: React.FC<Props> = ({
     <BaseTile
       size={size}
       onPress={onPress}
-      gradientColors={[COLORS.purple, '#7B1FA2']}
+      backgroundImage={AD_IMAGE}
+      gradientColors={['rgba(156,39,176,0.5)', 'rgba(156,39,176,0.9)']}
     >
       <View style={styles.container}>
         {onClose && (
@@ -39,13 +42,13 @@ export const AdTile: React.FC<Props> = ({
         </View>
 
         <View style={styles.content}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.description}>{description}</Text>
+          <Text style={styles.title} numberOfLines={1}>{title}</Text>
+          <Text style={styles.description} numberOfLines={1}>{description}</Text>
         </View>
 
-        <View style={styles.ctaButton}>
+        <TouchableOpacity style={styles.ctaButton} onPress={onPress}>
           <Text style={styles.ctaText}>{ctaText}</Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </BaseTile>
   );
@@ -59,58 +62,57 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: -SPACING.sm,
-    right: -SPACING.sm,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    top: -4,
+    right: -4,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     backgroundColor: COLORS.overlay.medium,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1,
   },
   closeText: {
-    fontSize: 12,
+    fontSize: 10,
     color: COLORS.white,
   },
   adBadge: {
     position: 'absolute',
-    top: -SPACING.sm,
-    left: -SPACING.sm,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 2,
+    top: -4,
+    left: -4,
+    paddingHorizontal: SPACING.xs,
+    paddingVertical: 1,
     backgroundColor: COLORS.overlay.medium,
-    borderRadius: 4,
+    borderRadius: 2,
   },
   adText: {
-    fontSize: FONT_SIZES.xs,
+    fontSize: 8,
     color: COLORS.white,
     opacity: 0.8,
     fontWeight: '600',
   },
   content: {
     flex: 1,
-    marginRight: SPACING.lg,
+    marginRight: SPACING.sm,
   },
   title: {
-    fontSize: FONT_SIZES.lg,
+    fontSize: FONT_SIZES.sm,
     fontWeight: '700',
     color: COLORS.white,
-    marginBottom: SPACING.xs,
   },
   description: {
-    fontSize: FONT_SIZES.sm,
+    fontSize: FONT_SIZES.xs,
     color: COLORS.white,
     opacity: 0.8,
   },
   ctaButton: {
     backgroundColor: COLORS.white,
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.sm,
-    borderRadius: 20,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.xs,
+    borderRadius: 12,
   },
   ctaText: {
-    fontSize: FONT_SIZES.sm,
+    fontSize: FONT_SIZES.xs,
     fontWeight: '600',
     color: COLORS.purple,
   },

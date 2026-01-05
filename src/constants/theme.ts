@@ -65,9 +65,9 @@ export const BORDER_RADIUS = {
 };
 
 export const TILE = {
-  gap: 10,
-  height: 195,
-  columns: 2,
+  gap: 6,
+  height: 120,
+  columns: 3,
 };
 
 export const SHADOWS = {

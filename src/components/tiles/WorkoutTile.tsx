@@ -13,9 +13,15 @@ interface Props {
   onPress?: () => void;
 }
 
+// Fitness Workout Hintergrundbilder
+const WORKOUT_IMAGES = {
+  default: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80',
+  active: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&q=80',
+};
+
 export const WorkoutTile: React.FC<Props> = ({
-  size = '2x1',
-  workoutName = 'Start Workout',
+  size = '1x1',
+  workoutName = 'Start',
   duration,
   exerciseCount,
   isActive = false,
@@ -25,37 +31,16 @@ export const WorkoutTile: React.FC<Props> = ({
     <BaseTile
       size={size}
       onPress={onPress}
-      gradientColors={
-        isActive
-          ? [COLORS.accent, COLORS.accent]
-          : ['rgba(33,150,243,0.8)', 'rgba(33,150,243,0.95)']
-      }
+      backgroundImage={isActive ? WORKOUT_IMAGES.active : WORKOUT_IMAGES.default}
+      gradientColors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.7)']}
     >
       <View style={styles.container}>
-        <View style={styles.iconContainer}>
-          <Text style={styles.icon}>{isActive ? '⏱️' : '💪'}</Text>
-        </View>
-
+        <Text style={styles.icon}>{isActive ? '⏱️' : '💪'}</Text>
         <View style={styles.textContainer}>
-          <Text style={styles.label}>
-            {isActive ? 'IN PROGRESS' : 'WORKOUT'}
+          <Text style={styles.label} numberOfLines={1}>
+            {isActive ? 'AKTIV' : 'WORKOUT'}
           </Text>
-          <Text style={styles.title}>{workoutName}</Text>
-
-          {(duration !== undefined || exerciseCount !== undefined) && (
-            <View style={styles.statsRow}>
-              {duration !== undefined && (
-                <Text style={styles.stat}>{duration} min</Text>
-              )}
-              {exerciseCount !== undefined && (
-                <Text style={styles.stat}>{exerciseCount} exercises</Text>
-              )}
-            </View>
-          )}
-        </View>
-
-        <View style={styles.arrow}>
-          <Text style={styles.arrowText}>→</Text>
+          <Text style={styles.title} numberOfLines={1}>{workoutName}</Text>
         </View>
       </View>
     </BaseTile>
@@ -65,56 +50,24 @@ export const WorkoutTile: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  iconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: COLORS.overlay.light,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: SPACING.lg,
+    justifyContent: 'space-between',
   },
   icon: {
-    fontSize: 28,
+    fontSize: 20,
   },
   textContainer: {
     flex: 1,
+    justifyContent: 'flex-end',
   },
   label: {
     fontSize: FONT_SIZES.xs,
     color: COLORS.white,
     opacity: 0.8,
-    letterSpacing: 1,
-    marginBottom: SPACING.xs,
+    letterSpacing: 0.5,
   },
   title: {
-    fontSize: FONT_SIZES.xl,
-    fontWeight: '700',
-    color: COLORS.white,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    marginTop: SPACING.sm,
-  },
-  stat: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.white,
-    opacity: 0.8,
-    marginRight: SPACING.lg,
-  },
-  arrow: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.overlay.light,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  arrowText: {
-    fontSize: FONT_SIZES.xl,
+    fontWeight: '700',
     color: COLORS.white,
   },
 });

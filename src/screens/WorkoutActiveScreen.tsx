@@ -267,7 +267,7 @@ export const WorkoutActiveScreen: React.FC = () => {
         <View style={styles.modalButtons}>
           <Button
             title={t('common.cancel')}
-            variant="outline"
+            variant="primary"
             onPress={() => setShowEndModal(false)}
             style={styles.modalButton}
           />

@@ -14,7 +14,16 @@ interface Props {
   trend?: 'up' | 'down' | 'neutral';
   trendValue?: string;
   onPress?: () => void;
+  backgroundImage?: string;
 }
+
+// Fitness-bezogene Hintergrundbilder
+const STAT_IMAGES: Record<string, string> = {
+  calendar: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&q=80',
+  weight: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&q=80',
+  total: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=400&q=80',
+  chart: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80',
+};
 
 export const StatTile: React.FC<Props> = ({
   size = '1x1',
@@ -26,56 +35,35 @@ export const StatTile: React.FC<Props> = ({
   trend,
   trendValue,
   onPress,
+  backgroundImage,
 }) => {
-  const getTrendIcon = () => {
-    switch (trend) {
-      case 'up':
-        return '↑';
-      case 'down':
-        return '↓';
-      default:
-        return '→';
-    }
-  };
-
-  const getTrendColor = () => {
-    switch (trend) {
-      case 'up':
-        return COLORS.success;
-      case 'down':
-        return COLORS.error;
-      default:
-        return COLORS.gray[400];
-    }
+  // Wähle Hintergrundbild basierend auf Icon
+  const getBackgroundImage = () => {
+    if (backgroundImage) return backgroundImage;
+    if (icon === '📅') return STAT_IMAGES.calendar;
+    if (icon === '🏋️') return STAT_IMAGES.weight;
+    if (icon === '💪') return STAT_IMAGES.total;
+    if (icon === '📊') return STAT_IMAGES.chart;
+    return STAT_IMAGES.total;
   };
 
   return (
     <BaseTile
       size={size}
       onPress={onPress}
-      gradientColors={[color, color]}
+      backgroundImage={getBackgroundImage()}
+      gradientColors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.75)']}
     >
       <View style={styles.container}>
-        {icon && (
-          <View style={styles.iconContainer}>
-            <Text style={styles.icon}>{icon}</Text>
+        {icon && <Text style={styles.icon}>{icon}</Text>}
+
+        <View style={styles.bottom}>
+          <Text style={styles.label} numberOfLines={1}>{label}</Text>
+          <View style={styles.valueContainer}>
+            <Text style={styles.value}>{value}</Text>
+            {unit && <Text style={styles.unit}>{unit}</Text>}
           </View>
-        )}
-
-        <Text style={styles.label}>{label}</Text>
-
-        <View style={styles.valueContainer}>
-          <Text style={styles.value}>{value}</Text>
-          {unit && <Text style={styles.unit}>{unit}</Text>}
         </View>
-
-        {trend && trendValue && (
-          <View style={[styles.trendContainer, { backgroundColor: getTrendColor() }]}>
-            <Text style={styles.trendText}>
-              {getTrendIcon()} {trendValue}
-            </Text>
-          </View>
-        )}
       </View>
     </BaseTile>
   );
@@ -86,48 +74,32 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
   },
-  iconContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: COLORS.overlay.light,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   icon: {
-    fontSize: 18,
+    fontSize: 16,
+  },
+  bottom: {
+    gap: 2,
   },
   label: {
     fontSize: FONT_SIZES.xs,
     color: COLORS.white,
     opacity: 0.8,
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   },
   valueContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
   },
   value: {
-    fontSize: FONT_SIZES['3xl'],
+    fontSize: FONT_SIZES.xl,
     fontWeight: '700',
     color: COLORS.white,
   },
   unit: {
-    fontSize: FONT_SIZES.base,
-    color: COLORS.white,
-    opacity: 0.8,
-    marginLeft: SPACING.xs,
-  },
-  trendContainer: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: SPACING.xs,
-    borderRadius: 12,
-  },
-  trendText: {
     fontSize: FONT_SIZES.xs,
     color: COLORS.white,
-    fontWeight: '600',
+    opacity: 0.7,
+    marginLeft: 2,
   },
 });

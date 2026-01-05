@@ -14,9 +14,11 @@ interface Props {
   onPress?: () => void;
 }
 
+const PROGRESS_IMAGE = 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400&q=80';
+
 export const ProgressTile: React.FC<Props> = ({
   size = '1x1',
-  title = 'Progress',
+  title = 'Ziel',
   current,
   target,
   unit = '',
@@ -29,18 +31,14 @@ export const ProgressTile: React.FC<Props> = ({
     <BaseTile
       size={size}
       onPress={onPress}
-      gradientColors={[COLORS.gray[800], COLORS.gray[900]]}
+      backgroundImage={PROGRESS_IMAGE}
+      gradientColors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.75)']}
     >
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
 
-        <View style={styles.valueContainer}>
-          <Text style={styles.current}>{current}</Text>
-          <Text style={styles.separator}>/</Text>
-          <Text style={styles.target}>
-            {target}
-            {unit && <Text style={styles.unit}> {unit}</Text>}
-          </Text>
+        <View style={styles.middle}>
+          <Text style={styles.percentage}>{Math.round(percentage)}%</Text>
         </View>
 
         <View style={styles.progressBarContainer}>
@@ -51,8 +49,6 @@ export const ProgressTile: React.FC<Props> = ({
             ]}
           />
         </View>
-
-        <Text style={styles.percentage}>{Math.round(percentage)}%</Text>
       </View>
     </BaseTile>
   );
@@ -66,47 +62,27 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FONT_SIZES.xs,
     color: COLORS.white,
-    opacity: 0.7,
+    opacity: 0.8,
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   },
-  valueContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+  middle: {
+    flex: 1,
+    justifyContent: 'center',
   },
-  current: {
-    fontSize: FONT_SIZES['2xl'],
+  percentage: {
+    fontSize: FONT_SIZES.xl,
     fontWeight: '700',
     color: COLORS.white,
   },
-  separator: {
-    fontSize: FONT_SIZES.lg,
-    color: COLORS.white,
-    opacity: 0.5,
-    marginHorizontal: SPACING.xs,
-  },
-  target: {
-    fontSize: FONT_SIZES.lg,
-    color: COLORS.white,
-    opacity: 0.7,
-  },
-  unit: {
-    fontSize: FONT_SIZES.sm,
-  },
   progressBarContainer: {
-    height: 6,
+    height: 4,
     backgroundColor: COLORS.overlay.light,
-    borderRadius: 3,
+    borderRadius: 2,
     overflow: 'hidden',
   },
   progressBar: {
     height: '100%',
-    borderRadius: 3,
-  },
-  percentage: {
-    fontSize: FONT_SIZES.sm,
-    color: COLORS.white,
-    opacity: 0.7,
-    alignSelf: 'flex-end',
+    borderRadius: 2,
   },
 });

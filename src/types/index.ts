@@ -213,7 +213,7 @@ export interface IBodyStats {
   };
 }
 
-export type TTileSize = '1x1' | '2x1' | '2x2';
+export type TTileSize = '1x1' | '2x1' | '3x1' | '2x2';
 
 export interface ITileConfig {
   id: string;

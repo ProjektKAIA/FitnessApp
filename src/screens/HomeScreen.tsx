@@ -49,14 +49,14 @@ export const HomeScreen: React.FC = () => {
         </View>
 
         <View style={styles.tilesContainer}>
-          <WorkoutTile
-            size="2x1"
-            workoutName={activeWorkout?.name || t('home.startWorkout')}
-            isActive={!!activeWorkout}
-            onPress={handleStartWorkout}
-          />
-
+          {/* Row 1: Workout, Streak, Week */}
           <View style={styles.row}>
+            <WorkoutTile
+              size="1x1"
+              workoutName={activeWorkout?.name || t('home.startWorkout')}
+              isActive={!!activeWorkout}
+              onPress={handleStartWorkout}
+            />
             <StreakTile
               currentStreak={stats.currentStreak}
               longestStreak={stats.longestStreak}
@@ -64,12 +64,11 @@ export const HomeScreen: React.FC = () => {
             <StatTile
               label={t('home.thisWeek')}
               value={stats.thisWeekWorkouts}
-              unit={t('common.workouts')}
               icon="📅"
-              color={COLORS.primary}
             />
           </View>
 
+          {/* Row 2: Progress, Volume, Total */}
           <View style={styles.row}>
             <ProgressTile
               title={t('home.weeklyGoal')}
@@ -80,14 +79,17 @@ export const HomeScreen: React.FC = () => {
             <StatTile
               label={t('home.totalVolume')}
               value={Math.round(stats.totalVolume / 1000)}
-              unit="k kg"
+              unit="k"
               icon="🏋️"
-              color={COLORS.accent}
+            />
+            <StatTile
+              label={t('home.totalWorkouts')}
+              value={stats.totalWorkouts}
+              icon="💪"
             />
           </View>
 
-          <Text style={styles.sectionTitle}>{t('home.trainingDirections')}</Text>
-
+          {/* Row 3: Directions */}
           <View style={styles.row}>
             <DirectionTile
               direction="gym"
@@ -98,42 +100,38 @@ export const HomeScreen: React.FC = () => {
               direction="calisthenics"
               workoutsCount={5}
             />
-          </View>
-
-          <View style={styles.row}>
             <DirectionTile
               direction="cardio"
               workoutsCount={8}
             />
+          </View>
+
+          {/* Row 4: More Directions + Month Stat */}
+          <View style={styles.row}>
             <DirectionTile
               direction="yoga"
               workoutsCount={3}
             />
+            <DirectionTile
+              direction="mobility"
+              workoutsCount={2}
+            />
+            <StatTile
+              label={t('home.thisMonth')}
+              value={stats.thisMonthWorkouts}
+              icon="📊"
+            />
           </View>
 
+          {/* Ad Banner - volle Breite */}
           <AdTile
+            size="3x1"
             title={t('home.premium.title')}
             description={t('home.premium.description')}
             ctaText={t('home.premium.cta')}
             onPress={() => {}}
             onClose={() => {}}
           />
-
-          <View style={styles.row}>
-            <StatTile
-              label={t('home.totalWorkouts')}
-              value={stats.totalWorkouts}
-              icon="💪"
-              color={COLORS.success}
-            />
-            <StatTile
-              label={t('home.thisMonth')}
-              value={stats.thisMonthWorkouts}
-              unit={t('common.workouts')}
-              icon="📊"
-              color={COLORS.purple}
-            />
-          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -153,16 +151,16 @@ const styles = StyleSheet.create({
     paddingBottom: SPACING['2xl'],
   },
   header: {
-    marginVertical: SPACING.lg,
+    marginVertical: SPACING.md,
   },
   greeting: {
-    fontSize: FONT_SIZES.sm,
+    fontSize: FONT_SIZES.xs,
     color: COLORS.gray[500],
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
   title: {
-    fontSize: FONT_SIZES['2xl'],
+    fontSize: FONT_SIZES.xl,
     fontWeight: '700',
     color: COLORS.gray[900],
     marginTop: SPACING.xs,
@@ -173,12 +171,5 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     gap: getTileGap(),
-  },
-  sectionTitle: {
-    fontSize: FONT_SIZES.lg,
-    fontWeight: '600',
-    color: COLORS.gray[900],
-    marginTop: SPACING.lg,
-    marginBottom: SPACING.sm,
   },
 });

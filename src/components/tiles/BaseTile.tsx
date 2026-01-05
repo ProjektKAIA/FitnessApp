@@ -41,13 +41,19 @@ export const BaseTile: React.FC<Props> = ({
 }) => {
   const { width: screenWidth } = useWindowDimensions();
 
-  // Berechne Tile-Breite dynamisch basierend auf aktueller Bildschirmbreite
+  // Berechne Tile-Breite dynamisch basierend auf aktueller Bildschirmbreite (3 Spalten)
   const tileWidth = useMemo(() => {
-    return (screenWidth - PADDING * 2 - TILE_GAP) / TILE.columns;
+    const totalGaps = TILE_GAP * (TILE.columns - 1);
+    return (screenWidth - PADDING * 2 - totalGaps) / TILE.columns;
   }, [screenWidth]);
 
   const getTileStyle = (): ViewStyle => {
     switch (size) {
+      case '3x1':
+        return {
+          width: tileWidth * 3 + TILE_GAP * 2,
+          height: TILE.height,
+        };
       case '2x1':
         return {
           width: tileWidth * 2 + TILE_GAP,
@@ -128,7 +134,7 @@ export const BaseTile: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   tile: {
-    borderRadius: BORDER_RADIUS.xl,
+    borderRadius: 0,
     overflow: 'hidden',
   },
   defaultBackground: {
@@ -142,7 +148,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: SPACING.lg,
+    padding: SPACING.sm,
     justifyContent: 'flex-end',
   },
   subtitle: {
@@ -163,7 +169,8 @@ const styles = StyleSheet.create({
 // Utility-Funktion für Tile-Breite (für Nicht-Komponenten-Kontexte)
 export const getTileWidth = (screenWidth?: number): number => {
   const width = screenWidth ?? require('react-native').Dimensions.get('window').width;
-  return (width - PADDING * 2 - TILE_GAP) / TILE.columns;
+  const totalGaps = TILE_GAP * (TILE.columns - 1);
+  return (width - PADDING * 2 - totalGaps) / TILE.columns;
 };
 
 export const getTileGap = () => TILE_GAP;
@@ -172,10 +179,13 @@ export const getTileGap = () => TILE_GAP;
 export const useTileDimensions = () => {
   const { width: screenWidth } = useWindowDimensions();
 
-  return useMemo(() => ({
-    tileWidth: (screenWidth - PADDING * 2 - TILE_GAP) / TILE.columns,
-    tileHeight: TILE.height,
-    tileGap: TILE_GAP,
-    fullWidth: screenWidth - PADDING * 2,
-  }), [screenWidth]);
+  return useMemo(() => {
+    const totalGaps = TILE_GAP * (TILE.columns - 1);
+    return {
+      tileWidth: (screenWidth - PADDING * 2 - totalGaps) / TILE.columns,
+      tileHeight: TILE.height,
+      tileGap: TILE_GAP,
+      fullWidth: screenWidth - PADDING * 2,
+    };
+  }, [screenWidth]);
 };
