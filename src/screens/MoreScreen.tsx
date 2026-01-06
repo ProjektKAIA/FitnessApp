@@ -208,7 +208,11 @@ export const MoreScreen: React.FC = () => {
         <Text style={styles.sectionTitle}>{t('more.support')}</Text>
         <Card style={styles.menuCard}>
           <MenuItem icon="❓" title={t('more.helpCenter')} />
-          <MenuItem icon="📧" title={t('more.contactUs')} />
+          <MenuItem
+            icon="📧"
+            title={t('more.contactUs')}
+            onPress={() => navigation.navigate('Contact')}
+          />
           <MenuItem icon="⭐" title={t('more.rateApp')} />
         </Card>
 

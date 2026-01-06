@@ -38,6 +38,7 @@ import {
   ExercisePickerScreen,
   HealthSettingsScreen,
   HealthDashboardScreen,
+  ContactScreen,
   WelcomeScreen,
   GenderScreen,
   HeightScreen,
@@ -336,6 +337,14 @@ export default function App() {
                 <Stack.Screen
                   name="HealthDashboard"
                   component={HealthDashboardScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="Contact"
+                  component={ContactScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',

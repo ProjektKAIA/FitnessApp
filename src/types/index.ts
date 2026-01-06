@@ -299,6 +299,7 @@ export type RootStackParamList = {
   ExercisePicker: { planId: string; day: TTrainingDay; workoutId: string };
   HealthSettings: undefined;
   HealthDashboard: undefined;
+  Contact: undefined;
 };
 
 export type OnboardingStackParamList = {

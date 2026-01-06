@@ -821,6 +821,35 @@ const de = {
     },
     startProgram: 'Programm starten',
   },
+
+  // Contact Screen
+  contact: {
+    title: 'Kontakt',
+    infoTitle: 'Schreib uns!',
+    infoText: 'Hast du Fragen, Feedback oder Anregungen? Wir freuen uns von dir zu hören.',
+    formTitle: 'Kontaktformular',
+    name: 'Name',
+    namePlaceholder: 'Dein Name',
+    email: 'E-Mail',
+    emailPlaceholder: 'deine@email.de',
+    subject: 'Betreff',
+    subjectPlaceholder: 'Worum geht es?',
+    message: 'Nachricht',
+    messagePlaceholder: 'Deine Nachricht an uns...',
+    send: 'Nachricht senden',
+    sending: 'Wird gesendet...',
+    successTitle: 'Vielen Dank!',
+    successMessage: 'Deine E-Mail-App wurde geöffnet. Sende die Nachricht, um uns zu kontaktieren.',
+    noMailAppTitle: 'Keine E-Mail-App',
+    noMailAppMessage: 'Bitte sende deine Nachricht direkt an: {{email}}',
+    errorName: 'Bitte gib deinen Namen ein.',
+    errorEmail: 'Bitte gib deine E-Mail-Adresse ein.',
+    errorSubject: 'Bitte gib einen Betreff ein.',
+    errorMessage: 'Bitte schreibe eine Nachricht.',
+    errorSending: 'Fehler beim Öffnen der E-Mail-App.',
+    alternativeTitle: 'Direkt per E-Mail',
+    alternativeText: 'Du kannst uns auch direkt eine E-Mail schreiben.',
+  },
 } as const;
 
 export default de;

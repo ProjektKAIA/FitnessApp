@@ -821,6 +821,35 @@ const en = {
     },
     startProgram: 'Start Program',
   },
+
+  // Contact Screen
+  contact: {
+    title: 'Contact',
+    infoTitle: 'Get in touch!',
+    infoText: 'Have questions, feedback or suggestions? We would love to hear from you.',
+    formTitle: 'Contact Form',
+    name: 'Name',
+    namePlaceholder: 'Your name',
+    email: 'Email',
+    emailPlaceholder: 'your@email.com',
+    subject: 'Subject',
+    subjectPlaceholder: 'What is it about?',
+    message: 'Message',
+    messagePlaceholder: 'Your message to us...',
+    send: 'Send Message',
+    sending: 'Sending...',
+    successTitle: 'Thank you!',
+    successMessage: 'Your email app has been opened. Send the message to contact us.',
+    noMailAppTitle: 'No Email App',
+    noMailAppMessage: 'Please send your message directly to: {{email}}',
+    errorName: 'Please enter your name.',
+    errorEmail: 'Please enter your email address.',
+    errorSubject: 'Please enter a subject.',
+    errorMessage: 'Please write a message.',
+    errorSending: 'Error opening email app.',
+    alternativeTitle: 'Direct Email',
+    alternativeText: 'You can also send us an email directly.',
+  },
 } as const;
 
 export default en;
