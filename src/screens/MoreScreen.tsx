@@ -60,12 +60,6 @@ export const MoreScreen: React.FC = () => {
     }
   };
 
-  const handleToggleHaptics = () => {
-    if (settings) {
-      updateSettings({ hapticFeedback: !settings.hapticFeedback });
-    }
-  };
-
   const handleLogout = () => {
     Alert.alert(
       t('more.logoutTitle'),
@@ -150,23 +144,6 @@ export const MoreScreen: React.FC = () => {
                 trackColor={{ false: COLORS.gray[300], true: COLORS.primary }}
               />
             }
-          />
-          <MenuItem
-            icon="📳"
-            title={t('more.hapticFeedback')}
-            showArrow={false}
-            rightElement={
-              <Switch
-                value={settings?.hapticFeedback ?? true}
-                onValueChange={handleToggleHaptics}
-                trackColor={{ false: COLORS.gray[300], true: COLORS.primary }}
-              />
-            }
-          />
-          <MenuItem
-            icon="📏"
-            title={t('more.units')}
-            subtitle={settings?.units === 'metric' ? t('more.unitsMetric') : t('more.unitsImperial')}
           />
           <MenuItem
             icon="🌙"
