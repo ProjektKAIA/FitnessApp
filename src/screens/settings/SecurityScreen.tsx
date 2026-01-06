@@ -14,10 +14,17 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import * as LocalAuthentication from 'expo-local-authentication';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useUserStore } from '@/stores';
 import { useSecurityStore } from '@/stores/securityStore';
+
+// Dynamically import LocalAuthentication to avoid crash if not available
+let LocalAuthentication: typeof import('expo-local-authentication') | null = null;
+try {
+  LocalAuthentication = require('expo-local-authentication');
+} catch (e) {
+  console.log('expo-local-authentication not available');
+}
 import {
   updatePassword,
   updateEmail,
@@ -56,34 +63,54 @@ export const SecurityScreen: React.FC = () => {
   }, []);
 
   const checkBiometricAvailability = async () => {
-    const compatible = await LocalAuthentication.hasHardwareAsync();
-    const enrolled = await LocalAuthentication.isEnrolledAsync();
+    if (!LocalAuthentication) {
+      setIsBiometricAvailable(false);
+      return;
+    }
 
-    if (compatible && enrolled) {
-      setIsBiometricAvailable(true);
-      const types = await LocalAuthentication.supportedAuthenticationTypesAsync();
-      if (types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) {
-        setBiometricType('Face ID');
-      } else if (types.includes(LocalAuthentication.AuthenticationType.FINGERPRINT)) {
-        setBiometricType('Fingerprint');
-      } else {
-        setBiometricType('Biometric');
+    try {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      const enrolled = await LocalAuthentication.isEnrolledAsync();
+
+      if (compatible && enrolled) {
+        setIsBiometricAvailable(true);
+        const types = await LocalAuthentication.supportedAuthenticationTypesAsync();
+        if (types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) {
+          setBiometricType('Face ID');
+        } else if (types.includes(LocalAuthentication.AuthenticationType.FINGERPRINT)) {
+          setBiometricType('Fingerprint');
+        } else {
+          setBiometricType('Biometric');
+        }
       }
+    } catch (error) {
+      console.log('Biometric check failed:', error);
+      setIsBiometricAvailable(false);
     }
   };
 
   const handleToggleBiometric = async (value: boolean) => {
+    if (!LocalAuthentication) {
+      Alert.alert(t('common.error'), t('security.biometricNotAvailable'));
+      return;
+    }
+
     if (value) {
       // Authenticate first before enabling
-      const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: t('security.biometricPrompt'),
-        fallbackLabel: t('security.usePassword'),
-        cancelLabel: t('common.cancel'),
-      });
+      try {
+        const result = await LocalAuthentication.authenticateAsync({
+          promptMessage: t('security.biometricPrompt'),
+          fallbackLabel: t('security.usePassword'),
+          cancelLabel: t('common.cancel'),
+        });
 
-      if (result.success) {
-        setBiometricEnabled(true);
-        Alert.alert(t('common.success'), t('security.biometricEnabled'));
+        if (result.success) {
+          setBiometricEnabled(true);
+          Alert.alert(t('common.success'), t('security.biometricEnabled'));
+        }
+      } catch (error) {
+        console.log('Biometric auth failed:', error);
+        Alert.alert(t('common.error'), t('security.biometricError'));
       }
     } else {
       setBiometricEnabled(false);

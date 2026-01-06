@@ -884,6 +884,8 @@ const de = {
     invalidEmail: 'Ungültige E-Mail-Adresse.',
     fillAllFields: 'Bitte fülle alle Felder aus.',
     infoText: 'Deine Sicherheitseinstellungen schützen deinen Account. Wir empfehlen ein starkes Passwort und die Aktivierung der biometrischen Entsperrung.',
+    biometricNotAvailable: 'Biometrische Authentifizierung ist auf diesem Gerät nicht verfügbar.',
+    biometricError: 'Fehler bei der biometrischen Authentifizierung.',
   },
 } as const;
 

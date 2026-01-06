@@ -884,6 +884,8 @@ const en = {
     invalidEmail: 'Invalid email address.',
     fillAllFields: 'Please fill in all fields.',
     infoText: 'Your security settings protect your account. We recommend a strong password and enabling biometric unlock.',
+    biometricNotAvailable: 'Biometric authentication is not available on this device.',
+    biometricError: 'Error during biometric authentication.',
   },
 } as const;
 
