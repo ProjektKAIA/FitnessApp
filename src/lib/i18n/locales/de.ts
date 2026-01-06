@@ -560,6 +560,7 @@ const de = {
     dashboard: 'Dashboard',
     enable: 'Gesundheitsdaten aktivieren',
     enabled: 'Aktiviert',
+    notSupported: 'Gesundheitsdaten werden auf diesem Gerät nicht unterstützt.',
     disabled: 'Deaktiviert',
     connected: 'Verbunden',
     notConnected: 'Nicht verbunden',

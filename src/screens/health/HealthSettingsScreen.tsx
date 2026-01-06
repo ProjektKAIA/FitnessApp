@@ -160,13 +160,19 @@ export const HealthSettingsScreen: React.FC = () => {
   if (!supported) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Text style={styles.backIcon}>←</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>{t('health.title')}</Text>
+          <View style={styles.headerSpacer} />
+        </View>
+
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-          <Text style={styles.title}>{t('health.title')}</Text>
           <Card style={styles.card}>
             <Text style={styles.notSupportedText}>
-              {Platform.OS === 'ios'
-                ? 'Apple Health wird auf diesem Gerät nicht unterstützt.'
-                : 'Health Connect wird auf diesem Gerät nicht unterstützt.'}
+              {t('health.notSupported')}
             </Text>
           </Card>
         </ScrollView>
@@ -176,8 +182,16 @@ export const HealthSettingsScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Text style={styles.backIcon}>←</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>{t('health.title')}</Text>
+        <View style={styles.headerSpacer} />
+      </View>
+
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{t('health.title')}</Text>
 
         {/* Master Toggle */}
         <Card style={styles.card}>
@@ -283,19 +297,38 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.gray[100],
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    backgroundColor: COLORS.white,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.gray[200],
+  },
+  backButton: {
+    padding: SPACING.sm,
+    marginLeft: -SPACING.sm,
+  },
+  backIcon: {
+    fontSize: FONT_SIZES['2xl'],
+    color: COLORS.gray[900],
+  },
+  headerTitle: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '600',
+    color: COLORS.gray[900],
+  },
+  headerSpacer: {
+    width: 40,
+  },
   scrollView: {
     flex: 1,
   },
   content: {
     paddingHorizontal: SPACING.lg,
     paddingBottom: SPACING['3xl'],
-  },
-  title: {
-    fontSize: FONT_SIZES['2xl'],
-    fontWeight: '700',
-    color: COLORS.gray[900],
-    marginTop: SPACING.lg,
-    marginBottom: SPACING.xl,
   },
   sectionTitle: {
     fontSize: FONT_SIZES.sm,
