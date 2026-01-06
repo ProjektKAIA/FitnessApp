@@ -301,6 +301,9 @@ export type RootStackParamList = {
   HealthDashboard: undefined;
   Contact: undefined;
   Security: undefined;
+  DataExport: undefined;
+  DataImport: undefined;
+  DeleteAccount: undefined;
 };
 
 export type OnboardingStackParamList = {

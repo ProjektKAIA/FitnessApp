@@ -10,6 +10,7 @@ interface WorkoutState {
   restTimerActive: boolean;
   restTimeRemaining: number;
 
+  setWorkouts: (workouts: IWorkout[]) => void;
   startWorkout: (workout: Omit<IWorkout, 'id' | 'startedAt' | 'status'>) => void;
   endWorkout: () => void;
   cancelWorkout: () => void;
@@ -42,6 +43,10 @@ export const useWorkoutStore = create<WorkoutState>()(
       currentExerciseIndex: 0,
       restTimerActive: false,
       restTimeRemaining: 0,
+
+      setWorkouts: (workouts) => {
+        set({ workouts });
+      },
 
       startWorkout: (workout) => {
         const newWorkout: IWorkout = {

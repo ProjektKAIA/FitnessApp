@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Image, Alert, Linking, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -76,6 +76,32 @@ export const MoreScreen: React.FC = () => {
         },
       ]
     );
+  };
+
+  const handleRateApp = async () => {
+    // TODO: Replace with actual App Store / Play Store URLs when published
+    const iosAppId = 'YOUR_APP_ID'; // Replace with actual App Store ID
+    const androidPackage = 'com.framefit.app'; // Replace with actual package name
+
+    const storeUrl = Platform.select({
+      ios: `https://apps.apple.com/app/id${iosAppId}?action=write-review`,
+      android: `https://play.google.com/store/apps/details?id=${androidPackage}`,
+      default: '',
+    });
+
+    if (storeUrl) {
+      try {
+        const canOpen = await Linking.canOpenURL(storeUrl);
+        if (canOpen) {
+          await Linking.openURL(storeUrl);
+        } else {
+          Alert.alert(t('common.error'), t('more.rateAppError'));
+        }
+      } catch (error) {
+        console.error('[RateApp]:', error);
+        Alert.alert(t('common.error'), t('more.rateAppError'));
+      }
+    }
   };
 
   return (
@@ -182,9 +208,24 @@ export const MoreScreen: React.FC = () => {
 
         <Text style={styles.sectionTitle}>{t('more.data')}</Text>
         <Card style={styles.menuCard}>
-          <MenuItem icon="📤" title={t('more.exportData')} subtitle={t('more.exportDataSubtitle')} />
-          <MenuItem icon="📥" title={t('more.importData')} subtitle={t('more.importDataSubtitle')} />
-          <MenuItem icon="🗑️" title={t('more.deleteAccount')} subtitle={t('more.deleteAccountSubtitle')} />
+          <MenuItem
+            icon="📤"
+            title={t('more.exportData')}
+            subtitle={t('more.exportDataSubtitle')}
+            onPress={() => navigation.navigate('DataExport')}
+          />
+          <MenuItem
+            icon="📥"
+            title={t('more.importData')}
+            subtitle={t('more.importDataSubtitle')}
+            onPress={() => navigation.navigate('DataImport')}
+          />
+          <MenuItem
+            icon="🗑️"
+            title={t('more.deleteAccount')}
+            subtitle={t('more.deleteAccountSubtitle')}
+            onPress={() => navigation.navigate('DeleteAccount')}
+          />
         </Card>
 
         <Text style={styles.sectionTitle}>{t('more.support')}</Text>
@@ -194,7 +235,11 @@ export const MoreScreen: React.FC = () => {
             title={t('more.contactUs')}
             onPress={() => navigation.navigate('Contact')}
           />
-          <MenuItem icon="⭐" title={t('more.rateApp')} />
+          <MenuItem
+            icon="⭐"
+            title={t('more.rateApp')}
+            onPress={handleRateApp}
+          />
         </Card>
 
         <Text style={styles.sectionTitle}>{t('more.legal')}</Text>

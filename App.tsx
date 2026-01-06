@@ -40,6 +40,9 @@ import {
   HealthDashboardScreen,
   ContactScreen,
   SecurityScreen,
+  DataExportScreen,
+  DataImportScreen,
+  DeleteAccountScreen,
   WelcomeScreen,
   GenderScreen,
   HeightScreen,
@@ -354,6 +357,30 @@ export default function App() {
                 <Stack.Screen
                   name="Security"
                   component={SecurityScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="DataExport"
+                  component={DataExportScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="DataImport"
+                  component={DataImportScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="DeleteAccount"
+                  component={DeleteAccountScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',
