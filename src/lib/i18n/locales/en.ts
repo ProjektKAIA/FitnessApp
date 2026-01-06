@@ -819,37 +819,7 @@ const en = {
       cardio: 'Endurance & Cardiovascular',
       stretching: 'Stretching & Mobility',
     },
-    unlockAllPrograms: 'Unlock All Programs',
     startProgram: 'Start Program',
-    premiumBanner: {
-      title: 'Get Premium',
-      subtitle: 'Unlock all programs',
-    },
-  },
-
-  // Premium Screen
-  premium: {
-    subtitle: 'Take your body to the perfect',
-    popular: 'Popular',
-    yearly: 'Yearly',
-    monthly: 'Monthly',
-    month: 'month',
-    billedYearly: 'Billed yearly (€59.88)',
-    getFrameFitPro: 'Get FrameFit Pro',
-    restorePurchase: 'Restore Purchase',
-    disclaimer: 'Subscription renews automatically. You can cancel at any time in settings.',
-    features: {
-      unlimitedWorkouts: 'Unlimited Workouts',
-      unlimitedWorkoutsDesc: 'Access all training programs',
-      advancedAnalytics: 'Advanced Analytics',
-      advancedAnalyticsDesc: 'Detailed progress reports',
-      aiCoach: 'AI Coach',
-      aiCoachDesc: 'Personalized training recommendations',
-      noAds: 'No Ads',
-      noAdsDesc: 'Enjoy the app ad-free',
-      cloudSync: 'Cloud Sync',
-      cloudSyncDesc: 'Data available on all devices',
-    },
   },
 } as const;
 

@@ -17,7 +17,6 @@ import {
   PlanScreen,
   ProgramsScreen,
   MoreScreen,
-  PremiumScreen,
   WorkoutActiveScreen,
   WorkoutHistoryScreen,
   WorkoutDetailScreen,
@@ -340,14 +339,6 @@ export default function App() {
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',
-                  }}
-                />
-                <Stack.Screen
-                  name="Premium"
-                  component={PremiumScreen}
-                  options={{
-                    presentation: 'fullScreenModal',
-                    animation: 'slide_from_bottom',
                   }}
                 />
               </>

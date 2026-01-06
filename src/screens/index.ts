@@ -4,7 +4,6 @@ export { PlanScreen } from './PlanScreen';
 export { ProgressScreen } from './ProgressScreen';
 export { ProgramsScreen } from './ProgramsScreen';
 export { MoreScreen } from './MoreScreen';
-export { PremiumScreen } from './PremiumScreen';
 export { WorkoutActiveScreen } from './WorkoutActiveScreen';
 export { WorkoutHistoryScreen } from './WorkoutHistoryScreen';
 export { WorkoutDetailScreen } from './WorkoutDetailScreen';

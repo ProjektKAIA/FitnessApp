@@ -141,10 +141,6 @@ export const ProgramsScreen: React.FC = () => {
     // Navigate to workout or show program details
   };
 
-  const handlePremiumPress = () => {
-    navigation.navigate('Premium');
-  };
-
   const renderProgramItem = ({ item }: { item: IProgram }) => (
     <View style={styles.programCardWrapper}>
       <ProgramCard program={item} onPress={handleProgramPress} />
@@ -234,17 +230,6 @@ export const ProgramsScreen: React.FC = () => {
           </View>
         )}
 
-        {/* Premium Banner */}
-        <TouchableOpacity style={styles.premiumBanner} onPress={handlePremiumPress}>
-          <View style={styles.premiumContent}>
-            <Text style={styles.premiumTitle}>FrameFit Pro</Text>
-            <Text style={styles.premiumSubtitle}>
-              {t('programs.unlockAllPrograms')}
-            </Text>
-          </View>
-          <Text style={styles.premiumArrow}>→</Text>
-        </TouchableOpacity>
-
         <View style={styles.bottomSpacing} />
       </ScrollView>
 
@@ -323,34 +308,6 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.sm,
     color: COLORS.gray[400],
     textAlign: 'center',
-  },
-  premiumBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.gray[800],
-    borderRadius: BORDER_RADIUS.xl,
-    padding: SPACING.lg,
-    marginHorizontal: SPACING.lg,
-    marginTop: SPACING.xl,
-    borderWidth: 1,
-    borderColor: COLORS.accent,
-  },
-  premiumContent: {
-    flex: 1,
-  },
-  premiumTitle: {
-    fontSize: FONT_SIZES.lg,
-    fontWeight: '700',
-    color: COLORS.accent,
-    marginBottom: 2,
-  },
-  premiumSubtitle: {
-    fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
-  },
-  premiumArrow: {
-    fontSize: FONT_SIZES.xl,
-    color: COLORS.accent,
   },
   bottomSpacing: {
     height: SPACING['3xl'],

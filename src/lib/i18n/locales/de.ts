@@ -819,37 +819,7 @@ const de = {
       cardio: 'Ausdauer & Herz-Kreislauf',
       stretching: 'Dehnung & Beweglichkeit',
     },
-    unlockAllPrograms: 'Alle Programme freischalten',
     startProgram: 'Programm starten',
-    premiumBanner: {
-      title: 'Hol dir Premium',
-      subtitle: 'Schalte alle Programme frei',
-    },
-  },
-
-  // Premium Screen
-  premium: {
-    subtitle: 'Bring deinen Körper zur Perfektion',
-    popular: 'Beliebt',
-    yearly: 'Jährlich',
-    monthly: 'Monatlich',
-    month: 'Monat',
-    billedYearly: 'Jährlich abgerechnet (59,88 €)',
-    getFrameFitPro: 'FrameFit Pro holen',
-    restorePurchase: 'Kauf wiederherstellen',
-    disclaimer: 'Das Abonnement verlängert sich automatisch. Du kannst es jederzeit in den Einstellungen kündigen.',
-    features: {
-      unlimitedWorkouts: 'Unbegrenzte Workouts',
-      unlimitedWorkoutsDesc: 'Zugriff auf alle Trainingsprogramme',
-      advancedAnalytics: 'Erweiterte Analysen',
-      advancedAnalyticsDesc: 'Detaillierte Fortschrittsberichte',
-      aiCoach: 'KI Coach',
-      aiCoachDesc: 'Personalisierte Trainingsempfehlungen',
-      noAds: 'Keine Werbung',
-      noAdsDesc: 'Genieße die App werbefrei',
-      cloudSync: 'Cloud-Synchronisierung',
-      cloudSyncDesc: 'Daten auf allen Geräten verfügbar',
-    },
   },
 } as const;
 
