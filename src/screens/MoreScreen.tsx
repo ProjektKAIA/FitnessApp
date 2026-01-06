@@ -123,7 +123,12 @@ export const MoreScreen: React.FC = () => {
             subtitle={t('more.profileSubtitle')}
             onPress={() => navigation.navigate('ProfileEdit')}
           />
-          <MenuItem icon="🔐" title={t('more.security')} subtitle={t('more.securitySubtitle')} />
+          <MenuItem
+            icon="🔐"
+            title={t('more.security')}
+            subtitle={t('more.securitySubtitle')}
+            onPress={() => navigation.navigate('Security')}
+          />
           <MenuItem
             icon="🚪"
             title={t('more.logout')}

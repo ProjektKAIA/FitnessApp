@@ -7,3 +7,4 @@ export { useLanguageStore, SUPPORTED_LANGUAGES, type Language } from './language
 export { useAICoachStore, type ImportedChat } from './aiCoachStore';
 export { useTrainingPlanStore, GYM_EXERCISES } from './trainingPlanStore';
 export { useHealthStore } from './healthStore';
+export { useSecurityStore } from './securityStore';

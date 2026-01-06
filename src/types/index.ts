@@ -300,6 +300,7 @@ export type RootStackParamList = {
   HealthSettings: undefined;
   HealthDashboard: undefined;
   Contact: undefined;
+  Security: undefined;
 };
 
 export type OnboardingStackParamList = {

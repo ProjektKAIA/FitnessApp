@@ -18,6 +18,7 @@ export {
 export { LanguageScreen } from './settings/LanguageScreen';
 export { ProfileEditScreen } from './settings/ProfileEditScreen';
 export { ContactScreen } from './settings/ContactScreen';
+export { SecurityScreen } from './settings/SecurityScreen';
 export { AICoachScreen, ChatGPTImportScreen, ChatDetailScreen } from './ai';
 export {
   SportSelectionScreen,

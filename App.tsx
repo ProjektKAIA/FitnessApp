@@ -39,6 +39,7 @@ import {
   HealthSettingsScreen,
   HealthDashboardScreen,
   ContactScreen,
+  SecurityScreen,
   WelcomeScreen,
   GenderScreen,
   HeightScreen,
@@ -345,6 +346,14 @@ export default function App() {
                 <Stack.Screen
                   name="Contact"
                   component={ContactScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="Security"
+                  component={SecurityScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',
