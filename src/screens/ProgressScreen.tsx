@@ -278,7 +278,7 @@ export const ProgressScreen: React.FC = () => {
               exerciseName={pr.exerciseName}
               weight={pr.weight}
               reps={pr.reps}
-              date={pr.date}
+              date={pr.date instanceof Date ? pr.date.toLocaleDateString() : pr.date}
             />
           ))
         ) : (

@@ -1,5 +1,44 @@
 export type TDirection = 'gym' | 'calisthenics' | 'cardio' | 'yoga' | 'mobility' | 'custom';
 
+// Onboarding Types
+export type TGender = 'male' | 'female' | 'other';
+
+export type TFitnessSport =
+  | 'bodybuilding'
+  | 'tennis'
+  | 'basketball'
+  | 'football'
+  | 'volleyball'
+  | 'badminton'
+  | 'shooting'
+  | 'running'
+  | 'swimming'
+  | 'yoga'
+  | 'kickboxing'
+  | 'karate';
+
+export type TFitnessGoal =
+  | 'fat_burning'
+  | 'fitness'
+  | 'strengthen_muscles'
+  | 'increased_metabolism'
+  | 'weight_gain';
+
+export type TProgramLevel = 1 | 2 | 3 | 4;
+
+export type TProgramCategory = 'yoga' | 'meditation' | 'bodybuilding' | 'cardio' | 'stretching';
+
+export interface IProgram {
+  id: string;
+  name: string;
+  category: TProgramCategory;
+  imageUrl: string;
+  duration: string;
+  level: TProgramLevel;
+  sessionsCount: number;
+  description?: string;
+}
+
 export type TSportType =
   | 'fitness'
   | 'running'
@@ -105,6 +144,9 @@ export interface IUser {
   birthday?: string;
   weight?: number;
   height?: number;
+  gender?: TGender;
+  favoriteSports?: TFitnessSport[];
+  fitnessGoal?: TFitnessGoal;
   createdAt: Date;
   settings: IUserSettings;
 }
@@ -115,6 +157,9 @@ export interface IUserProfile {
   birthday?: string;
   weight?: number;
   height?: number;
+  gender?: TGender;
+  favoriteSports?: TFitnessSport[];
+  fitnessGoal?: TFitnessGoal;
 }
 
 export interface ISet {
@@ -230,6 +275,7 @@ export interface ITileConfig {
 export type RootStackParamList = {
   Auth: undefined;
   Consent: undefined;
+  Onboarding: undefined;
   Main: undefined;
   WorkoutActive: { workoutId: string };
   WorkoutHistory: { direction?: TDirection } | undefined;
@@ -253,6 +299,16 @@ export type RootStackParamList = {
   ExercisePicker: { planId: string; day: TTrainingDay; workoutId: string };
   HealthSettings: undefined;
   HealthDashboard: undefined;
+  Premium: undefined;
+};
+
+export type OnboardingStackParamList = {
+  Welcome: undefined;
+  Gender: undefined;
+  Height: undefined;
+  Weight: undefined;
+  Sport: undefined;
+  Goal: undefined;
 };
 
 export type AuthStackParamList = {
@@ -265,6 +321,6 @@ export type MainTabParamList = {
   Home: undefined;
   Workout: undefined;
   Plan: undefined;
-  Progress: undefined;
+  Programs: undefined;
   More: undefined;
 };

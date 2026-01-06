@@ -15,8 +15,9 @@ import {
   HomeScreen,
   WorkoutScreen,
   PlanScreen,
-  ProgressScreen,
+  ProgramsScreen,
   MoreScreen,
+  PremiumScreen,
   WorkoutActiveScreen,
   WorkoutHistoryScreen,
   WorkoutDetailScreen,
@@ -38,16 +39,41 @@ import {
   ExercisePickerScreen,
   HealthSettingsScreen,
   HealthDashboardScreen,
+  WelcomeScreen,
+  GenderScreen,
+  HeightScreen,
+  WeightScreen,
+  SportScreen,
+  GoalScreen,
 } from '@/screens';
 import { BottomNav } from '@/components/navigation';
 import { ErrorBoundary, LoadingScreen } from '@/components/common';
 import { useAuthStore, useConsentStore, useLanguageStore } from '@/stores';
-import { RootStackParamList, MainTabParamList } from '@/types';
+import { RootStackParamList, MainTabParamList, OnboardingStackParamList } from '@/types';
 import { COLORS } from '@/constants/theme';
 import { initI18n } from '@/lib/i18n';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
+const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>();
+
+const OnboardingNavigator: React.FC = () => {
+  return (
+    <OnboardingStack.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_right',
+      }}
+    >
+      <OnboardingStack.Screen name="Welcome" component={WelcomeScreen} />
+      <OnboardingStack.Screen name="Gender" component={GenderScreen} />
+      <OnboardingStack.Screen name="Height" component={HeightScreen} />
+      <OnboardingStack.Screen name="Weight" component={WeightScreen} />
+      <OnboardingStack.Screen name="Sport" component={SportScreen} />
+      <OnboardingStack.Screen name="Goal" component={GoalScreen} />
+    </OnboardingStack.Navigator>
+  );
+};
 
 const MainTabs: React.FC = () => {
   const { t } = useTranslation();
@@ -75,9 +101,9 @@ const MainTabs: React.FC = () => {
         options={{ tabBarLabel: t('nav.plan') }}
       />
       <Tab.Screen
-        name="Progress"
-        component={ProgressScreen}
-        options={{ tabBarLabel: t('nav.progress') }}
+        name="Programs"
+        component={ProgramsScreen}
+        options={{ tabBarLabel: t('nav.programs') }}
       />
       <Tab.Screen
         name="More"
@@ -96,6 +122,7 @@ export default function App() {
   const hasAcceptedPrivacyPolicy = useConsentStore((state) => state.hasAcceptedPrivacyPolicy);
   const hasAcceptedTerms = useConsentStore((state) => state.hasAcceptedTerms);
   const hasRespondedToTracking = useConsentStore((state) => state.hasRespondedToTracking);
+  const hasCompletedOnboarding = useConsentStore((state) => state.hasCompletedOnboarding);
   const initializeLanguage = useLanguageStore((state) => state.initialize);
 
   const hasCompletedConsent = hasAcceptedPrivacyPolicy && hasAcceptedTerms && hasRespondedToTracking;
@@ -148,6 +175,14 @@ export default function App() {
               <Stack.Screen
                 name="Consent"
                 component={ConsentScreen}
+                options={{
+                  animationTypeForReplace: 'push',
+                }}
+              />
+            ) : !hasCompletedOnboarding ? (
+              <Stack.Screen
+                name="Onboarding"
+                component={OnboardingNavigator}
                 options={{
                   animationTypeForReplace: 'push',
                 }}
@@ -305,6 +340,14 @@ export default function App() {
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="Premium"
+                  component={PremiumScreen}
+                  options={{
+                    presentation: 'fullScreenModal',
+                    animation: 'slide_from_bottom',
                   }}
                 />
               </>

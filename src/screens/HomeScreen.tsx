@@ -71,9 +71,9 @@ export const HomeScreen: React.FC = () => {
     navigation.navigate('WorkoutActive', { workoutId: 'new' });
   };
 
-  // Navigation zu Progress Tab
+  // Navigation zu Programs Tab
   const handleNavigateToProgress = () => {
-    navigation.navigate('Progress');
+    navigation.navigate('Programs');
   };
 
   // Streak Tile Handler
@@ -98,7 +98,7 @@ export const HomeScreen: React.FC = () => {
 
   // Health Tile Handler
   const handleHealthPress = () => {
-    navigation.navigate('Progress');
+    navigation.navigate('Programs');
   };
 
   return (

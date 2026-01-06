@@ -29,6 +29,7 @@ const de = {
     workout: 'Workout',
     plan: 'Plan',
     progress: 'Fortschritt',
+    programs: 'Programme',
     more: 'Mehr',
   },
 
@@ -528,6 +529,10 @@ const de = {
     volume: 'Volumen',
     totalVolume: 'Gesamt',
     notes: 'Notizen',
+    description: 'Beschreibung',
+    noExercises: 'Keine Übungen',
+    nextProgram: 'Nächstes Programm',
+    startWorkout: 'Workout starten',
   },
 
   // Streak Detail
@@ -726,6 +731,125 @@ const de = {
     noFitnessChats: 'Keine Fitness-bezogenen Chats gefunden',
     showAllChats: 'Alle Chats anzeigen',
     imported: 'Importiert',
+  },
+
+  // Onboarding
+  onboarding: {
+    welcome: {
+      title: 'Bring deinen Körper auf das nächste Level',
+      subtitle: 'Starte jetzt deine Fitness-Reise mit personalisierten Trainingsplänen',
+      letsGo: 'Los geht\'s',
+      skip: 'Überspringen',
+    },
+    gender: {
+      title: 'Was ist dein Geschlecht?',
+      subtitle: 'Hilft uns, dein Training anzupassen',
+      female: 'Weiblich',
+      male: 'Männlich',
+    },
+    height: {
+      title: 'Wie groß bist du?',
+      subtitle: 'Wird für Berechnungen verwendet',
+      cm: 'cm',
+    },
+    weight: {
+      title: 'Wie viel wiegst du?',
+      subtitle: 'Wird für Berechnungen verwendet',
+      kg: 'kg',
+    },
+    sport: {
+      title: 'Was sind deine Lieblingssportarten?',
+      subtitle: 'Wähle eine oder mehrere aus',
+      sports: {
+        bodybuilding: 'Bodybuilding',
+        tennis: 'Tennis',
+        basketball: 'Basketball',
+        football: 'Fußball',
+        volleyball: 'Volleyball',
+        badminton: 'Badminton',
+        shooting: 'Schießen',
+        running: 'Laufen',
+        swimming: 'Schwimmen',
+        yoga: 'Yoga',
+        kickboxing: 'Kickboxen',
+        karate: 'Karate',
+      },
+    },
+    goal: {
+      title: 'Was ist dein Hauptziel?',
+      subtitle: 'Wir passen dein Training entsprechend an',
+      goals: {
+        fat_burning: 'Fettverbrennung',
+        fitness: 'Allgemeine Fitness',
+        strengthen_muscles: 'Muskelaufbau',
+        increased_metabolism: 'Stoffwechsel steigern',
+        weight_gain: 'Gewichtszunahme',
+      },
+    },
+    continue: 'Weiter',
+    finish: 'Fertig',
+    step: 'Schritt {{current}} von {{total}}',
+  },
+
+  // Programs Screen
+  programs: {
+    title: 'Programme',
+    subtitle: 'Wähle dein Trainingsprogramm',
+    featuredPrograms: 'Beliebte Programme',
+    allPrograms: 'Alle Programme',
+    selectLevel: 'Level auswählen',
+    level: 'Level {{level}}',
+    levelDescription: {
+      1: 'Einsteiger - Leichte Intensität',
+      2: 'Fortgeschritten - Mittlere Intensität',
+      3: 'Profi - Hohe Intensität',
+      4: 'Experte - Maximale Intensität',
+    },
+    categories: {
+      yoga: 'Yoga Time',
+      meditation: 'Meditation Time',
+      bodybuilding: 'Bodybuilding Time',
+      cardio: 'Cardio Time',
+      stretching: 'Stretching Time',
+    },
+    categoryDescriptions: {
+      yoga: 'Entspannung & Flexibilität',
+      meditation: 'Ruhe & Fokus',
+      bodybuilding: 'Kraft & Muskelaufbau',
+      cardio: 'Ausdauer & Herz-Kreislauf',
+      stretching: 'Dehnung & Beweglichkeit',
+    },
+    unlockAllPrograms: 'Alle Programme freischalten',
+    startProgram: 'Programm starten',
+    premiumBanner: {
+      title: 'Hol dir Premium',
+      subtitle: 'Schalte alle Programme frei',
+    },
+  },
+
+  // Premium Screen
+  premium: {
+    subtitle: 'Bring deinen Körper zur Perfektion',
+    popular: 'Beliebt',
+    yearly: 'Jährlich',
+    monthly: 'Monatlich',
+    month: 'Monat',
+    billedYearly: 'Jährlich abgerechnet (59,88 €)',
+    getFrameFitPro: 'FrameFit Pro holen',
+    restorePurchase: 'Kauf wiederherstellen',
+    disclaimer: 'Das Abonnement verlängert sich automatisch. Du kannst es jederzeit in den Einstellungen kündigen.',
+    features: {
+      unlimitedWorkouts: 'Unbegrenzte Workouts',
+      unlimitedWorkoutsDesc: 'Zugriff auf alle Trainingsprogramme',
+      advancedAnalytics: 'Erweiterte Analysen',
+      advancedAnalyticsDesc: 'Detaillierte Fortschrittsberichte',
+      aiCoach: 'KI Coach',
+      aiCoachDesc: 'Personalisierte Trainingsempfehlungen',
+      noAds: 'Keine Werbung',
+      noAdsDesc: 'Genieße die App werbefrei',
+      cloudSync: 'Cloud-Synchronisierung',
+      cloudSyncDesc: 'Daten auf allen Geräten verfügbar',
+    },
   },
 } as const;
 

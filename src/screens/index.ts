@@ -2,7 +2,9 @@ export { HomeScreen } from './HomeScreen';
 export { WorkoutScreen } from './WorkoutScreen';
 export { PlanScreen } from './PlanScreen';
 export { ProgressScreen } from './ProgressScreen';
+export { ProgramsScreen } from './ProgramsScreen';
 export { MoreScreen } from './MoreScreen';
+export { PremiumScreen } from './PremiumScreen';
 export { WorkoutActiveScreen } from './WorkoutActiveScreen';
 export { WorkoutHistoryScreen } from './WorkoutHistoryScreen';
 export { WorkoutDetailScreen } from './WorkoutDetailScreen';
@@ -25,3 +27,11 @@ export {
   ExercisePickerScreen,
 } from './plan';
 export { HealthSettingsScreen, HealthDashboardScreen } from './health';
+export {
+  WelcomeScreen,
+  GenderScreen,
+  HeightScreen,
+  WeightScreen,
+  SportScreen,
+  GoalScreen,
+} from './onboarding';

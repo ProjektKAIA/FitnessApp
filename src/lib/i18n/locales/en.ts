@@ -29,6 +29,7 @@ const en = {
     workout: 'Workout',
     plan: 'Plan',
     progress: 'Progress',
+    programs: 'Programs',
     more: 'More',
   },
 
@@ -528,6 +529,10 @@ const en = {
     volume: 'Volume',
     totalVolume: 'Total',
     notes: 'Notes',
+    description: 'Description',
+    noExercises: 'No exercises',
+    nextProgram: 'Next Program',
+    startWorkout: 'Start Workout',
   },
 
   // Streak Detail
@@ -726,6 +731,125 @@ const en = {
     noFitnessChats: 'No fitness-related chats found',
     showAllChats: 'Show all chats',
     imported: 'Imported',
+  },
+
+  // Onboarding
+  onboarding: {
+    welcome: {
+      title: 'Take your body to the peak',
+      subtitle: 'Start your fitness journey now with personalized training plans',
+      letsGo: "Let's Go",
+      skip: 'Skip',
+    },
+    gender: {
+      title: 'What is your gender?',
+      subtitle: 'Helps us customize your training',
+      female: 'Female',
+      male: 'Male',
+    },
+    height: {
+      title: 'How tall are you?',
+      subtitle: 'Used for calculations',
+      cm: 'cm',
+    },
+    weight: {
+      title: 'How much do you weigh?',
+      subtitle: 'Used for calculations',
+      kg: 'kg',
+    },
+    sport: {
+      title: 'What are your favorite sports?',
+      subtitle: 'Select one or more',
+      sports: {
+        bodybuilding: 'Bodybuilding',
+        tennis: 'Tennis',
+        basketball: 'Basketball',
+        football: 'Football',
+        volleyball: 'Volleyball',
+        badminton: 'Badminton',
+        shooting: 'Shooting',
+        running: 'Running',
+        swimming: 'Swimming',
+        yoga: 'Yoga',
+        kickboxing: 'Kickboxing',
+        karate: 'Karate',
+      },
+    },
+    goal: {
+      title: 'What is your main goal?',
+      subtitle: 'We will adjust your training accordingly',
+      goals: {
+        fat_burning: 'Fat Burning',
+        fitness: 'General Fitness',
+        strengthen_muscles: 'Build Muscles',
+        increased_metabolism: 'Boost Metabolism',
+        weight_gain: 'Weight Gain',
+      },
+    },
+    continue: 'Continue',
+    finish: 'Finish',
+    step: 'Step {{current}} of {{total}}',
+  },
+
+  // Programs Screen
+  programs: {
+    title: 'Programs',
+    subtitle: 'Choose your training program',
+    featuredPrograms: 'Featured Programs',
+    allPrograms: 'All Programs',
+    selectLevel: 'Select Level',
+    level: 'Level {{level}}',
+    levelDescription: {
+      1: 'Beginner - Light intensity',
+      2: 'Intermediate - Medium intensity',
+      3: 'Advanced - High intensity',
+      4: 'Expert - Maximum intensity',
+    },
+    categories: {
+      yoga: 'Yoga Time',
+      meditation: 'Meditation Time',
+      bodybuilding: 'Bodybuilding Time',
+      cardio: 'Cardio Time',
+      stretching: 'Stretching Time',
+    },
+    categoryDescriptions: {
+      yoga: 'Relaxation & Flexibility',
+      meditation: 'Peace & Focus',
+      bodybuilding: 'Strength & Muscle Building',
+      cardio: 'Endurance & Cardiovascular',
+      stretching: 'Stretching & Mobility',
+    },
+    unlockAllPrograms: 'Unlock All Programs',
+    startProgram: 'Start Program',
+    premiumBanner: {
+      title: 'Get Premium',
+      subtitle: 'Unlock all programs',
+    },
+  },
+
+  // Premium Screen
+  premium: {
+    subtitle: 'Take your body to the perfect',
+    popular: 'Popular',
+    yearly: 'Yearly',
+    monthly: 'Monthly',
+    month: 'month',
+    billedYearly: 'Billed yearly (€59.88)',
+    getFrameFitPro: 'Get FrameFit Pro',
+    restorePurchase: 'Restore Purchase',
+    disclaimer: 'Subscription renews automatically. You can cancel at any time in settings.',
+    features: {
+      unlimitedWorkouts: 'Unlimited Workouts',
+      unlimitedWorkoutsDesc: 'Access all training programs',
+      advancedAnalytics: 'Advanced Analytics',
+      advancedAnalyticsDesc: 'Detailed progress reports',
+      aiCoach: 'AI Coach',
+      aiCoachDesc: 'Personalized training recommendations',
+      noAds: 'No Ads',
+      noAdsDesc: 'Enjoy the app ad-free',
+      cloudSync: 'Cloud Sync',
+      cloudSyncDesc: 'Data available on all devices',
+    },
   },
 } as const;
 

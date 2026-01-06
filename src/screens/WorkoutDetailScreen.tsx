@@ -1,3 +1,4 @@
+// /workspaces/claude-workspace/fitnessapp/src/screens/WorkoutDetailScreen.tsx
 import React from 'react';
 import {
   View,
@@ -5,11 +6,13 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
+import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useWorkoutStore } from '@/stores';
 import { RootStackParamList, IExercise, TDirection } from '@/types';
@@ -24,6 +27,15 @@ const DIRECTION_COLORS: Record<TDirection, string> = {
   yoga: COLORS.success,
   mobility: COLORS.gray[500],
   custom: COLORS.gray[600],
+};
+
+const DIRECTION_IMAGES: Record<TDirection, string> = {
+  gym: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800',
+  calisthenics: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=800',
+  cardio: 'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=800',
+  yoga: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800',
+  mobility: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800',
+  custom: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800',
 };
 
 const formatDateTime = (date: Date): string => {
@@ -120,69 +132,99 @@ export const WorkoutDetailScreen: React.FC = () => {
     navigation.goBack();
   };
 
+  const handleStartWorkout = () => {
+    if (workout) {
+      navigation.navigate('WorkoutActive', { workoutId: workout.id });
+    }
+  };
+
   if (!workout) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <View style={styles.header}>
+        <View style={styles.headerBar}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <Text style={styles.backText}>{t('common.back')}</Text>
+            <Text style={styles.backIcon}>←</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>{t('workoutDetail.title')}</Text>
           <View style={styles.placeholder} />
         </View>
         <View style={styles.emptyState}>
+          <Text style={styles.emptyIcon}>🏋️</Text>
           <Text style={styles.emptyText}>{t('workoutDetail.notFound')}</Text>
         </View>
       </SafeAreaView>
     );
   }
 
-  return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-          <Text style={styles.backText}>{t('common.back')}</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>{t('workoutDetail.title')}</Text>
-        <View style={styles.placeholder} />
-      </View>
+  const imageUrl = DIRECTION_IMAGES[workout.direction];
 
+  return (
+    <View style={styles.container}>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Workout Info Card */}
-        <View style={styles.infoCard}>
-          <View style={styles.infoHeader}>
-            <Text style={styles.workoutName}>{workout.name}</Text>
-            <View
-              style={[
-                styles.directionBadge,
-                { backgroundColor: DIRECTION_COLORS[workout.direction] },
-              ]}
-            >
-              <Text style={styles.directionText}>
-                {t(`directions.${workout.direction}`)}
-              </Text>
+        {/* Hero Image */}
+        <ImageBackground
+          source={{ uri: imageUrl }}
+          style={styles.heroImage}
+          resizeMode="cover"
+        >
+          <LinearGradient
+            colors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.7)']}
+            style={styles.heroGradient}
+          >
+            <SafeAreaView edges={['top']}>
+              <View style={styles.headerBar}>
+                <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+                  <Text style={styles.backIcon}>←</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.pauseButton}>
+                  <Text style={styles.pauseIcon}>⏸</Text>
+                </TouchableOpacity>
+              </View>
+            </SafeAreaView>
+          </LinearGradient>
+        </ImageBackground>
+
+        {/* Content */}
+        <View style={styles.content}>
+          {/* Workout Info */}
+          <View style={styles.workoutInfo}>
+            <View style={styles.titleRow}>
+              <Text style={styles.workoutName}>{workout.name}</Text>
+              <View style={styles.durationBadge}>
+                <Text style={styles.durationIcon}>⏱</Text>
+                <Text style={styles.durationText}>{formatDuration(workout.duration)}</Text>
+              </View>
             </View>
+
+            <Text style={styles.description}>
+              {t('workoutDetail.description', {
+                exercises: workout.exercises.length,
+                direction: t(`directions.${workout.direction}`),
+              })}
+            </Text>
+
+            {workout.finishedAt && (
+              <Text style={styles.dateText}>
+                {formatDateTime(workout.finishedAt)}
+              </Text>
+            )}
           </View>
 
-          {workout.finishedAt && (
-            <Text style={styles.workoutDate}>
-              {formatDateTime(workout.finishedAt)}
-            </Text>
-          )}
-
+          {/* Stats Row */}
           <View style={styles.statsRow}>
             <View style={styles.statItem}>
               <Text style={styles.statValue}>{workout.exercises.length}</Text>
               <Text style={styles.statLabel}>{t('common.exercises')}</Text>
             </View>
+            <View style={styles.statDivider} />
             <View style={styles.statItem}>
               <Text style={styles.statValue}>{formatDuration(workout.duration)}</Text>
               <Text style={styles.statLabel}>{t('workoutDetail.duration')}</Text>
             </View>
+            <View style={styles.statDivider} />
             <View style={styles.statItem}>
               <Text style={styles.statValue}>
                 {workout.totalVolume >= 1000
@@ -192,115 +234,230 @@ export const WorkoutDetailScreen: React.FC = () => {
               <Text style={styles.statLabel}>{t('workoutDetail.totalKg')}</Text>
             </View>
           </View>
-        </View>
 
-        {/* Exercises */}
-        <Text style={styles.sectionTitle}>{t('workoutDetail.exercises')}</Text>
-        {workout.exercises.map((exercise, index) => (
-          <ExerciseCard key={exercise.id} exercise={exercise} index={index} />
-        ))}
-
-        {workout.notes && (
-          <>
-            <Text style={styles.sectionTitle}>{t('workoutDetail.notes')}</Text>
-            <View style={styles.notesCard}>
-              <Text style={styles.notesText}>{workout.notes}</Text>
+          {/* Next Program Preview */}
+          <View style={styles.nextProgramCard}>
+            <Text style={styles.nextProgramLabel}>{t('workoutDetail.nextProgram')}</Text>
+            <View style={styles.nextProgramRow}>
+              <View style={styles.nextProgramIcon}>
+                <Text style={styles.nextProgramIconText}>🏋️</Text>
+              </View>
+              <View style={styles.nextProgramInfo}>
+                <Text style={styles.nextProgramTitle}>
+                  {workout.exercises[0]?.name || t('workoutDetail.noExercises')}
+                </Text>
+                <Text style={styles.nextProgramMeta}>
+                  {workout.exercises[0]?.sets.length || 0} {t('common.sets')} • 12 {t('common.reps')} • 5 {t('common.mins')}
+                </Text>
+              </View>
+              <TouchableOpacity style={styles.playButton}>
+                <Text style={styles.playIcon}>▶</Text>
+              </TouchableOpacity>
             </View>
-          </>
-        )}
+          </View>
+
+          {/* Exercises List */}
+          <Text style={styles.sectionTitle}>{t('workoutDetail.exercises')}</Text>
+          {workout.exercises.map((exercise, index) => (
+            <ExerciseCard key={exercise.id} exercise={exercise} index={index} />
+          ))}
+
+          {/* Notes */}
+          {workout.notes && (
+            <>
+              <Text style={styles.sectionTitle}>{t('workoutDetail.notes')}</Text>
+              <View style={styles.notesCard}>
+                <Text style={styles.notesText}>{workout.notes}</Text>
+              </View>
+            </>
+          )}
+        </View>
       </ScrollView>
-    </SafeAreaView>
+
+      {/* Start Workout Button */}
+      <SafeAreaView edges={['bottom']} style={styles.bottomBar}>
+        <TouchableOpacity style={styles.startButton} onPress={handleStartWorkout}>
+          <Text style={styles.startButtonText}>{t('workoutDetail.startWorkout')}</Text>
+          <Text style={styles.startButtonArrow}>→</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.gray[100],
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.md,
-    backgroundColor: COLORS.white,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray[200],
-  },
-  backButton: {
-    padding: SPACING.xs,
-  },
-  backText: {
-    fontSize: FONT_SIZES.base,
-    color: COLORS.primary,
-  },
-  title: {
-    fontSize: FONT_SIZES.lg,
-    fontWeight: '600',
-    color: COLORS.gray[900],
-  },
-  placeholder: {
-    width: 60,
+    backgroundColor: COLORS.gray[900],
   },
   scrollView: {
     flex: 1,
   },
-  content: {
-    padding: SPACING.lg,
+  scrollContent: {
+    paddingBottom: 100,
   },
-  infoCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: BORDER_RADIUS.lg,
-    padding: SPACING.lg,
-    marginBottom: SPACING.lg,
+  heroImage: {
+    height: 280,
   },
-  infoHeader: {
+  heroGradient: {
+    flex: 1,
+  },
+  headerBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: SPACING.xs,
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.md,
   },
-  workoutName: {
-    fontSize: FONT_SIZES.lg,
-    fontWeight: '700',
-    color: COLORS.gray[900],
-    flex: 1,
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  directionBadge: {
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 4,
-    borderRadius: BORDER_RADIUS.sm,
-  },
-  directionText: {
-    fontSize: FONT_SIZES.xs,
-    fontWeight: '500',
+  backIcon: {
+    fontSize: FONT_SIZES.xl,
     color: COLORS.white,
   },
-  workoutDate: {
+  pauseButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pauseIcon: {
+    fontSize: FONT_SIZES.lg,
+    color: COLORS.white,
+  },
+  placeholder: {
+    width: 40,
+  },
+  content: {
+    padding: SPACING.lg,
+  },
+  workoutInfo: {
+    marginBottom: SPACING.xl,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: SPACING.sm,
+  },
+  workoutName: {
+    fontSize: FONT_SIZES['2xl'],
+    fontWeight: '700',
+    color: COLORS.white,
+    flex: 1,
+  },
+  durationBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.gray[800],
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: BORDER_RADIUS.full,
+    gap: SPACING.xs,
+  },
+  durationIcon: {
+    fontSize: FONT_SIZES.sm,
+  },
+  durationText: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.white,
+    fontWeight: '500',
+  },
+  description: {
+    fontSize: FONT_SIZES.base,
+    color: COLORS.gray[400],
+    lineHeight: 22,
+    marginBottom: SPACING.sm,
+  },
+  dateText: {
     fontSize: FONT_SIZES.sm,
     color: COLORS.gray[500],
-    marginBottom: SPACING.md,
   },
   statsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingTop: SPACING.md,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.gray[100],
+    backgroundColor: COLORS.gray[800],
+    borderRadius: BORDER_RADIUS.xl,
+    padding: SPACING.lg,
+    marginBottom: SPACING.xl,
   },
   statItem: {
+    flex: 1,
     alignItems: 'center',
+  },
+  statDivider: {
+    width: 1,
+    backgroundColor: COLORS.gray[700],
   },
   statValue: {
     fontSize: FONT_SIZES.xl,
     fontWeight: '700',
-    color: COLORS.gray[900],
+    color: COLORS.white,
+    marginBottom: 2,
   },
   statLabel: {
     fontSize: FONT_SIZES.xs,
     color: COLORS.gray[500],
-    marginTop: 2,
+  },
+  nextProgramCard: {
+    backgroundColor: COLORS.gray[800],
+    borderRadius: BORDER_RADIUS.xl,
+    padding: SPACING.lg,
+    marginBottom: SPACING.xl,
+  },
+  nextProgramLabel: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.gray[500],
+    marginBottom: SPACING.md,
+  },
+  nextProgramRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  nextProgramIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: BORDER_RADIUS.lg,
+    backgroundColor: COLORS.gray[700],
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: SPACING.md,
+  },
+  nextProgramIconText: {
+    fontSize: FONT_SIZES.xl,
+  },
+  nextProgramInfo: {
+    flex: 1,
+  },
+  nextProgramTitle: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    color: COLORS.white,
+    marginBottom: 2,
+  },
+  nextProgramMeta: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.gray[500],
+  },
+  playButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playIcon: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.gray[900],
+    marginLeft: 2,
   },
   sectionTitle: {
     fontSize: FONT_SIZES.sm,
@@ -308,11 +465,11 @@ const styles = StyleSheet.create({
     color: COLORS.gray[500],
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginBottom: SPACING.sm,
+    marginBottom: SPACING.md,
     marginTop: SPACING.sm,
   },
   exerciseCard: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.gray[800],
     borderRadius: BORDER_RADIUS.lg,
     padding: SPACING.md,
     marginBottom: SPACING.sm,
@@ -326,7 +483,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.accent,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: SPACING.sm,
@@ -342,14 +499,14 @@ const styles = StyleSheet.create({
   exerciseName: {
     fontSize: FONT_SIZES.base,
     fontWeight: '600',
-    color: COLORS.gray[900],
+    color: COLORS.white,
   },
   exerciseMuscle: {
     fontSize: FONT_SIZES.xs,
     color: COLORS.gray[500],
   },
   setsContainer: {
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: COLORS.gray[700],
     borderRadius: BORDER_RADIUS.md,
     padding: SPACING.sm,
   },
@@ -357,7 +514,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingBottom: SPACING.xs,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray[200],
+    borderBottomColor: COLORS.gray[600],
     marginBottom: SPACING.xs,
   },
   setHeaderText: {
@@ -375,7 +532,7 @@ const styles = StyleSheet.create({
   },
   setCell: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[700],
+    color: COLORS.gray[300],
   },
   setCol: {
     width: 40,
@@ -394,31 +551,64 @@ const styles = StyleSheet.create({
     marginTop: SPACING.sm,
     paddingTop: SPACING.sm,
     borderTopWidth: 1,
-    borderTopColor: COLORS.gray[100],
+    borderTopColor: COLORS.gray[700],
   },
   exerciseTotal: {
     fontSize: FONT_SIZES.sm,
     fontWeight: '600',
-    color: COLORS.gray[700],
+    color: COLORS.gray[400],
     textAlign: 'right',
   },
   notesCard: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.gray[800],
     borderRadius: BORDER_RADIUS.lg,
     padding: SPACING.lg,
   },
   notesText: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[700],
+    color: COLORS.gray[400],
     lineHeight: 20,
   },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: SPACING.md,
+  },
+  emptyIcon: {
+    fontSize: 64,
   },
   emptyText: {
     fontSize: FONT_SIZES.base,
     color: COLORS.gray[500],
+  },
+  bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: COLORS.gray[900],
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.md,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.gray[800],
+  },
+  startButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.white,
+    paddingVertical: SPACING.lg,
+    borderRadius: BORDER_RADIUS.lg,
+    gap: SPACING.sm,
+  },
+  startButtonText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    color: COLORS.gray[900],
+  },
+  startButtonArrow: {
+    fontSize: FONT_SIZES.lg,
+    color: COLORS.gray[900],
   },
 });
