@@ -107,12 +107,15 @@ export const HomeScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <Text style={[styles.greeting, { color: colors.textSecondary }]}>
-            {getGreeting(t)}
-          </Text>
-          <Text style={[styles.title, { color: colors.text }]}>
-            {t('home.readyToTrain')}
-          </Text>
+          <View style={styles.headerLeft}>
+            <Text style={[styles.greeting, { color: colors.textSecondary }]}>
+              {getGreeting(t)}
+            </Text>
+            <Text style={[styles.title, { color: colors.text }]}>
+              {t('home.readyToTrain')}
+            </Text>
+          </View>
+          <Text style={[styles.brandName, { color: colors.primary }]}>ShapyFit</Text>
         </View>
 
         <View style={styles.tilesContainer}>
@@ -264,7 +267,13 @@ const styles = StyleSheet.create({
     paddingBottom: FLOATING_TAB_BAR_HEIGHT + SPACING.md,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
     marginVertical: SPACING.md,
+  },
+  headerLeft: {
+    flex: 1,
   },
   greeting: {
     fontSize: FONT_SIZES.xs,
@@ -275,6 +284,11 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.xl,
     fontWeight: '700',
     marginTop: SPACING.xs,
+  },
+  brandName: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '800',
+    letterSpacing: 0.5,
   },
   tilesContainer: {
     gap: getTileGap(),
