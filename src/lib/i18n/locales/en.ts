@@ -107,6 +107,7 @@ const en = {
     discard: 'Discard',
     newWorkout: 'New Workout',
     loadingWorkout: 'Loading workout...',
+    lastTime: 'Last time',
   },
 
   // Plan Screen

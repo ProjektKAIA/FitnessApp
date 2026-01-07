@@ -107,6 +107,7 @@ const de = {
     discard: 'Verwerfen',
     newWorkout: 'Neues Workout',
     loadingWorkout: 'Workout wird geladen...',
+    lastTime: 'Letztes Mal',
   },
 
   // Plan Screen

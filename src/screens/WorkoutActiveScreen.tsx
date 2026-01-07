@@ -35,7 +35,9 @@ export const WorkoutActiveScreen: React.FC = () => {
   const addExercise = useWorkoutStore((state) => state.addExercise);
   const addSet = useWorkoutStore((state) => state.addSet);
   const updateSet = useWorkoutStore((state) => state.updateSet);
+  const removeSet = useWorkoutStore((state) => state.removeSet);
   const completeSet = useWorkoutStore((state) => state.completeSet);
+  const getWorkoutHistory = useWorkoutStore((state) => state.getWorkoutHistory);
   const restTimerActive = useWorkoutStore((state) => state.restTimerActive);
   const restTimeRemaining = useWorkoutStore((state) => state.restTimeRemaining);
   const startRestTimer = useWorkoutStore((state) => state.startRestTimer);
@@ -47,6 +49,21 @@ export const WorkoutActiveScreen: React.FC = () => {
   const [showExerciseModal, setShowExerciseModal] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+
+  // Letzte Performance für eine Übung finden
+  const getLastPerformance = (exerciseName: string, setIndex: number): { weight: number; reps: number } | null => {
+    const history = getWorkoutHistory();
+    for (const workout of history) {
+      const exercise = workout.exercises.find((e) => e.name === exerciseName);
+      if (exercise && exercise.sets[setIndex]) {
+        const set = exercise.sets[setIndex];
+        if (set.weight > 0 || set.reps > 0) {
+          return { weight: set.weight, reps: set.reps };
+        }
+      }
+    }
+    return null;
+  };
 
   const SAMPLE_EXERCISES = [
     { nameKey: 'exercises.benchPress', muscleGroup: 'chest' as const },
@@ -245,49 +262,66 @@ export const WorkoutActiveScreen: React.FC = () => {
               <View style={{ width: 44 }} />
             </View>
 
-            {exercise.sets.map((set, setIndex) => (
-              <View
-                key={set.id}
-                style={[styles.setRow, set.completed && styles.setRowCompleted]}
-              >
-                <Text style={styles.setNumber}>{setIndex + 1}</Text>
-                <TextInput
-                  style={styles.setInput}
-                  value={set.weight > 0 ? set.weight.toString() : ''}
-                  onChangeText={(text) =>
-                    updateSet(exercise.id, set.id, {
-                      weight: parseFloat(text) || 0,
-                    })
-                  }
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor={COLORS.gray[400]}
-                />
-                <TextInput
-                  style={styles.setInput}
-                  value={set.reps > 0 ? set.reps.toString() : ''}
-                  onChangeText={(text) =>
-                    updateSet(exercise.id, set.id, {
-                      reps: parseInt(text) || 0,
-                    })
-                  }
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor={COLORS.gray[400]}
-                />
-                <TouchableOpacity
-                  style={[
-                    styles.checkButton,
-                    set.completed && styles.checkButtonCompleted,
-                  ]}
-                  onPress={() => handleCompleteSet(exercise.id, set.id)}
-                >
-                  <Text style={styles.checkIcon}>
-                    {set.completed ? '✓' : ''}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ))}
+            {exercise.sets.map((set, setIndex) => {
+              const lastPerf = getLastPerformance(exercise.name, setIndex);
+              return (
+                <View key={set.id} style={styles.setContainer}>
+                  <View style={[styles.setRow, set.completed && styles.setRowCompleted]}>
+                    {exercise.sets.length > 1 && (
+                      <TouchableOpacity
+                        style={styles.deleteSetButton}
+                        onPress={() => removeSet(exercise.id, set.id)}
+                      >
+                        <Text style={styles.deleteSetIcon}>×</Text>
+                      </TouchableOpacity>
+                    )}
+                    <Text style={[styles.setNumber, exercise.sets.length === 1 && styles.setNumberNoDelete]}>
+                      {setIndex + 1}
+                    </Text>
+                    <TextInput
+                      style={[styles.setInput, { backgroundColor: colors.inputBackground, color: colors.text }]}
+                      value={set.weight > 0 ? set.weight.toString() : ''}
+                      onChangeText={(text) =>
+                        updateSet(exercise.id, set.id, {
+                          weight: parseFloat(text) || 0,
+                        })
+                      }
+                      keyboardType="numeric"
+                      placeholder={lastPerf ? lastPerf.weight.toString() : '0'}
+                      placeholderTextColor={COLORS.gray[400]}
+                    />
+                    <TextInput
+                      style={[styles.setInput, { backgroundColor: colors.inputBackground, color: colors.text }]}
+                      value={set.reps > 0 ? set.reps.toString() : ''}
+                      onChangeText={(text) =>
+                        updateSet(exercise.id, set.id, {
+                          reps: parseInt(text) || 0,
+                        })
+                      }
+                      keyboardType="numeric"
+                      placeholder={lastPerf ? lastPerf.reps.toString() : '0'}
+                      placeholderTextColor={COLORS.gray[400]}
+                    />
+                    <TouchableOpacity
+                      style={[
+                        styles.checkButton,
+                        set.completed && styles.checkButtonCompleted,
+                      ]}
+                      onPress={() => handleCompleteSet(exercise.id, set.id)}
+                    >
+                      <Text style={styles.checkIcon}>
+                        {set.completed ? '✓' : ''}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  {lastPerf && (
+                    <Text style={[styles.lastPerfText, { color: colors.textTertiary }]}>
+                      {t('workoutActive.lastTime')}: {lastPerf.weight}kg × {lastPerf.reps}
+                    </Text>
+                  )}
+                </View>
+              );
+            })}
 
             <TouchableOpacity
               style={styles.addSetButton}
@@ -467,6 +501,9 @@ const styles = StyleSheet.create({
     color: COLORS.gray[500],
     textAlign: 'center',
   },
+  setContainer: {
+    marginBottom: SPACING.xs,
+  },
   setRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -478,12 +515,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     borderRadius: BORDER_RADIUS.md,
   },
+  deleteSetButton: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: COLORS.error + '20',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: SPACING.xs,
+  },
+  deleteSetIcon: {
+    fontSize: FONT_SIZES.lg,
+    color: COLORS.error,
+    fontWeight: '600',
+    marginTop: -2,
+  },
   setNumber: {
-    flex: 1,
+    width: 30,
     fontSize: FONT_SIZES.base,
     fontWeight: '600',
     color: COLORS.gray[700],
     textAlign: 'center',
+  },
+  setNumberNoDelete: {
+    marginLeft: 0,
+  },
+  lastPerfText: {
+    fontSize: FONT_SIZES.xs,
+    marginLeft: 54,
+    marginTop: -4,
+    marginBottom: SPACING.xs,
   },
   setInput: {
     flex: 1,
