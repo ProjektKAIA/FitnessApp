@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Fitness Tracker",
-    "slug": "fitness-tracker",
+    "name": "ShapyFit",
+    "slug": "shapyfit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -32,7 +32,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.amelkantarevic.fitness-tracker",
+      "bundleIdentifier": "de.shapyfit.app",
       "infoPlist": {
         "NSHealthShareUsageDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Fitness-Fortschritte zu verfolgen und personalisierte Empfehlungen zu geben.",
         "NSHealthUpdateUsageDescription": "Diese App möchte Ihre Trainings- und Aktivitätsdaten in Apple Health speichern."
@@ -52,7 +52,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.amelkantarevic.fitnesstracker",
+      "package": "de.shapyfit.app",
       "permissions": [
         "android.permission.health.READ_STEPS",
         "android.permission.health.READ_DISTANCE",
