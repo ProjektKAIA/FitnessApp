@@ -16,6 +16,7 @@ interface Props {
   };
   onPress?: () => void;
   compact?: boolean;
+  darkMode?: boolean;
 }
 
 export const MetricCard: React.FC<Props> = ({
@@ -28,7 +29,13 @@ export const MetricCard: React.FC<Props> = ({
   trend,
   onPress,
   compact = false,
+  darkMode = false,
 }) => {
+  const bgColor = darkMode ? '#1E1E2E' : COLORS.white;
+  const titleColor = darkMode ? COLORS.gray[400] : COLORS.gray[500];
+  const valueColor = darkMode ? COLORS.white : COLORS.gray[900];
+  const unitColor = darkMode ? COLORS.gray[400] : COLORS.gray[500];
+  const subtitleColor = darkMode ? COLORS.gray[500] : COLORS.gray[500];
   const getTrendIcon = () => {
     if (!trend) return null;
     switch (trend.direction) {
@@ -54,26 +61,26 @@ export const MetricCard: React.FC<Props> = ({
   };
 
   const content = (
-    <View style={[styles.container, compact && styles.containerCompact]}>
+    <View style={[styles.container, compact && styles.containerCompact, { backgroundColor: bgColor }]}>
       <View style={styles.header}>
         {icon && (
           <Text style={[styles.icon, iconColor && { color: iconColor }]}>{icon}</Text>
         )}
-        <Text style={styles.title} numberOfLines={1}>
+        <Text style={[styles.title, { color: titleColor }]} numberOfLines={1}>
           {title}
         </Text>
       </View>
 
       <View style={styles.valueContainer}>
-        <Text style={[styles.value, compact && styles.valueCompact]}>
+        <Text style={[styles.value, compact && styles.valueCompact, { color: valueColor }]}>
           {typeof value === 'number' ? value.toLocaleString() : value}
         </Text>
-        {unit && <Text style={styles.unit}>{unit}</Text>}
+        {unit && <Text style={[styles.unit, { color: unitColor }]}>{unit}</Text>}
       </View>
 
       {(subtitle || trend) && (
         <View style={styles.footer}>
-          {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+          {subtitle && <Text style={[styles.subtitle, { color: subtitleColor }]}>{subtitle}</Text>}
           {trend && (
             <View style={styles.trendContainer}>
               <Text style={[styles.trendIcon, { color: getTrendColor() }]}>
@@ -102,7 +109,6 @@ export const MetricCard: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.white,
     borderRadius: BORDER_RADIUS.xl,
     padding: SPACING.lg,
     minWidth: 140,
@@ -122,7 +128,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: FONT_SIZES.xs,
-    color: COLORS.gray[500],
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     flex: 1,
@@ -134,14 +139,12 @@ const styles = StyleSheet.create({
   value: {
     fontSize: FONT_SIZES['2xl'],
     fontWeight: '700',
-    color: COLORS.gray[900],
   },
   valueCompact: {
     fontSize: FONT_SIZES.xl,
   },
   unit: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[500],
     marginLeft: SPACING.xs,
   },
   footer: {
@@ -152,7 +155,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: FONT_SIZES.xs,
-    color: COLORS.gray[500],
     flex: 1,
   },
   trendContainer: {

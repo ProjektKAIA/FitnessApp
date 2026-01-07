@@ -10,18 +10,23 @@ interface Props {
     label: string;
     onPress: () => void;
   };
+  darkMode?: boolean;
 }
 
-export const SectionHeader: React.FC<Props> = ({ title, subtitle, action }) => {
+export const SectionHeader: React.FC<Props> = ({ title, subtitle, action, darkMode = false }) => {
+  const titleColor = darkMode ? COLORS.white : COLORS.gray[900];
+  const subtitleColor = darkMode ? COLORS.gray[400] : COLORS.gray[500];
+  const actionColor = darkMode ? '#6366F1' : COLORS.primary;
+
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{title}</Text>
-        {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+        <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
+        {subtitle && <Text style={[styles.subtitle, { color: subtitleColor }]}>{subtitle}</Text>}
       </View>
       {action && (
         <TouchableOpacity onPress={action.onPress} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-          <Text style={styles.action}>{action.label}</Text>
+          <Text style={[styles.action, { color: actionColor }]}>{action.label}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -35,6 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: SPACING.md,
     marginTop: SPACING.xl,
+    paddingHorizontal: SPACING.lg,
   },
   textContainer: {
     flex: 1,
@@ -42,16 +48,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FONT_SIZES.lg,
     fontWeight: '600',
-    color: COLORS.gray[900],
   },
   subtitle: {
     fontSize: FONT_SIZES.xs,
-    color: COLORS.gray[500],
     marginTop: 2,
   },
   action: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.primary,
     fontWeight: '500',
   },
 });

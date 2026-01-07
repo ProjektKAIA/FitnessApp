@@ -313,7 +313,7 @@ export const YouScreen: React.FC = () => {
         </View>
 
         {/* Health Stats Grid */}
-        <SectionHeader title={t('you.healthStats')} />
+        <SectionHeader title={t('you.healthStats')} darkMode />
         <View style={styles.statsGrid}>
           <TouchableOpacity
             style={styles.metricCardTouchable}
@@ -325,6 +325,7 @@ export const YouScreen: React.FC = () => {
               value={latestHealth?.weight ?? user?.weight ?? '--'}
               unit="kg"
               compact
+              darkMode
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -340,12 +341,13 @@ export const YouScreen: React.FC = () => {
                   : '--'
               }
               compact
+              darkMode
             />
           </TouchableOpacity>
         </View>
 
         {/* Streak & Workouts */}
-        <SectionHeader title={t('you.activity')} />
+        <SectionHeader title={t('you.activity')} darkMode />
         <View style={styles.statsGrid}>
           <MetricCard
             icon="🔥"
@@ -354,6 +356,7 @@ export const YouScreen: React.FC = () => {
             value={stats.currentStreak}
             unit={t('progress.days')}
             onPress={() => navigation.navigate('StreakDetail')}
+            darkMode
           />
           <MetricCard
             icon="💪"
@@ -361,6 +364,7 @@ export const YouScreen: React.FC = () => {
             value={stats.totalWorkouts}
             subtitle={t('progress.allTime')}
             onPress={() => navigation.navigate('WorkoutHistory')}
+            darkMode
           />
         </View>
 
@@ -371,6 +375,7 @@ export const YouScreen: React.FC = () => {
             label: t('you.addCalories'),
             onPress: () => setShowCalorieInput(true),
           }}
+          darkMode
         />
         <LinearGradient
           colors={['#1E1E2E', '#2D2D44']}
@@ -416,6 +421,7 @@ export const YouScreen: React.FC = () => {
             label: t('you.addGoal'),
             onPress: () => setShowGoalInput(true),
           }}
+          darkMode
         />
         {activeGoal ? (
           <LinearGradient colors={['#1E1E2E', '#2D2D44']} style={styles.goalCard}>
