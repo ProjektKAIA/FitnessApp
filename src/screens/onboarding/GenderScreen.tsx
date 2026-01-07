@@ -14,6 +14,7 @@ import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { OnboardingStackParamList, TGender } from '@/types';
 import { OnboardingProgress } from '@/components/onboarding';
 import { useUserStore } from '@/stores';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type NavigationProp = NativeStackNavigationProp<OnboardingStackParamList, 'Gender'>;
 
@@ -22,6 +23,7 @@ const CURRENT_STEP = 1;
 
 export const GenderScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const updateProfile = useUserStore((state) => state.updateProfile);
   const [selectedGender, setSelectedGender] = useState<TGender | null>(null);
@@ -43,19 +45,19 @@ export const GenderScreen: React.FC = () => {
   ];
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={styles.header}>
         <View style={styles.logoContainer}>
-          <View style={styles.logoBox}>
-            <Text style={styles.logoText}>FrameFit</Text>
+          <View style={[styles.logoBox, { borderColor: colors.text }]}>
+            <Text style={[styles.logoText, { color: colors.text }]}>ShapyFit</Text>
           </View>
         </View>
         <OnboardingProgress currentStep={CURRENT_STEP} totalSteps={TOTAL_STEPS} />
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title}>{t('onboarding.gender.title')}</Text>
-        <Text style={styles.subtitle}>{t('onboarding.gender.subtitle')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('onboarding.gender.title')}</Text>
+        <Text style={[styles.subtitle, { color: colors.textTertiary }]}>{t('onboarding.gender.subtitle')}</Text>
 
         <View style={styles.optionsContainer}>
           {genderOptions.map((option) => (
@@ -63,14 +65,16 @@ export const GenderScreen: React.FC = () => {
               key={option.key}
               style={[
                 styles.optionButton,
-                selectedGender === option.key && styles.optionButtonSelected,
+                { backgroundColor: colors.surface },
+                selectedGender === option.key && [styles.optionButtonSelected, { backgroundColor: colors.surfaceElevated, borderColor: colors.text }],
               ]}
               onPress={() => setSelectedGender(option.key)}
             >
               <Text
                 style={[
                   styles.optionText,
-                  selectedGender === option.key && styles.optionTextSelected,
+                  { color: colors.textSecondary },
+                  selectedGender === option.key && { color: colors.text },
                 ]}
               >
                 {option.label}
@@ -84,19 +88,20 @@ export const GenderScreen: React.FC = () => {
         <TouchableOpacity
           style={[
             styles.continueButton,
-            !selectedGender && styles.continueButtonDisabled,
+            { backgroundColor: isDark ? COLORS.white : colors.primary },
+            !selectedGender && [styles.continueButtonDisabled, { backgroundColor: colors.border }],
           ]}
           onPress={handleContinue}
           disabled={!selectedGender}
         >
-          <Text style={styles.continueButtonText}>
+          <Text style={[styles.continueButtonText, { color: isDark ? COLORS.gray[900] : COLORS.white }]}>
             {t('onboarding.continue')}
           </Text>
-          <Text style={styles.arrowIcon}>→</Text>
+          <Text style={[styles.arrowIcon, { color: isDark ? COLORS.gray[900] : COLORS.white }]}>→</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Text style={styles.backButtonText}>{t('onboarding.back')}</Text>
+          <Text style={[styles.backButtonText, { color: colors.textSecondary }]}>{t('onboarding.back')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

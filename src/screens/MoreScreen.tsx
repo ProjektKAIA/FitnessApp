@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FONT_SIZES, SPACING, BORDER_RADIUS, APP_VERSION } from '@/constants';
 import { Card } from '@/components/common';
+import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { useUserStore, useLanguageStore, SUPPORTED_LANGUAGES } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
 import { useTheme } from '@/contexts';
@@ -461,7 +462,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: SPACING.lg,
-    paddingBottom: SPACING['3xl'],
+    paddingBottom: FLOATING_TAB_BAR_HEIGHT + SPACING.md,
   },
   title: {
     fontSize: FONT_SIZES['2xl'],

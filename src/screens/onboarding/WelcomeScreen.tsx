@@ -15,11 +15,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { OnboardingStackParamList } from '@/types';
 import { useConsentStore } from '@/stores/consentStore';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type NavigationProp = NativeStackNavigationProp<OnboardingStackParamList, 'Welcome'>;
 
 export const WelcomeScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const setOnboardingComplete = useConsentStore((state) => state.setOnboardingComplete);
 
@@ -32,7 +34,7 @@ export const WelcomeScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ImageBackground
         source={{
           uri: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800',
@@ -41,34 +43,34 @@ export const WelcomeScreen: React.FC = () => {
         resizeMode="cover"
       >
         <LinearGradient
-          colors={['transparent', 'rgba(0,0,0,0.7)', COLORS.gray[900]]}
+          colors={['transparent', 'rgba(0,0,0,0.7)', colors.background]}
           style={styles.gradient}
         >
           <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
             <View style={styles.header}>
               <View style={styles.logoContainer}>
-                <View style={styles.logoBox}>
-                  <Text style={styles.logoText}>FrameFit</Text>
+                <View style={[styles.logoBox, { borderColor: colors.text }]}>
+                  <Text style={[styles.logoText, { color: colors.text }]}>ShapyFit</Text>
                 </View>
               </View>
             </View>
 
             <View style={styles.content}>
-              <Text style={styles.welcomeText}>{t('onboarding.welcome.greeting')}</Text>
-              <Text style={styles.title}>{t('onboarding.welcome.title')}</Text>
-              <Text style={styles.subtitle}>{t('onboarding.welcome.subtitle')}</Text>
+              <Text style={[styles.welcomeText, { color: colors.textSecondary }]}>{t('onboarding.welcome.greeting')}</Text>
+              <Text style={[styles.title, { color: colors.text }]}>{t('onboarding.welcome.title')}</Text>
+              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('onboarding.welcome.subtitle')}</Text>
             </View>
 
             <View style={styles.footer}>
-              <TouchableOpacity style={styles.primaryButton} onPress={handleGetStarted}>
-                <Text style={styles.primaryButtonText}>
+              <TouchableOpacity style={[styles.primaryButton, { backgroundColor: isDark ? COLORS.white : colors.primary }]} onPress={handleGetStarted}>
+                <Text style={[styles.primaryButtonText, { color: isDark ? COLORS.gray[900] : COLORS.white }]}>
                   {t('onboarding.welcome.getStarted')}
                 </Text>
-                <Text style={styles.arrowIcon}>→</Text>
+                <Text style={[styles.arrowIcon, { color: isDark ? COLORS.gray[900] : COLORS.white }]}>→</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-                <Text style={styles.skipButtonText}>
+                <Text style={[styles.skipButtonText, { color: colors.textSecondary }]}>
                   {t('onboarding.welcome.skip')}
                 </Text>
               </TouchableOpacity>

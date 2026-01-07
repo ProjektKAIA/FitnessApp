@@ -17,6 +17,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Button } from '@/components/common';
+import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { SectionHeader } from '@/components/progress';
 import { useTheme } from '@/contexts';
 import { useWorkoutStore, useTrainingPlanStore } from '@/stores';
@@ -285,7 +286,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingBottom: SPACING['3xl'],
+    paddingBottom: FLOATING_TAB_BAR_HEIGHT + SPACING.md,
   },
   header: {
     paddingHorizontal: SPACING.lg,

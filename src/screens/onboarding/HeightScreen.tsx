@@ -14,6 +14,7 @@ import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { OnboardingStackParamList } from '@/types';
 import { OnboardingProgress, ScrollPicker } from '@/components/onboarding';
 import { useUserStore } from '@/stores';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type NavigationProp = NativeStackNavigationProp<OnboardingStackParamList, 'Height'>;
 
@@ -24,6 +25,7 @@ const HEIGHT_VALUES = Array.from({ length: 81 }, (_, i) => 140 + i); // 140-220 
 
 export const HeightScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const updateProfile = useUserStore((state) => state.updateProfile);
   const currentHeight = useUserStore((state) => state.user?.height);
@@ -39,19 +41,19 @@ export const HeightScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={styles.header}>
         <View style={styles.logoContainer}>
-          <View style={styles.logoBox}>
-            <Text style={styles.logoText}>FrameFit</Text>
+          <View style={[styles.logoBox, { borderColor: colors.text }]}>
+            <Text style={[styles.logoText, { color: colors.text }]}>ShapyFit</Text>
           </View>
         </View>
         <OnboardingProgress currentStep={CURRENT_STEP} totalSteps={TOTAL_STEPS} />
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title}>{t('onboarding.height.title')}</Text>
-        <Text style={styles.subtitle}>{t('onboarding.height.subtitle')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('onboarding.height.title')}</Text>
+        <Text style={[styles.subtitle, { color: colors.textTertiary }]}>{t('onboarding.height.subtitle')}</Text>
 
         <View style={styles.pickerContainer}>
           <ScrollPicker
@@ -64,15 +66,15 @@ export const HeightScreen: React.FC = () => {
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-          <Text style={styles.continueButtonText}>
+        <TouchableOpacity style={[styles.continueButton, { backgroundColor: isDark ? COLORS.white : colors.primary }]} onPress={handleContinue}>
+          <Text style={[styles.continueButtonText, { color: isDark ? COLORS.gray[900] : COLORS.white }]}>
             {t('onboarding.continue')}
           </Text>
-          <Text style={styles.arrowIcon}>→</Text>
+          <Text style={[styles.arrowIcon, { color: isDark ? COLORS.gray[900] : COLORS.white }]}>→</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Text style={styles.backButtonText}>{t('onboarding.back')}</Text>
+          <Text style={[styles.backButtonText, { color: colors.textSecondary }]}>{t('onboarding.back')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

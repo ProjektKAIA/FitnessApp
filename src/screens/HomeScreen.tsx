@@ -20,6 +20,7 @@ import {
   getTileGap,
 } from '@/components/tiles';
 import { WeeklyGoalModal } from '@/components/common';
+import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { COLORS, FONT_SIZES, SPACING } from '@/constants';
 import { useTheme } from '@/contexts';
 import { useStatsStore, useWorkoutStore } from '@/stores';
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: SPACING.lg,
-    paddingBottom: SPACING['2xl'],
+    paddingBottom: FLOATING_TAB_BAR_HEIGHT + SPACING.md,
   },
   header: {
     marginVertical: SPACING.md,

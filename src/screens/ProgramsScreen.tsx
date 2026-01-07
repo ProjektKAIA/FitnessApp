@@ -24,6 +24,7 @@ import {
 import { RootStackParamList, IProgram, TProgramLevel, TProgramCategory } from '@/types';
 import { useStatsStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -84,6 +85,7 @@ const SAMPLE_PROGRAMS: IProgram[] = [
 
 export const ProgramsScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const [showLevelSelector, setShowLevelSelector] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<IProgram | null>(null);
@@ -148,7 +150,7 @@ export const ProgramsScreen: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
@@ -156,13 +158,13 @@ export const ProgramsScreen: React.FC = () => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>{t('programs.title')}</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('programs.title')}</Text>
         </View>
 
         {/* Activity Rings (if health enabled) */}
         {isHealthEnabled && (
           <View style={styles.ringsSection}>
-            <View style={styles.ringsCard}>
+            <View style={[styles.ringsCard, { backgroundColor: colors.surface }]}>
               <ActivityRings
                 rings={activityRings}
                 size={140}
@@ -197,7 +199,7 @@ export const ProgramsScreen: React.FC = () => {
           />
           <MetricCard
             icon="🔥"
-            iconColor={COLORS.accent}
+            iconColor={colors.accent}
             title={t('progress.currentStreak')}
             value={stats.currentStreak}
             unit={t('progress.days')}
@@ -223,10 +225,10 @@ export const ProgramsScreen: React.FC = () => {
             />
           ))
         ) : (
-          <View style={styles.emptyState}>
+          <View style={[styles.emptyState, { backgroundColor: colors.surface }]}>
             <Text style={styles.emptyIcon}>🏆</Text>
-            <Text style={styles.emptyTitle}>{t('progress.noRecordsYet')}</Text>
-            <Text style={styles.emptyText}>{t('progress.noRecordsText')}</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('progress.noRecordsYet')}</Text>
+            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('progress.noRecordsText')}</Text>
           </View>
         )}
 

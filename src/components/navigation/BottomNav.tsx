@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { SPACING } from '@/constants';
+import { SPACING, BORDER_RADIUS } from '@/constants';
 import { useTheme } from '@/contexts';
 import { scale, scaleFont, MIN_TOUCH_TARGET } from '@/lib';
 
@@ -17,6 +17,9 @@ const TAB_ICONS: Record<string, { active: string; inactive: string }> = {
   More: { active: '⚙️', inactive: '⚙️' },
 };
 
+const TAB_BAR_HEIGHT = scale(70);
+const TAB_BAR_MARGIN = SPACING.lg;
+
 export const BottomNav: React.FC<BottomTabBarProps> = ({
   state,
   descriptors,
@@ -25,19 +28,28 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
   const insets = useSafeAreaInsets();
   const { colors, isDark } = useTheme();
 
-  const bottomPadding = Math.max(insets.bottom, SPACING.md);
+  const bottomMargin = Math.max(insets.bottom, SPACING.md);
 
   return (
     <View
       style={[
-        styles.container,
+        styles.wrapper,
         {
-          paddingBottom: bottomPadding,
-          backgroundColor: colors.tabBar,
-          borderTopColor: colors.tabBarBorder,
+          bottom: bottomMargin,
         },
       ]}
     >
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: isDark
+              ? 'rgba(26, 26, 26, 0.92)'
+              : 'rgba(255, 255, 255, 0.92)',
+            borderColor: colors.border,
+          },
+        ]}
+      >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel ?? options.title ?? route.name;
@@ -92,28 +104,39 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
           </TouchableOpacity>
         );
       })}
+      </View>
     </View>
   );
 };
 
-const ICON_SIZE = scale(26);
-const ICON_CONTAINER_SIZE = scale(56);
-const LABEL_SIZE = scaleFont(11);
+const ICON_SIZE = scale(24);
+const ICON_CONTAINER_SIZE = scale(48);
+const LABEL_SIZE = scaleFont(10);
+
+// Export height for screens to use as bottom padding
+export const FLOATING_TAB_BAR_HEIGHT = TAB_BAR_HEIGHT + TAB_BAR_MARGIN * 2;
 
 const styles = StyleSheet.create({
+  wrapper: {
+    position: 'absolute',
+    left: TAB_BAR_MARGIN,
+    right: TAB_BAR_MARGIN,
+  },
   container: {
     flexDirection: 'row',
-    borderTopWidth: StyleSheet.hairlineWidth,
-    paddingTop: SPACING.md,
+    height: TAB_BAR_HEIGHT,
+    borderRadius: BORDER_RADIUS['2xl'],
+    borderWidth: 1,
+    paddingHorizontal: SPACING.sm,
     ...Platform.select({
       ios: {
         shadowColor: '#000000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
       },
       android: {
-        elevation: 8,
+        elevation: 12,
       },
     }),
   },
@@ -122,21 +145,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: MIN_TOUCH_TARGET,
-    paddingVertical: SPACING.xs,
   },
   iconContainer: {
     width: ICON_CONTAINER_SIZE,
-    height: scale(36),
+    height: scale(32),
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: scale(18),
+    borderRadius: scale(16),
   },
   icon: {
     fontSize: ICON_SIZE,
   },
   label: {
     fontSize: LABEL_SIZE,
-    marginTop: SPACING.xs,
+    marginTop: 2,
     fontWeight: '500',
   },
 });

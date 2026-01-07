@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
 import { useLanguageStore, SUPPORTED_LANGUAGES, Language } from '@/stores';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export const LanguageScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const currentLanguage = useLanguageStore((state) => state.language);
   const setLanguage = useLanguageStore((state) => state.setLanguage);
@@ -21,20 +23,20 @@ export const LanguageScreen: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backText}>← {t('common.back')}</Text>
+          <Text style={[styles.backText, { color: colors.primary }]}>← {t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>{t('language.title')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('language.title')}</Text>
         <View style={styles.placeholder} />
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.subtitle}>{t('language.subtitle')}</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('language.subtitle')}</Text>
 
         <Card style={styles.languageCard}>
           {SUPPORTED_LANGUAGES.map((lang, index) => {
@@ -46,7 +48,7 @@ export const LanguageScreen: React.FC = () => {
                 key={lang.code}
                 style={[
                   styles.languageItem,
-                  !isLast && styles.languageItemBorder,
+                  !isLast && [styles.languageItemBorder, { borderBottomColor: colors.borderLight }],
                 ]}
                 onPress={() => handleLanguageChange(lang.code)}
               >
@@ -55,24 +57,25 @@ export const LanguageScreen: React.FC = () => {
                     {lang.code === 'de' ? '🇩🇪' : '🇬🇧'}
                   </Text>
                   <View style={styles.languageText}>
-                    <Text style={styles.languageName}>{lang.nativeName}</Text>
-                    <Text style={styles.languageNameEnglish}>{lang.name}</Text>
+                    <Text style={[styles.languageName, { color: colors.text }]}>{lang.nativeName}</Text>
+                    <Text style={[styles.languageNameEnglish, { color: colors.textTertiary }]}>{lang.name}</Text>
                   </View>
                 </View>
                 <View
                   style={[
                     styles.radioButton,
-                    isSelected && styles.radioButtonSelected,
+                    { borderColor: colors.border },
+                    isSelected && [styles.radioButtonSelected, { borderColor: colors.primary }],
                   ]}
                 >
-                  {isSelected && <View style={styles.radioButtonInner} />}
+                  {isSelected && <View style={[styles.radioButtonInner, { backgroundColor: colors.primary }]} />}
                 </View>
               </TouchableOpacity>
             );
           })}
         </Card>
 
-        <Text style={styles.note}>
+        <Text style={[styles.note, { color: colors.textTertiary }]}>
           {t('language.current')}: {SUPPORTED_LANGUAGES.find((l) => l.code === currentLanguage)?.nativeName}
         </Text>
       </View>

@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
 import { Card } from '@/components/common';
+import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { useTheme } from '@/contexts';
 import { useTrainingPlanStore } from '@/stores';
 import { RootStackParamList, TTrainingDay } from '@/types';
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: SPACING.lg,
-    paddingBottom: SPACING['3xl'],
+    paddingBottom: FLOATING_TAB_BAR_HEIGHT + SPACING.md,
   },
   title: {
     fontSize: FONT_SIZES['2xl'],

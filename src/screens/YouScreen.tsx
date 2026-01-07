@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useTheme } from '@/contexts';
+import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { ActivityRings, MetricCard, SectionHeader } from '@/components/progress';
 import type { RingData } from '@/components/progress/ActivityRings';
 import { RootStackParamList } from '@/types';
@@ -731,7 +732,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingBottom: SPACING['3xl'],
+    paddingBottom: FLOATING_TAB_BAR_HEIGHT + SPACING.md,
   },
   header: {
     flexDirection: 'row',

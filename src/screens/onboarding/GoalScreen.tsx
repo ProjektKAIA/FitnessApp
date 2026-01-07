@@ -16,6 +16,7 @@ import { OnboardingStackParamList, TFitnessGoal } from '@/types';
 import { OnboardingProgress } from '@/components/onboarding';
 import { useUserStore } from '@/stores';
 import { useConsentStore } from '@/stores/consentStore';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type NavigationProp = NativeStackNavigationProp<OnboardingStackParamList, 'Goal'>;
 
@@ -32,6 +33,7 @@ const GOAL_OPTIONS: TFitnessGoal[] = [
 
 export const GoalScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const updateProfile = useUserStore((state) => state.updateProfile);
   const setOnboardingComplete = useConsentStore((state) => state.setOnboardingComplete);
@@ -52,11 +54,11 @@ export const GoalScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={styles.header}>
         <View style={styles.logoContainer}>
-          <View style={styles.logoBox}>
-            <Text style={styles.logoText}>FrameFit</Text>
+          <View style={[styles.logoBox, { borderColor: colors.text }]}>
+            <Text style={[styles.logoText, { color: colors.text }]}>ShapyFit</Text>
           </View>
         </View>
         <OnboardingProgress currentStep={CURRENT_STEP} totalSteps={TOTAL_STEPS} />
@@ -67,8 +69,8 @@ export const GoalScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>{t('onboarding.goal.title')}</Text>
-        <Text style={styles.subtitle}>{t('onboarding.goal.subtitle')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('onboarding.goal.title')}</Text>
+        <Text style={[styles.subtitle, { color: colors.textTertiary }]}>{t('onboarding.goal.subtitle')}</Text>
 
         <View style={styles.optionsContainer}>
           {GOAL_OPTIONS.map((goal) => {
@@ -76,10 +78,10 @@ export const GoalScreen: React.FC = () => {
             return (
               <TouchableOpacity
                 key={goal}
-                style={[styles.optionButton, isSelected && styles.optionButtonSelected]}
+                style={[styles.optionButton, { borderColor: colors.border }, isSelected && [styles.optionButtonSelected, { borderColor: colors.text, backgroundColor: colors.surface }]]}
                 onPress={() => setSelectedGoal(goal)}
               >
-                <Text style={[styles.optionText, isSelected && styles.optionTextSelected]}>
+                <Text style={[styles.optionText, { color: colors.textSecondary }, isSelected && { color: colors.text }]}>
                   {t(`onboarding.goal.options.${goal}`)}
                 </Text>
               </TouchableOpacity>
@@ -92,19 +94,20 @@ export const GoalScreen: React.FC = () => {
         <TouchableOpacity
           style={[
             styles.continueButton,
-            !selectedGoal && styles.continueButtonDisabled,
+            { backgroundColor: isDark ? COLORS.white : colors.primary },
+            !selectedGoal && [styles.continueButtonDisabled, { backgroundColor: colors.border }],
           ]}
           onPress={handleContinue}
           disabled={!selectedGoal}
         >
-          <Text style={styles.continueButtonText}>
+          <Text style={[styles.continueButtonText, { color: isDark ? COLORS.gray[900] : COLORS.white }]}>
             {t('onboarding.finish')}
           </Text>
-          <Text style={styles.arrowIcon}>→</Text>
+          <Text style={[styles.arrowIcon, { color: isDark ? COLORS.gray[900] : COLORS.white }]}>→</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Text style={styles.backButtonText}>{t('onboarding.back')}</Text>
+          <Text style={[styles.backButtonText, { color: colors.textSecondary }]}>{t('onboarding.back')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -17,11 +17,13 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants/theme';
 import { DEV_LOGIN_ENABLED } from '@/constants/config';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type AuthMode = 'login' | 'register' | 'forgot';
 
 export const LoginScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const [mode, setMode] = useState<AuthMode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -102,9 +104,9 @@ export const LoginScreen: React.FC = () => {
 
     return (
       <View style={styles.header}>
-        <Text style={styles.logo}>{t('auth.logo')}</Text>
-        <Text style={styles.title}>{titles[mode]}</Text>
-        <Text style={styles.subtitle}>{subtitles[mode]}</Text>
+        <Text style={[styles.logo, { color: colors.accent }]}>{t('auth.logo')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{titles[mode]}</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{subtitles[mode]}</Text>
       </View>
     );
   };
@@ -112,11 +114,11 @@ export const LoginScreen: React.FC = () => {
   const renderInputs = () => (
     <View style={styles.inputContainer}>
       <View style={styles.inputWrapper}>
-        <Text style={styles.inputLabel}>{t('auth.email')}</Text>
+        <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('auth.email')}</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text }]}
           placeholder={t('auth.emailPlaceholder')}
-          placeholderTextColor={COLORS.gray[400]}
+          placeholderTextColor={colors.inputPlaceholder}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -127,12 +129,12 @@ export const LoginScreen: React.FC = () => {
 
       {mode !== 'forgot' && (
         <View style={styles.inputWrapper}>
-          <Text style={styles.inputLabel}>{t('auth.password')}</Text>
-          <View style={styles.passwordContainer}>
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('auth.password')}</Text>
+          <View style={[styles.passwordContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <TextInput
-              style={styles.passwordInput}
+              style={[styles.passwordInput, { color: colors.text }]}
               placeholder={t('auth.passwordPlaceholder')}
-              placeholderTextColor={COLORS.gray[400]}
+              placeholderTextColor={colors.inputPlaceholder}
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
@@ -151,12 +153,12 @@ export const LoginScreen: React.FC = () => {
 
       {mode === 'register' && (
         <View style={styles.inputWrapper}>
-          <Text style={styles.inputLabel}>{t('auth.confirmPassword')}</Text>
-          <View style={styles.passwordContainer}>
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('auth.confirmPassword')}</Text>
+          <View style={[styles.passwordContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <TextInput
-              style={styles.passwordInput}
+              style={[styles.passwordInput, { color: colors.text }]}
               placeholder={t('auth.confirmPasswordPlaceholder')}
-              placeholderTextColor={COLORS.gray[400]}
+              placeholderTextColor={colors.inputPlaceholder}
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               secureTextEntry={!showConfirmPassword}
@@ -174,7 +176,7 @@ export const LoginScreen: React.FC = () => {
 
       {mode === 'login' && (
         <TouchableOpacity style={styles.forgotLink} onPress={() => setMode('forgot')}>
-          <Text style={styles.forgotText}>{t('auth.forgotLink')}</Text>
+          <Text style={[styles.forgotText, { color: colors.accent }]}>{t('auth.forgotLink')}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -224,36 +226,36 @@ export const LoginScreen: React.FC = () => {
     return (
       <View style={styles.socialContainer}>
         <View style={styles.divider}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>{t('common.or')}</Text>
-          <View style={styles.dividerLine} />
+          <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+          <Text style={[styles.dividerText, { color: colors.textTertiary }]}>{t('common.or')}</Text>
+          <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
         </View>
 
         <View style={styles.socialButtons}>
           <TouchableOpacity
-            style={styles.socialButton}
+            style={[styles.socialButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
             onPress={() => handleSocialLogin('google')}
           >
-            <Text style={styles.socialIcon}>G</Text>
-            <Text style={styles.socialText}>Google</Text>
+            <Text style={[styles.socialIcon, { color: colors.text }]}>G</Text>
+            <Text style={[styles.socialText, { color: colors.text }]}>Google</Text>
           </TouchableOpacity>
 
           {Platform.OS === 'ios' && (
             <TouchableOpacity
-              style={styles.socialButton}
+              style={[styles.socialButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
               onPress={() => handleSocialLogin('apple')}
             >
-              <Text style={styles.socialIcon}></Text>
-              <Text style={styles.socialText}>Apple</Text>
+              <Text style={[styles.socialIcon, { color: colors.text }]}></Text>
+              <Text style={[styles.socialText, { color: colors.text }]}>Apple</Text>
             </TouchableOpacity>
           )}
 
           <TouchableOpacity
-            style={styles.socialButton}
+            style={[styles.socialButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
             onPress={() => handleSocialLogin('facebook')}
           >
             <Text style={[styles.socialIcon, { color: '#1877F2' }]}>f</Text>
-            <Text style={styles.socialText}>Facebook</Text>
+            <Text style={[styles.socialText, { color: colors.text }]}>Facebook</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -265,7 +267,7 @@ export const LoginScreen: React.FC = () => {
       return (
         <View style={styles.modeSwitch}>
           <TouchableOpacity onPress={() => setMode('login')}>
-            <Text style={styles.modeSwitchLink}>{t('auth.backToLogin')}</Text>
+            <Text style={[styles.modeSwitchLink, { color: colors.accent }]}>{t('auth.backToLogin')}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -273,11 +275,11 @@ export const LoginScreen: React.FC = () => {
 
     return (
       <View style={styles.modeSwitch}>
-        <Text style={styles.modeSwitchText}>
+        <Text style={[styles.modeSwitchText, { color: colors.textSecondary }]}>
           {mode === 'login' ? t('auth.noAccount') : t('auth.hasAccount')}
         </Text>
         <TouchableOpacity onPress={() => setMode(mode === 'login' ? 'register' : 'login')}>
-          <Text style={styles.modeSwitchLink}>
+          <Text style={[styles.modeSwitchLink, { color: colors.accent }]}>
             {mode === 'login' ? t('auth.register') : t('auth.login')}
           </Text>
         </TouchableOpacity>
@@ -296,7 +298,7 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}

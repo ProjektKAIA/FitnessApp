@@ -15,6 +15,7 @@ import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { OnboardingStackParamList, TFitnessSport } from '@/types';
 import { OnboardingProgress } from '@/components/onboarding';
 import { useUserStore } from '@/stores';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type NavigationProp = NativeStackNavigationProp<OnboardingStackParamList, 'Sport'>;
 
@@ -38,6 +39,7 @@ const SPORT_OPTIONS: TFitnessSport[] = [
 
 export const SportScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const updateProfile = useUserStore((state) => state.updateProfile);
   const currentSports = useUserStore((state) => state.user?.favoriteSports);
@@ -63,11 +65,11 @@ export const SportScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={styles.header}>
         <View style={styles.logoContainer}>
-          <View style={styles.logoBox}>
-            <Text style={styles.logoText}>FrameFit</Text>
+          <View style={[styles.logoBox, { borderColor: colors.text }]}>
+            <Text style={[styles.logoText, { color: colors.text }]}>ShapyFit</Text>
           </View>
         </View>
         <OnboardingProgress currentStep={CURRENT_STEP} totalSteps={TOTAL_STEPS} />
@@ -78,8 +80,8 @@ export const SportScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>{t('onboarding.sport.title')}</Text>
-        <Text style={styles.subtitle}>{t('onboarding.sport.subtitle')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('onboarding.sport.title')}</Text>
+        <Text style={[styles.subtitle, { color: colors.textTertiary }]}>{t('onboarding.sport.subtitle')}</Text>
 
         <View style={styles.tagsContainer}>
           {SPORT_OPTIONS.map((sport) => {
@@ -87,10 +89,10 @@ export const SportScreen: React.FC = () => {
             return (
               <TouchableOpacity
                 key={sport}
-                style={[styles.tag, isSelected && styles.tagSelected]}
+                style={[styles.tag, { borderColor: colors.border }, isSelected && [styles.tagSelected, { borderColor: colors.text, backgroundColor: colors.surface }]]}
                 onPress={() => toggleSport(sport)}
               >
-                <Text style={[styles.tagText, isSelected && styles.tagTextSelected]}>
+                <Text style={[styles.tagText, { color: colors.textSecondary }, isSelected && { color: colors.text }]}>
                   {t(`onboarding.sport.options.${sport}`)}
                 </Text>
               </TouchableOpacity>
@@ -103,19 +105,20 @@ export const SportScreen: React.FC = () => {
         <TouchableOpacity
           style={[
             styles.continueButton,
-            selectedSports.length === 0 && styles.continueButtonDisabled,
+            { backgroundColor: isDark ? COLORS.white : colors.primary },
+            selectedSports.length === 0 && [styles.continueButtonDisabled, { backgroundColor: colors.border }],
           ]}
           onPress={handleContinue}
           disabled={selectedSports.length === 0}
         >
-          <Text style={styles.continueButtonText}>
+          <Text style={[styles.continueButtonText, { color: isDark ? COLORS.gray[900] : COLORS.white }]}>
             {t('onboarding.continue')}
           </Text>
-          <Text style={styles.arrowIcon}>→</Text>
+          <Text style={[styles.arrowIcon, { color: isDark ? COLORS.gray[900] : COLORS.white }]}>→</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Text style={styles.backButtonText}>{t('onboarding.back')}</Text>
+          <Text style={[styles.backButtonText, { color: colors.textSecondary }]}>{t('onboarding.back')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
