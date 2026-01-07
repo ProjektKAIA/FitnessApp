@@ -108,6 +108,8 @@ const de = {
     newWorkout: 'Neues Workout',
     loadingWorkout: 'Workout wird geladen...',
     lastTime: 'Letztes Mal',
+    removeSet: 'Satz entfernen',
+    deleteSelected: 'Löschen ({{count}})',
   },
 
   // Plan Screen

@@ -49,6 +49,8 @@ export const WorkoutActiveScreen: React.FC = () => {
   const [showExerciseModal, setShowExerciseModal] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [deleteMode, setDeleteMode] = useState<string | null>(null); // exerciseId wenn im Lösch-Modus
+  const [setsToDelete, setSetsToDelete] = useState<string[]>([]);
 
   // Letzte Performance für eine Übung finden
   const getLastPerformance = (exerciseName: string, setIndex: number): { weight: number; reps: number } | null => {
@@ -195,6 +197,30 @@ export const WorkoutActiveScreen: React.FC = () => {
     }
   };
 
+  const handleEnterDeleteMode = (exerciseId: string) => {
+    setDeleteMode(exerciseId);
+    setSetsToDelete([]);
+  };
+
+  const handleCancelDeleteMode = () => {
+    setDeleteMode(null);
+    setSetsToDelete([]);
+  };
+
+  const handleToggleSetForDeletion = (setId: string) => {
+    setSetsToDelete((prev) =>
+      prev.includes(setId) ? prev.filter((id) => id !== setId) : [...prev, setId]
+    );
+  };
+
+  const handleConfirmDelete = (exerciseId: string) => {
+    setsToDelete.forEach((setId) => {
+      removeSet(exerciseId, setId);
+    });
+    setDeleteMode(null);
+    setSetsToDelete([]);
+  };
+
   const handleEndWorkout = () => {
     endWorkout();
     navigation.goBack();
@@ -264,18 +290,27 @@ export const WorkoutActiveScreen: React.FC = () => {
 
             {exercise.sets.map((set, setIndex) => {
               const lastPerf = getLastPerformance(exercise.name, setIndex);
+              const isInDeleteMode = deleteMode === exercise.id;
+              const isSelectedForDelete = setsToDelete.includes(set.id);
               return (
                 <View key={set.id} style={styles.setContainer}>
-                  <View style={[styles.setRow, set.completed && styles.setRowCompleted]}>
-                    {exercise.sets.length > 1 && (
+                  <View style={[
+                    styles.setRow,
+                    set.completed && !isInDeleteMode && styles.setRowCompleted,
+                    isSelectedForDelete && styles.setRowSelected,
+                  ]}>
+                    {isInDeleteMode ? (
                       <TouchableOpacity
-                        style={styles.deleteSetButton}
-                        onPress={() => removeSet(exercise.id, set.id)}
+                        style={[
+                          styles.deleteCheckbox,
+                          isSelectedForDelete && styles.deleteCheckboxSelected,
+                        ]}
+                        onPress={() => handleToggleSetForDeletion(set.id)}
                       >
-                        <Text style={styles.deleteSetIcon}>×</Text>
+                        {isSelectedForDelete && <Text style={styles.deleteCheckboxIcon}>✓</Text>}
                       </TouchableOpacity>
-                    )}
-                    <Text style={[styles.setNumber, exercise.sets.length === 1 && styles.setNumberNoDelete]}>
+                    ) : null}
+                    <Text style={[styles.setNumber, !isInDeleteMode && styles.setNumberNormal]}>
                       {setIndex + 1}
                     </Text>
                     <TextInput
@@ -289,6 +324,7 @@ export const WorkoutActiveScreen: React.FC = () => {
                       keyboardType="numeric"
                       placeholder={lastPerf ? lastPerf.weight.toString() : '0'}
                       placeholderTextColor={COLORS.gray[400]}
+                      editable={!isInDeleteMode}
                     />
                     <TextInput
                       style={[styles.setInput, { backgroundColor: colors.inputBackground, color: colors.text }]}
@@ -301,20 +337,22 @@ export const WorkoutActiveScreen: React.FC = () => {
                       keyboardType="numeric"
                       placeholder={lastPerf ? lastPerf.reps.toString() : '0'}
                       placeholderTextColor={COLORS.gray[400]}
+                      editable={!isInDeleteMode}
                     />
                     <TouchableOpacity
                       style={[
                         styles.checkButton,
                         set.completed && styles.checkButtonCompleted,
                       ]}
-                      onPress={() => handleCompleteSet(exercise.id, set.id)}
+                      onPress={() => !isInDeleteMode && handleCompleteSet(exercise.id, set.id)}
+                      disabled={isInDeleteMode}
                     >
                       <Text style={styles.checkIcon}>
                         {set.completed ? '✓' : ''}
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  {lastPerf && (
+                  {lastPerf && !isInDeleteMode && (
                     <Text style={[styles.lastPerfText, { color: colors.textTertiary }]}>
                       {t('workoutActive.lastTime')}: {lastPerf.weight}kg × {lastPerf.reps}
                     </Text>
@@ -323,14 +361,49 @@ export const WorkoutActiveScreen: React.FC = () => {
               );
             })}
 
-            <TouchableOpacity
-              style={styles.addSetButton}
-              onPress={() =>
-                addSet(exercise.id, { weight: 0, reps: 0, completed: false })
-              }
-            >
-              <Text style={styles.addSetText}>{t('workoutActive.addSet')}</Text>
-            </TouchableOpacity>
+            {deleteMode === exercise.id ? (
+              <View style={styles.deleteActionsRow}>
+                <TouchableOpacity
+                  style={[styles.deleteActionButton, styles.cancelDeleteButton]}
+                  onPress={handleCancelDeleteMode}
+                >
+                  <Text style={styles.cancelDeleteText}>{t('common.cancel')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.deleteActionButton,
+                    styles.confirmDeleteButton,
+                    setsToDelete.length === 0 && styles.confirmDeleteButtonDisabled,
+                  ]}
+                  onPress={() => handleConfirmDelete(exercise.id)}
+                  disabled={setsToDelete.length === 0}
+                >
+                  <Text style={[
+                    styles.confirmDeleteText,
+                    setsToDelete.length === 0 && styles.confirmDeleteTextDisabled,
+                  ]}>
+                    {t('workoutActive.deleteSelected', { count: setsToDelete.length })}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.setActionsRow}>
+                <TouchableOpacity
+                  style={styles.addSetButton}
+                  onPress={() => addSet(exercise.id, { weight: 0, reps: 0, completed: false })}
+                >
+                  <Text style={styles.addSetText}>{t('workoutActive.addSet')}</Text>
+                </TouchableOpacity>
+                {exercise.sets.length > 1 && (
+                  <TouchableOpacity
+                    style={styles.removeSetButton}
+                    onPress={() => handleEnterDeleteMode(exercise.id)}
+                  >
+                    <Text style={styles.removeSetText}>{t('workoutActive.removeSet')}</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
           </Card>
         ))}
 
@@ -575,15 +648,96 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontWeight: '700',
   },
+  setRowSelected: {
+    backgroundColor: COLORS.error + '15',
+    marginHorizontal: -SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: BORDER_RADIUS.md,
+  },
+  deleteCheckbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: COLORS.gray[400],
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: SPACING.xs,
+  },
+  deleteCheckboxSelected: {
+    backgroundColor: COLORS.error,
+    borderColor: COLORS.error,
+  },
+  deleteCheckboxIcon: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.white,
+    fontWeight: '700',
+  },
+  setNumberNormal: {
+    marginLeft: 0,
+  },
+  setActionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: SPACING.lg,
+    marginTop: SPACING.sm,
+  },
   addSetButton: {
     paddingVertical: SPACING.md,
     alignItems: 'center',
-    marginTop: SPACING.sm,
   },
   addSetText: {
     fontSize: FONT_SIZES.base,
     fontWeight: '500',
     color: COLORS.primary,
+  },
+  removeSetButton: {
+    paddingVertical: SPACING.md,
+    alignItems: 'center',
+  },
+  removeSetText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '500',
+    color: COLORS.error,
+  },
+  deleteActionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: SPACING.md,
+    marginTop: SPACING.md,
+    paddingTop: SPACING.md,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.gray[200],
+  },
+  deleteActionButton: {
+    flex: 1,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    alignItems: 'center',
+  },
+  cancelDeleteButton: {
+    backgroundColor: COLORS.gray[200],
+  },
+  cancelDeleteText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '500',
+    color: COLORS.gray[700],
+  },
+  confirmDeleteButton: {
+    backgroundColor: COLORS.error,
+  },
+  confirmDeleteButtonDisabled: {
+    backgroundColor: COLORS.gray[300],
+  },
+  confirmDeleteText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '500',
+    color: COLORS.white,
+  },
+  confirmDeleteTextDisabled: {
+    color: COLORS.gray[500],
   },
   exerciseList: {
     maxHeight: 300,
