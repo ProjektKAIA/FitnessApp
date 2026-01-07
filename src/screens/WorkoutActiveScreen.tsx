@@ -14,9 +14,9 @@ import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, REST_TIMER_DEFAULT } from '@/constants';
 import { Button, Card, Modal, LoadingScreen } from '@/components/common';
-import { useWorkoutStore, useUserStore } from '@/stores';
+import { useWorkoutStore, useUserStore, useTrainingPlanStore } from '@/stores';
 import { useTheme } from '@/contexts';
-import { RootStackParamList } from '@/types';
+import { RootStackParamList, IPlannedWorkout } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type WorkoutActiveRouteProp = RouteProp<RootStackParamList, 'WorkoutActive'>;
@@ -42,6 +42,8 @@ export const WorkoutActiveScreen: React.FC = () => {
   const stopRestTimer = useWorkoutStore((state) => state.stopRestTimer);
   const updateRestTimer = useWorkoutStore((state) => state.updateRestTimer);
 
+  const activePlan = useTrainingPlanStore((state) => state.getActivePlan());
+
   const [showExerciseModal, setShowExerciseModal] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -56,7 +58,62 @@ export const WorkoutActiveScreen: React.FC = () => {
   ];
 
   useEffect(() => {
-    if (!activeWorkout && route.params?.workoutId === 'new') {
+    if (activeWorkout) return;
+
+    const workoutId = route.params?.workoutId;
+
+    if (workoutId === 'new') {
+      // Neues leeres Workout
+      startWorkout({
+        userId: user?.id || 'guest',
+        name: t('workoutActive.newWorkout'),
+        direction: 'gym',
+        exercises: [],
+        duration: 0,
+        totalVolume: 0,
+      });
+      return;
+    }
+
+    if (workoutId && activePlan) {
+      // Workout aus Trainingsplan laden
+      const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
+      let plannedWorkout: IPlannedWorkout | null = null;
+
+      for (const day of days) {
+        const dayWorkout = activePlan.weeklySchedule[day];
+        if (dayWorkout?.id === workoutId) {
+          plannedWorkout = dayWorkout;
+          break;
+        }
+      }
+
+      if (plannedWorkout) {
+        startWorkout({
+          userId: user?.id || 'guest',
+          name: plannedWorkout.name,
+          direction: plannedWorkout.direction,
+          exercises: plannedWorkout.exercises.map((e) => ({
+            id: e.id,
+            name: e.name,
+            muscleGroup: e.muscleGroup,
+            sets: Array.from({ length: e.targetSets }, (_, i) => ({
+              id: `${e.id}-set-${i}`,
+              weight: e.targetWeight || 0,
+              reps: 0,
+              completed: false,
+            })),
+            notes: e.notes,
+          })),
+          duration: 0,
+          totalVolume: 0,
+        });
+        return;
+      }
+    }
+
+    // Fallback: Neues Workout wenn nichts anderes zutrifft und workoutId vorhanden
+    if (workoutId) {
       startWorkout({
         userId: user?.id || 'guest',
         name: t('workoutActive.newWorkout'),
@@ -66,7 +123,7 @@ export const WorkoutActiveScreen: React.FC = () => {
         totalVolume: 0,
       });
     }
-  }, []);
+  }, [activePlan, route.params?.workoutId]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -132,7 +189,7 @@ export const WorkoutActiveScreen: React.FC = () => {
   };
 
   if (!activeWorkout) {
-    return <LoadingScreen message={t('workoutActive.loadingWorkout')} backgroundColor={COLORS.gray[100]} />;
+    return <LoadingScreen message={t('workoutActive.loadingWorkout')} />;
   }
 
   return (
