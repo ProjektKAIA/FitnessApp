@@ -57,6 +57,22 @@ const en = {
       description: 'Get 20% off your first order',
       cta: 'Shop Now',
     },
+    ads: {
+      import: {
+        title: 'Plan Import',
+        cta: 'Import',
+      },
+      plans: {
+        title: 'Training Plans',
+        description: 'Create personalized plans',
+        cta: 'Explore',
+      },
+      health: {
+        title: 'Connect Health',
+        description: 'Sync your steps, calories & more',
+        cta: 'Connect',
+      },
+    },
   },
 
   // Workout Screen
@@ -101,9 +117,6 @@ const en = {
     edit: 'Edit',
     swap: 'Swap',
     skip: 'Skip',
-    aiCoach: 'AI Coach',
-    aiDescription: 'Let our AI create a personalized training plan based on your goals and preferences.',
-    generatePlan: 'Generate Plan',
     rest: 'Rest',
     activePlan: 'Active Plan',
     today: 'Today',
@@ -111,13 +124,13 @@ const en = {
     startWorkout: 'Start Workout',
     restDay: 'Rest Day',
     noPlan: 'No Training Plan',
-    noPlanDescription: 'Create your first training plan manually or let our AI help you.',
+    noPlanDescription: 'Create your first training plan or import an existing one.',
+    createOptions: 'Create Plan',
     createManually: 'Create Manually',
     createManuallyDesc: 'Build your plan step by step',
-    createWithAI: 'Create with AI',
-    createWithAIDesc: 'Get a personalized plan generated',
+    importFromChatGPT: 'Import from ChatGPT',
+    importFromChatGPTDesc: 'Import your plan from your ChatGPT chat',
     managePlans: 'Manage {{count}} plan(s)',
-    openAICoach: 'Open AI Coach',
   },
 
   // Progress Screen
@@ -1017,6 +1030,65 @@ const en = {
     requiresRecentLogin: 'Please log in again and try again.',
     error: 'Error deleting account. Please try again later.',
     disclaimer: 'After deletion, you will no longer receive emails from us.',
+  },
+
+  // Fitness Questionnaire
+  questionnaire: {
+    next: 'Next',
+    finish: 'Create Plan',
+    experience: {
+      title: 'What\'s your experience level?',
+      subtitle: 'This helps us find the right plan for you',
+      beginner: 'Beginner',
+      beginnerDesc: 'New to training or less than 6 months experience',
+      intermediate: 'Intermediate',
+      intermediateDesc: '6 months to 2 years of regular training',
+      advanced: 'Advanced',
+      advancedDesc: 'Over 2 years of consistent training',
+    },
+    goal: {
+      title: 'What\'s your main goal?',
+      subtitle: 'Choose the goal that matters most to you',
+      muscle: 'Build Muscle',
+      strength: 'Increase Strength',
+      loseWeight: 'Lose Weight',
+      fitness: 'General Fitness',
+    },
+    days: {
+      title: 'How often do you want to train?',
+      subtitle: 'Days per week',
+      two: '2 Days',
+      three: '3 Days',
+      four: '4 Days',
+      five: '5 Days',
+      six: '6 Days',
+    },
+    duration: {
+      title: 'How long per workout?',
+      subtitle: 'Average time per session',
+      thirty: '30 Minutes',
+      fortyFive: '45 Minutes',
+      sixty: '60 Minutes',
+      ninety: '90 Minutes',
+    },
+    equipment: {
+      title: 'What equipment do you have?',
+      subtitle: 'Choose your training environment',
+      gym: 'Full Gym',
+      gymDesc: 'Full access to machines and weights',
+      home: 'Home Gym',
+      homeDesc: 'Dumbbells, kettlebells, maybe a rack',
+      minimal: 'Minimal',
+      minimalDesc: 'Bodyweight only or resistance bands',
+    },
+    focus: {
+      title: 'Which areas do you want to focus on?',
+      subtitle: 'Multiple selection possible',
+      upper: 'Upper Body',
+      lower: 'Lower Body',
+      core: 'Core / Abs',
+      full: 'Full Body',
+    },
   },
 } as const;
 

@@ -46,10 +46,12 @@ export const ActivityRings: React.FC<Props> = ({
     return value.toLocaleString();
   };
 
-  const bgColor = darkMode ? COLORS.gray[700] : COLORS.gray[200];
+  const bgColor = darkMode ? COLORS.gray[700] : COLORS.gray[300];
+  const bgOpacity = darkMode ? 0.3 : 0.6;
   const textColor = darkMode ? COLORS.white : COLORS.gray[900];
   const subtextColor = darkMode ? COLORS.gray[400] : COLORS.gray[600];
-  const borderColor = darkMode ? COLORS.gray[700] : COLORS.gray[200];
+  const borderColor = darkMode ? COLORS.gray[700] : COLORS.gray[300];
+  const badgeBgColor = darkMode ? COLORS.gray[700] : COLORS.gray[200];
 
   return (
     <View style={styles.container}>
@@ -87,7 +89,7 @@ export const ActivityRings: React.FC<Props> = ({
                   stroke={bgColor}
                   strokeWidth={strokeWidth}
                   fill="none"
-                  opacity={0.3}
+                  opacity={bgOpacity}
                 />
                 {/* Progress circle */}
                 <Circle
@@ -129,8 +131,8 @@ export const ActivityRings: React.FC<Props> = ({
                   {formatValue(ring.value)}
                   {ring.unit && <Text style={[styles.labelUnit, { color: subtextColor }]}> {ring.unit}</Text>}
                 </Text>
-                <View style={[styles.progressBadge, isComplete && styles.progressBadgeComplete]}>
-                  <Text style={[styles.labelProgress, isComplete && styles.labelProgressComplete]}>
+                <View style={[styles.progressBadge, { backgroundColor: badgeBgColor }, isComplete && styles.progressBadgeComplete]}>
+                  <Text style={[styles.labelProgress, { color: subtextColor }, isComplete && styles.labelProgressComplete]}>
                     {progress}%
                   </Text>
                 </View>
@@ -204,7 +206,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   progressBadge: {
-    backgroundColor: COLORS.gray[700],
     paddingHorizontal: SPACING.sm,
     paddingVertical: SPACING.xs,
     borderRadius: 12,
@@ -216,7 +217,6 @@ const styles = StyleSheet.create({
   },
   labelProgress: {
     fontSize: FONT_SIZES.xs,
-    color: COLORS.gray[400],
     fontWeight: '600',
   },
   labelProgressComplete: {

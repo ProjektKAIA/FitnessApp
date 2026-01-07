@@ -38,7 +38,11 @@ export const SportSelectionScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
 
   const handleSelectSport = (sportType: TSportType) => {
-    navigation.navigate('TrainingPlanList', { sportType });
+    if (sportType === 'fitness') {
+      navigation.navigate('FitnessQuestionnaire', { sportType });
+    } else {
+      navigation.navigate('TrainingPlanList', { sportType });
+    }
   };
 
   return (

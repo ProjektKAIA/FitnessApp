@@ -157,6 +157,11 @@ export const HomeScreen: React.FC = () => {
           )}
 
           <View style={styles.row}>
+            <AdTile
+              size="1x1"
+              title={t('home.ads.import.title')}
+              onPress={() => navigation.navigate('ChatGPTImport')}
+            />
             <StatTile
               label={t('home.totalVolume')}
               value={Math.round(stats.totalVolume / 1000)}
@@ -170,12 +175,6 @@ export const HomeScreen: React.FC = () => {
               icon="💪"
               onPress={handleWorkoutHistoryPress}
             />
-            <StatTile
-              label={t('home.thisMonth')}
-              value={stats.thisMonthWorkouts}
-              icon="📊"
-              onPress={handleNavigateToProgress}
-            />
           </View>
 
           <View style={styles.row}>
@@ -184,24 +183,37 @@ export const HomeScreen: React.FC = () => {
               workoutsCount={directionCounts.gym}
               onPress={() => handleDirectionPress('gym')}
             />
+            <AdTile
+              size="1x1"
+              title={t('home.ads.plans.title')}
+              onPress={() => navigation.navigate('TrainingPlanList')}
+            />
             <DirectionTile
               direction="calisthenics"
               workoutsCount={directionCounts.calisthenics}
               onPress={() => handleDirectionPress('calisthenics')}
             />
+          </View>
+
+          <View style={styles.row}>
             <DirectionTile
               direction="cardio"
               workoutsCount={directionCounts.cardio}
               onPress={() => handleDirectionPress('cardio')}
             />
-          </View>
-
-          <View style={styles.row}>
             <DirectionTile
               direction="yoga"
               workoutsCount={directionCounts.yoga}
               onPress={() => handleDirectionPress('yoga')}
             />
+            <AdTile
+              size="1x1"
+              title={t('home.ads.health.title')}
+              onPress={() => navigation.navigate('HealthSettings')}
+            />
+          </View>
+
+          <View style={styles.row}>
             <DirectionTile
               direction="mobility"
               workoutsCount={directionCounts.mobility}
@@ -212,8 +224,15 @@ export const HomeScreen: React.FC = () => {
               workoutsCount={directionCounts.custom}
               onPress={() => handleDirectionPress('custom')}
             />
+            <StatTile
+              label={t('home.thisMonth')}
+              value={stats.thisMonthWorkouts}
+              icon="📊"
+              onPress={handleNavigateToProgress}
+            />
           </View>
 
+          {/* Ad: Premium (groß) */}
           <AdTile
             size="3x1"
             title={t('home.premium.title')}

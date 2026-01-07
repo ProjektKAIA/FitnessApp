@@ -26,6 +26,7 @@ export { DeleteAccountScreen } from './settings/DeleteAccountScreen';
 export { AICoachScreen, ChatGPTImportScreen, ChatDetailScreen } from './ai';
 export {
   SportSelectionScreen,
+  FitnessQuestionnaireScreen,
   TrainingPlanListScreen,
   TrainingPlanEditorScreen,
   WorkoutDayEditorScreen,

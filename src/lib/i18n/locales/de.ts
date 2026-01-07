@@ -57,6 +57,22 @@ const de = {
       description: '20% Rabatt auf deine erste Bestellung',
       cta: 'Jetzt shoppen',
     },
+    ads: {
+      import: {
+        title: 'Plan Import',
+        cta: 'Importieren',
+      },
+      plans: {
+        title: 'Trainingspläne',
+        description: 'Personalisierte Pläne erstellen',
+        cta: 'Entdecken',
+      },
+      health: {
+        title: 'Health verbinden',
+        description: 'Synchronisiere deine Schritte, Kalorien & mehr',
+        cta: 'Verbinden',
+      },
+    },
   },
 
   // Workout Screen
@@ -101,9 +117,6 @@ const de = {
     edit: 'Bearbeiten',
     swap: 'Tauschen',
     skip: 'Überspringen',
-    aiCoach: 'KI Coach',
-    aiDescription: 'Lass unsere KI einen personalisierten Trainingsplan basierend auf deinen Zielen erstellen.',
-    generatePlan: 'Plan generieren',
     rest: 'Ruhetag',
     activePlan: 'Aktiver Plan',
     today: 'Heute',
@@ -111,13 +124,13 @@ const de = {
     startWorkout: 'Workout starten',
     restDay: 'Ruhetag',
     noPlan: 'Kein Trainingsplan',
-    noPlanDescription: 'Erstelle deinen ersten Trainingsplan manuell oder lass dir von unserer KI helfen.',
+    noPlanDescription: 'Erstelle deinen ersten Trainingsplan oder importiere einen bestehenden.',
+    createOptions: 'Plan erstellen',
     createManually: 'Manuell erstellen',
     createManuallyDesc: 'Erstelle deinen Plan Schritt für Schritt',
-    createWithAI: 'Mit KI erstellen',
-    createWithAIDesc: 'Lass dir einen personalisierten Plan generieren',
+    importFromChatGPT: 'Aus ChatGPT importieren',
+    importFromChatGPTDesc: 'Importiere deinen Plan aus deinem ChatGPT-Chat',
     managePlans: '{{count}} Trainingsplan(e) verwalten',
-    openAICoach: 'KI Coach öffnen',
   },
 
   // Progress Screen
@@ -1017,6 +1030,65 @@ const de = {
     requiresRecentLogin: 'Bitte melde dich erneut an und versuche es dann nochmal.',
     error: 'Fehler beim Löschen des Kontos. Bitte versuche es später erneut.',
     disclaimer: 'Nach dem Löschen erhältst du keine E-Mails mehr von uns.',
+  },
+
+  // Fitness Questionnaire
+  questionnaire: {
+    next: 'Weiter',
+    finish: 'Plan erstellen',
+    experience: {
+      title: 'Wie erfahren bist du?',
+      subtitle: 'Das hilft uns, den richtigen Plan für dich zu finden',
+      beginner: 'Anfänger',
+      beginnerDesc: 'Neu im Training oder weniger als 6 Monate Erfahrung',
+      intermediate: 'Fortgeschritten',
+      intermediateDesc: '6 Monate bis 2 Jahre regelmäßiges Training',
+      advanced: 'Profi',
+      advancedDesc: 'Über 2 Jahre konsequentes Training',
+    },
+    goal: {
+      title: 'Was ist dein Hauptziel?',
+      subtitle: 'Wähle das Ziel, das dir am wichtigsten ist',
+      muscle: 'Muskelaufbau',
+      strength: 'Kraft steigern',
+      loseWeight: 'Abnehmen',
+      fitness: 'Allgemeine Fitness',
+    },
+    days: {
+      title: 'Wie oft möchtest du trainieren?',
+      subtitle: 'Tage pro Woche',
+      two: '2 Tage',
+      three: '3 Tage',
+      four: '4 Tage',
+      five: '5 Tage',
+      six: '6 Tage',
+    },
+    duration: {
+      title: 'Wie lange pro Training?',
+      subtitle: 'Durchschnittliche Zeit pro Einheit',
+      thirty: '30 Minuten',
+      fortyFive: '45 Minuten',
+      sixty: '60 Minuten',
+      ninety: '90 Minuten',
+    },
+    equipment: {
+      title: 'Welche Ausrüstung hast du?',
+      subtitle: 'Wähle deine Trainingsumgebung',
+      gym: 'Fitnessstudio',
+      gymDesc: 'Voller Zugang zu Geräten und Gewichten',
+      home: 'Home Gym',
+      homeDesc: 'Hanteln, Kettlebells, evtl. Rack',
+      minimal: 'Minimal',
+      minimalDesc: 'Nur Körpergewicht oder Resistance Bands',
+    },
+    focus: {
+      title: 'Welche Bereiche möchtest du fokussieren?',
+      subtitle: 'Mehrfachauswahl möglich',
+      upper: 'Oberkörper',
+      lower: 'Unterkörper',
+      core: 'Core / Bauch',
+      full: 'Ganzkörper',
+    },
   },
 } as const;
 

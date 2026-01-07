@@ -293,7 +293,8 @@ export type RootStackParamList = {
   ChatGPTImport: undefined;
   ChatDetail: { chatId: string };
   SportSelection: undefined;
-  TrainingPlanList: { sportType: TSportType };
+  FitnessQuestionnaire: { sportType: TSportType };
+  TrainingPlanList: { sportType: TSportType; questionnaireAnswers?: Record<string, string | string[]> };
   TrainingPlanEditor: { planId?: string; sportType: TSportType };
   WorkoutDayEditor: { planId: string; day: TTrainingDay };
   ExercisePicker: { planId: string; day: TTrainingDay; workoutId: string };

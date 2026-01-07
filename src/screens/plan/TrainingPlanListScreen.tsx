@@ -29,11 +29,13 @@ export const TrainingPlanListScreen: React.FC = () => {
   const route = useRoute<RouteProps>();
   const { sportType } = route.params;
 
-  const plans = useTrainingPlanStore((state) => state.getPlansBySport(sportType));
+  const allPlans = useTrainingPlanStore((state) => state.plans);
   const activePlanId = useTrainingPlanStore((state) => state.activePlanId);
   const setActivePlan = useTrainingPlanStore((state) => state.setActivePlan);
   const deletePlan = useTrainingPlanStore((state) => state.deletePlan);
   const duplicatePlan = useTrainingPlanStore((state) => state.duplicatePlan);
+
+  const plans = useMemo(() => allPlans.filter((p) => p.sportType === sportType), [allPlans, sportType]);
 
   const handleCreatePlan = () => {
     navigation.navigate('TrainingPlanEditor', { sportType });

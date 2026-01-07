@@ -12,10 +12,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
+import { LinearGradient } from 'expo-linear-gradient';
 
-import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
-import { Card } from '@/components/common';
+import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
+import { SectionHeader } from '@/components/progress';
 import { useTheme } from '@/contexts';
 import { useTrainingPlanStore } from '@/stores';
 import { RootStackParamList, TTrainingDay } from '@/types';
@@ -58,8 +59,8 @@ export const PlanScreen: React.FC = () => {
     }
   };
 
-  const handleNavigateToAI = () => {
-    navigation.navigate('AICoach');
+  const handleImportFromChatGPT = () => {
+    navigation.navigate('ChatGPTImport');
   };
 
   const getDirectionColor = (direction: string): string => {
@@ -85,6 +86,11 @@ export const PlanScreen: React.FC = () => {
   const todayKey = getTodayKey();
   const todayWorkout = activePlan?.weeklySchedule[todayKey];
 
+  // Dynamic gradient colors based on theme
+  const cardGradient: [string, string] = isDark
+    ? ['#1E1E2E', '#2D2D44']
+    : [COLORS.gray[100], COLORS.gray[200]];
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <ScrollView
@@ -92,26 +98,33 @@ export const PlanScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={[styles.title, { color: colors.text }]}>{t('plan.title')}</Text>
-        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('plan.subtitle')}</Text>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: colors.text }]}>{t('plan.title')}</Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('plan.subtitle')}</Text>
+        </View>
 
         {activePlan ? (
           <>
-            <Card style={styles.activePlanCard} elevated>
+            {/* Active Plan Card */}
+            <LinearGradient
+              colors={cardGradient}
+              style={styles.activePlanCard}
+            >
               <View style={styles.activePlanHeader}>
                 <View style={styles.activePlanInfo}>
                   <Text style={[styles.activePlanLabel, { color: colors.textSecondary }]}>
                     {t('plan.activePlan')}
                   </Text>
-                  <Text style={[styles.activePlanName, { color: colors.text }]}>
+                  <Text style={[styles.activePlanName, { color: isDark ? COLORS.white : colors.text }]}>
                     {activePlan.name}
                   </Text>
                 </View>
                 <TouchableOpacity
-                  style={[styles.editPlanButton, { backgroundColor: colors.surfaceElevated }]}
+                  style={[styles.editPlanButton, { backgroundColor: isDark ? 'rgba(99, 102, 241, 0.2)' : 'rgba(99, 102, 241, 0.1)' }]}
                   onPress={handleEditPlan}
                 >
-                  <Text style={[styles.editPlanText, { color: colors.primary }]}>
+                  <Text style={styles.editPlanText}>
                     {t('common.edit')}
                   </Text>
                 </TouchableOpacity>
@@ -128,8 +141,8 @@ export const PlanScreen: React.FC = () => {
                       key={day}
                       style={[
                         styles.dayButton,
-                        { backgroundColor: colors.surfaceElevated },
-                        isToday && { backgroundColor: colors.primary },
+                        { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' },
+                        isToday && styles.dayButtonToday,
                         hasWorkout && !isToday && { borderWidth: 1, borderColor: colors.border },
                       ]}
                       onPress={() => hasWorkout && handleStartWorkout(day)}
@@ -139,7 +152,7 @@ export const PlanScreen: React.FC = () => {
                         style={[
                           styles.dayText,
                           { color: colors.textSecondary },
-                          isToday && { color: '#FFFFFF' },
+                          isToday && styles.dayTextToday,
                         ]}
                       >
                         {t(`days.short.${day}`)}
@@ -156,18 +169,17 @@ export const PlanScreen: React.FC = () => {
                   );
                 })}
               </View>
-            </Card>
+            </LinearGradient>
 
+            {/* Today Workout Card */}
             {todayWorkout && (
-              <Card style={[styles.todayCard, { backgroundColor: isDark ? colors.surfaceElevated : COLORS.gray[800] }]}>
+              <LinearGradient
+                colors={['#6366F1', '#8B5CF6']}
+                style={styles.todayCard}
+              >
                 <View style={styles.todayHeader}>
                   <Text style={styles.todayLabel}>{t('plan.today')}</Text>
-                  <View
-                    style={[
-                      styles.directionBadge,
-                      { backgroundColor: getDirectionColor(todayWorkout.direction) },
-                    ]}
-                  >
+                  <View style={styles.directionBadge}>
                     <Text style={styles.directionText}>
                       {t(`directions.${todayWorkout.direction}`)}
                     </Text>
@@ -178,15 +190,16 @@ export const PlanScreen: React.FC = () => {
                   {t('plan.exerciseCount', { count: todayWorkout.exercises.length })}
                 </Text>
                 <TouchableOpacity
-                  style={[styles.startButton, { backgroundColor: colors.primary }]}
+                  style={styles.startButton}
                   onPress={() => handleStartWorkout(todayKey)}
                 >
                   <Text style={styles.startButtonText}>{t('plan.startWorkout')}</Text>
                 </TouchableOpacity>
-              </Card>
+              </LinearGradient>
             )}
 
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('plan.thisWeek')}</Text>
+            {/* Weekly Schedule */}
+            <SectionHeader title={t('plan.thisWeek')} darkMode={isDark} />
 
             {DAYS.map((day) => {
               const workout = activePlan.weeklySchedule[day];
@@ -198,17 +211,17 @@ export const PlanScreen: React.FC = () => {
                   style={[
                     styles.scheduleItem,
                     { backgroundColor: colors.card },
-                    isToday && { borderWidth: 2, borderColor: colors.primary },
+                    isToday && styles.scheduleItemToday,
                   ]}
                   onPress={() => workout && handleStartWorkout(day)}
                   disabled={!workout}
                 >
-                  <View style={[styles.scheduleDay, { backgroundColor: colors.surfaceElevated }]}>
+                  <View style={[styles.scheduleDay, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }]}>
                     <Text
                       style={[
                         styles.scheduleDayText,
                         { color: colors.textSecondary },
-                        isToday && { color: colors.primary },
+                        isToday && styles.scheduleDayTextToday,
                       ]}
                     >
                       {t(`days.short.${day}`)}
@@ -243,55 +256,72 @@ export const PlanScreen: React.FC = () => {
             })}
           </>
         ) : (
-          <Card style={styles.emptyCard}>
-            <Text style={styles.emptyIcon}>📋</Text>
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('plan.noPlan')}</Text>
-            <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
-              {t('plan.noPlanDescription')}
-            </Text>
+          <>
+            {/* Empty State - Create Options */}
+            <LinearGradient
+              colors={cardGradient}
+              style={styles.emptyCard}
+            >
+              <Text style={styles.emptyIcon}>📋</Text>
+              <Text style={[styles.emptyTitle, { color: isDark ? COLORS.white : colors.text }]}>{t('plan.noPlan')}</Text>
+              <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
+                {t('plan.noPlanDescription')}
+              </Text>
+            </LinearGradient>
 
-            <View style={styles.createOptions}>
-              <TouchableOpacity
-                style={[
-                  styles.createOptionButton,
-                  {
-                    backgroundColor: colors.surfaceElevated,
-                    borderColor: colors.border,
-                  },
-                ]}
-                onPress={handleCreatePlan}
-              >
-                <Text style={styles.createOptionIcon}>✏️</Text>
-                <Text style={[styles.createOptionTitle, { color: colors.text }]}>
-                  {t('plan.createManually')}
-                </Text>
-                <Text style={[styles.createOptionDesc, { color: colors.textSecondary }]}>
-                  {t('plan.createManuallyDesc')}
-                </Text>
-              </TouchableOpacity>
+            <SectionHeader title={t('plan.createOptions')} darkMode={isDark} />
 
-              <TouchableOpacity
-                style={[
-                  styles.createOptionButton,
-                  {
-                    backgroundColor: colors.surfaceElevated,
-                    borderColor: colors.border,
-                  },
-                ]}
-                onPress={handleNavigateToAI}
+            {/* Manual Create */}
+            <TouchableOpacity
+              style={styles.createOptionButton}
+              onPress={handleCreatePlan}
+            >
+              <LinearGradient
+                colors={cardGradient}
+                style={styles.createOptionGradient}
               >
-                <Text style={styles.createOptionIcon}>🤖</Text>
-                <Text style={[styles.createOptionTitle, { color: colors.text }]}>
-                  {t('plan.createWithAI')}
-                </Text>
-                <Text style={[styles.createOptionDesc, { color: colors.textSecondary }]}>
-                  {t('plan.createWithAIDesc')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </Card>
+                <View style={styles.createOptionIconContainer}>
+                  <Text style={styles.createOptionIcon}>✏️</Text>
+                </View>
+                <View style={styles.createOptionContent}>
+                  <Text style={[styles.createOptionTitle, { color: isDark ? COLORS.white : colors.text }]}>
+                    {t('plan.createManually')}
+                  </Text>
+                  <Text style={[styles.createOptionDesc, { color: colors.textSecondary }]}>
+                    {t('plan.createManuallyDesc')}
+                  </Text>
+                </View>
+                <Text style={[styles.createOptionArrow, { color: colors.textTertiary }]}>›</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            {/* Import from ChatGPT */}
+            <TouchableOpacity
+              style={styles.createOptionButton}
+              onPress={handleImportFromChatGPT}
+            >
+              <LinearGradient
+                colors={cardGradient}
+                style={styles.createOptionGradient}
+              >
+                <View style={[styles.createOptionIconContainer, { backgroundColor: '#10B981' }]}>
+                  <Text style={styles.createOptionIcon}>💬</Text>
+                </View>
+                <View style={styles.createOptionContent}>
+                  <Text style={[styles.createOptionTitle, { color: isDark ? COLORS.white : colors.text }]}>
+                    {t('plan.importFromChatGPT')}
+                  </Text>
+                  <Text style={[styles.createOptionDesc, { color: colors.textSecondary }]}>
+                    {t('plan.importFromChatGPTDesc')}
+                  </Text>
+                </View>
+                <Text style={[styles.createOptionArrow, { color: colors.textTertiary }]}>›</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </>
         )}
 
+        {/* Manage Plans Button */}
         {plans.length > 0 && (
           <TouchableOpacity
             style={[styles.managePlansButton, { backgroundColor: colors.card }]}
@@ -304,19 +334,7 @@ export const PlanScreen: React.FC = () => {
           </TouchableOpacity>
         )}
 
-        <Card style={[styles.aiCard, { backgroundColor: isDark ? colors.surfaceElevated : COLORS.gray[800] }]}>
-          <View style={styles.aiHeader}>
-            <Text style={styles.aiIcon}>🤖</Text>
-            <Text style={styles.aiTitle}>{t('plan.aiCoach')}</Text>
-          </View>
-          <Text style={styles.aiDescription}>{t('plan.aiDescription')}</Text>
-          <TouchableOpacity
-            style={[styles.aiButton, { backgroundColor: colors.primary }]}
-            onPress={handleNavigateToAI}
-          >
-            <Text style={styles.aiButtonText}>{t('plan.openAICoach')}</Text>
-          </TouchableOpacity>
-        </Card>
+        <View style={styles.bottomSpacing} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -330,20 +348,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingHorizontal: SPACING.lg,
     paddingBottom: FLOATING_TAB_BAR_HEIGHT + SPACING.md,
+  },
+  header: {
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.md,
+    paddingBottom: SPACING.lg,
   },
   title: {
     fontSize: FONT_SIZES['2xl'],
     fontWeight: '700',
-    marginTop: SPACING.lg,
   },
   subtitle: {
-    fontSize: FONT_SIZES.base,
+    fontSize: FONT_SIZES.sm,
     marginTop: SPACING.xs,
-    marginBottom: SPACING.xl,
   },
   activePlanCard: {
+    marginHorizontal: SPACING.lg,
+    borderRadius: BORDER_RADIUS['2xl'],
+    padding: SPACING.lg,
     marginBottom: SPACING.lg,
   },
   activePlanHeader: {
@@ -368,11 +391,12 @@ const styles = StyleSheet.create({
   editPlanButton: {
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
-    borderRadius: BORDER_RADIUS.md,
+    borderRadius: BORDER_RADIUS.full,
   },
   editPlanText: {
     fontSize: FONT_SIZES.sm,
-    fontWeight: '500',
+    fontWeight: '600',
+    color: '#6366F1',
   },
   weekContainer: {
     flexDirection: 'row',
@@ -385,9 +409,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  dayButtonToday: {
+    backgroundColor: '#6366F1',
+  },
   dayText: {
     fontSize: FONT_SIZES.xs,
     fontWeight: '500',
+  },
+  dayTextToday: {
+    color: COLORS.white,
   },
   workoutIndicator: {
     width: 6,
@@ -396,6 +426,9 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   todayCard: {
+    marginHorizontal: SPACING.lg,
+    borderRadius: BORDER_RADIUS['2xl'],
+    padding: SPACING.lg,
     marginBottom: SPACING.xl,
   },
   todayHeader: {
@@ -406,13 +439,14 @@ const styles = StyleSheet.create({
   },
   todayLabel: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
+    color: 'rgba(255,255,255,0.7)',
     fontWeight: '500',
   },
   directionBadge: {
     paddingHorizontal: SPACING.sm,
     paddingVertical: 2,
     borderRadius: BORDER_RADIUS.sm,
+    backgroundColor: 'rgba(255,255,255,0.2)',
   },
   directionText: {
     fontSize: FONT_SIZES.xs,
@@ -428,10 +462,11 @@ const styles = StyleSheet.create({
   },
   todayExerciseCount: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
+    color: 'rgba(255,255,255,0.7)',
     marginBottom: SPACING.md,
   },
   startButton: {
+    backgroundColor: COLORS.white,
     paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.lg,
     alignItems: 'center',
@@ -439,19 +474,19 @@ const styles = StyleSheet.create({
   startButtonText: {
     fontSize: FONT_SIZES.base,
     fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  sectionTitle: {
-    fontSize: FONT_SIZES.lg,
-    fontWeight: '600',
-    marginBottom: SPACING.md,
+    color: '#6366F1',
   },
   scheduleItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: BORDER_RADIUS.lg,
-    padding: SPACING.md,
+    marginHorizontal: SPACING.lg,
     marginBottom: SPACING.sm,
+    borderRadius: BORDER_RADIUS.xl,
+    padding: SPACING.md,
+  },
+  scheduleItemToday: {
+    borderWidth: 2,
+    borderColor: '#6366F1',
   },
   scheduleDay: {
     width: 40,
@@ -464,6 +499,9 @@ const styles = StyleSheet.create({
   scheduleDayText: {
     fontSize: FONT_SIZES.sm,
     fontWeight: '600',
+  },
+  scheduleDayTextToday: {
+    color: '#6366F1',
   },
   scheduleInfo: {
     flex: 1,
@@ -486,8 +524,11 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   emptyCard: {
+    marginHorizontal: SPACING.lg,
+    borderRadius: BORDER_RADIUS['2xl'],
+    padding: SPACING.xl,
     alignItems: 'center',
-    paddingVertical: SPACING.xl,
+    marginBottom: SPACING.xl,
   },
   emptyIcon: {
     fontSize: 64,
@@ -501,22 +542,32 @@ const styles = StyleSheet.create({
   emptySubtitle: {
     fontSize: FONT_SIZES.base,
     textAlign: 'center',
-    marginBottom: SPACING.xl,
     paddingHorizontal: SPACING.lg,
   },
-  createOptions: {
-    width: '100%',
-    gap: SPACING.md,
-  },
   createOptionButton: {
-    width: '100%',
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.sm,
+  },
+  createOptionGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: BORDER_RADIUS.xl,
     padding: SPACING.lg,
+  },
+  createOptionIconContainer: {
+    width: 48,
+    height: 48,
     borderRadius: BORDER_RADIUS.lg,
-    borderWidth: 1,
+    backgroundColor: '#6366F1',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: SPACING.md,
   },
   createOptionIcon: {
-    fontSize: 28,
-    marginBottom: SPACING.sm,
+    fontSize: 24,
+  },
+  createOptionContent: {
+    flex: 1,
   },
   createOptionTitle: {
     fontSize: FONT_SIZES.base,
@@ -526,15 +577,17 @@ const styles = StyleSheet.create({
   createOptionDesc: {
     fontSize: FONT_SIZES.sm,
   },
+  createOptionArrow: {
+    fontSize: 24,
+  },
   managePlansButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: SPACING.lg,
-    borderRadius: BORDER_RADIUS.lg,
+    marginHorizontal: SPACING.lg,
     marginTop: SPACING.lg,
-    marginBottom: SPACING.lg,
-    ...SHADOWS.sm,
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.xl,
   },
   managePlansText: {
     fontSize: FONT_SIZES.base,
@@ -543,36 +596,7 @@ const styles = StyleSheet.create({
   managePlansArrow: {
     fontSize: FONT_SIZES.lg,
   },
-  aiCard: {
-    marginTop: SPACING.lg,
-  },
-  aiHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: SPACING.sm,
-  },
-  aiIcon: {
-    fontSize: 24,
-    marginRight: SPACING.sm,
-  },
-  aiTitle: {
-    fontSize: FONT_SIZES.lg,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  aiDescription: {
-    fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[300],
-    marginBottom: SPACING.lg,
-  },
-  aiButton: {
-    paddingVertical: SPACING.md,
-    borderRadius: BORDER_RADIUS.lg,
-    alignItems: 'center',
-  },
-  aiButtonText: {
-    fontSize: FONT_SIZES.base,
-    fontWeight: '600',
-    color: '#FFFFFF',
+  bottomSpacing: {
+    height: SPACING['3xl'],
   },
 });

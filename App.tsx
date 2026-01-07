@@ -31,6 +31,7 @@ import {
   ChatGPTImportScreen,
   ChatDetailScreen,
   SportSelectionScreen,
+  FitnessQuestionnaireScreen,
   TrainingPlanListScreen,
   TrainingPlanEditorScreen,
   WorkoutDayEditorScreen,
@@ -295,6 +296,14 @@ export default function App() {
                 <Stack.Screen
                   name="SportSelection"
                   component={SportSelectionScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="FitnessQuestionnaire"
+                  component={FitnessQuestionnaireScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',

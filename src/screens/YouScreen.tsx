@@ -77,7 +77,7 @@ const DEFAULT_RING_CONFIGS: RingConfig[] = [
 
 export const YouScreen: React.FC = () => {
   const { t } = useTranslation();
-  const { isDark } = useTheme();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
 
   // Stores
@@ -117,6 +117,14 @@ export const YouScreen: React.FC = () => {
   const [showHealthInput, setShowHealthInput] = useState(false);
   const [calorieInputValue, setCalorieInputValue] = useState('');
   const [goalInputValue, setGoalInputValue] = useState('');
+
+  // Dynamic gradient colors based on theme
+  const cardGradient: [string, string] = isDark
+    ? ['#1E1E2E', '#2D2D44']
+    : [COLORS.gray[100], COLORS.gray[200]];
+
+  const modalBgColor = isDark ? '#1E1E2E' : COLORS.white;
+  const inputBgColor = isDark ? COLORS.gray[800] : COLORS.gray[100];
 
   // Build rings from config
   const activityRings = useMemo((): RingData[] => {
@@ -242,7 +250,7 @@ export const YouScreen: React.FC = () => {
   ) as RingType[];
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
@@ -260,12 +268,12 @@ export const YouScreen: React.FC = () => {
               </Text>
             </LinearGradient>
             <View style={styles.headerTextContainer}>
-              <Text style={styles.greeting}>{t('home.greeting')}</Text>
-              <Text style={styles.userName}>{user?.name || t('you.guest')}</Text>
+              <Text style={[styles.greeting, { color: colors.textSecondary }]}>{t('home.greeting')}</Text>
+              <Text style={[styles.userName, { color: colors.text }]}>{user?.name || t('you.guest')}</Text>
             </View>
           </View>
           <TouchableOpacity
-            style={styles.settingsButton}
+            style={[styles.settingsButton, { backgroundColor: colors.card }]}
             onPress={() => navigation.navigate('HealthSettings')}
           >
             <Text style={styles.settingsIcon}>⚙️</Text>
@@ -275,13 +283,13 @@ export const YouScreen: React.FC = () => {
         {/* Activity Rings Card */}
         <View style={styles.ringsSection}>
           <LinearGradient
-            colors={['#1E1E2E', '#2D2D44']}
+            colors={cardGradient}
             style={styles.ringsCard}
           >
             <View style={styles.ringsHeader}>
-              <Text style={styles.ringsTitle}>{t('you.todayActivity')}</Text>
+              <Text style={[styles.ringsTitle, { color: isDark ? COLORS.white : colors.text }]}>{t('you.todayActivity')}</Text>
               <TouchableOpacity
-                style={styles.editRingsButton}
+                style={[styles.editRingsButton, { backgroundColor: isDark ? 'rgba(99, 102, 241, 0.2)' : 'rgba(99, 102, 241, 0.1)' }]}
                 onPress={() => setShowRingEditor(true)}
               >
                 <Text style={styles.editRingsText}>{t('common.edit')}</Text>
@@ -294,7 +302,7 @@ export const YouScreen: React.FC = () => {
               strokeWidth={16}
               showLabels={true}
               onRingPress={handleRingPress}
-              darkMode={true}
+              darkMode={isDark}
             />
 
             {!isHealthEnabled && (
@@ -316,7 +324,7 @@ export const YouScreen: React.FC = () => {
         </View>
 
         {/* Health Stats Grid */}
-        <SectionHeader title={t('you.healthStats')} darkMode />
+        <SectionHeader title={t('you.healthStats')} darkMode={isDark} />
         <View style={styles.statsGrid}>
           <TouchableOpacity
             style={styles.metricCardTouchable}
@@ -328,7 +336,7 @@ export const YouScreen: React.FC = () => {
               value={latestHealth?.weight ?? user?.weight ?? '--'}
               unit="kg"
               compact
-              darkMode
+              darkMode={isDark}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -344,13 +352,13 @@ export const YouScreen: React.FC = () => {
                   : '--'
               }
               compact
-              darkMode
+              darkMode={isDark}
             />
           </TouchableOpacity>
         </View>
 
         {/* Streak & Workouts */}
-        <SectionHeader title={t('you.activity')} darkMode />
+        <SectionHeader title={t('you.activity')} darkMode={isDark} />
         <View style={styles.statsGrid}>
           <MetricCard
             icon="🔥"
@@ -359,7 +367,7 @@ export const YouScreen: React.FC = () => {
             value={stats.currentStreak}
             unit={t('progress.days')}
             onPress={() => navigation.navigate('StreakDetail')}
-            darkMode
+            darkMode={isDark}
           />
           <MetricCard
             icon="💪"
@@ -367,7 +375,7 @@ export const YouScreen: React.FC = () => {
             value={stats.totalWorkouts}
             subtitle={t('progress.allTime')}
             onPress={() => navigation.navigate('WorkoutHistory')}
-            darkMode
+            darkMode={isDark}
           />
         </View>
 
@@ -378,33 +386,33 @@ export const YouScreen: React.FC = () => {
             label: t('you.addCalories'),
             onPress: () => setShowCalorieInput(true),
           }}
-          darkMode
+          darkMode={isDark}
         />
         <LinearGradient
-          colors={['#1E1E2E', '#2D2D44']}
+          colors={cardGradient}
           style={styles.calorieCard}
         >
           <View style={styles.calorieRow}>
-            <Text style={styles.calorieLabel}>{t('you.dailyNeed')}</Text>
-            <Text style={styles.calorieValue}>{dailyCalorieGoal} kcal</Text>
+            <Text style={[styles.calorieLabel, { color: colors.textSecondary }]}>{t('you.dailyNeed')}</Text>
+            <Text style={[styles.calorieValue, { color: isDark ? COLORS.white : colors.text }]}>{dailyCalorieGoal} kcal</Text>
           </View>
           <View style={styles.calorieRow}>
-            <Text style={styles.calorieLabel}>{t('you.consumed')}</Text>
-            <Text style={styles.calorieValue}>{todayCalories?.consumed ?? 0} kcal</Text>
+            <Text style={[styles.calorieLabel, { color: colors.textSecondary }]}>{t('you.consumed')}</Text>
+            <Text style={[styles.calorieValue, { color: isDark ? COLORS.white : colors.text }]}>{todayCalories?.consumed ?? 0} kcal</Text>
           </View>
           <View style={styles.calorieRow}>
-            <Text style={styles.calorieLabel}>{t('you.workoutBurned')}</Text>
+            <Text style={[styles.calorieLabel, { color: colors.textSecondary }]}>{t('you.workoutBurned')}</Text>
             <Text style={styles.calorieValueGreen}>
               -{todayCalories?.workoutBurned ?? 0} kcal
             </Text>
           </View>
-          <View style={styles.calorieDivider} />
+          <View style={[styles.calorieDivider, { backgroundColor: colors.border }]} />
           <View style={styles.calorieRow}>
-            <Text style={styles.calorieLabel}>{t('you.target')}</Text>
+            <Text style={[styles.calorieLabel, { color: colors.textSecondary }]}>{t('you.target')}</Text>
             <Text style={styles.calorieTargetLabel}>{getCalorieTargetLabel()}</Text>
           </View>
           <View style={styles.calorieRow}>
-            <Text style={styles.calorieLabelBold}>{t('you.balance')}</Text>
+            <Text style={[styles.calorieLabelBold, { color: isDark ? COLORS.white : colors.text }]}>{t('you.balance')}</Text>
             <Text
               style={[
                 styles.calorieBalanceValue,
@@ -424,15 +432,15 @@ export const YouScreen: React.FC = () => {
             label: t('you.addGoal'),
             onPress: () => setShowGoalInput(true),
           }}
-          darkMode
+          darkMode={isDark}
         />
         {activeGoal ? (
-          <LinearGradient colors={['#1E1E2E', '#2D2D44']} style={styles.goalCard}>
+          <LinearGradient colors={cardGradient} style={styles.goalCard}>
             <Text style={styles.goalIcon}>🎯</Text>
             <View style={styles.goalContent}>
-              <Text style={styles.goalText}>{activeGoal.text}</Text>
+              <Text style={[styles.goalText, { color: isDark ? COLORS.white : colors.text }]}>{activeGoal.text}</Text>
               {activeGoal.deadline && (
-                <Text style={styles.goalDeadline}>
+                <Text style={[styles.goalDeadline, { color: colors.textSecondary }]}>
                   {t('you.until')}: {new Date(activeGoal.deadline).toLocaleDateString()}
                 </Text>
               )}
@@ -446,11 +454,11 @@ export const YouScreen: React.FC = () => {
           </LinearGradient>
         ) : (
           <TouchableOpacity
-            style={styles.emptyGoalCard}
+            style={[styles.emptyGoalCard, { backgroundColor: colors.card, borderColor: colors.border }]}
             onPress={() => setShowGoalInput(true)}
           >
             <Text style={styles.emptyGoalIcon}>🎯</Text>
-            <Text style={styles.emptyGoalText}>{t('you.setGoal')}</Text>
+            <Text style={[styles.emptyGoalText, { color: colors.textTertiary }]}>{t('you.setGoal')}</Text>
           </TouchableOpacity>
         )}
 
@@ -465,22 +473,22 @@ export const YouScreen: React.FC = () => {
         onRequestClose={() => setShowRingEditor(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.ringEditorContent}>
+          <View style={[styles.ringEditorContent, { backgroundColor: modalBgColor }]}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{t('you.editRings')}</Text>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.editRings')}</Text>
               <TouchableOpacity onPress={() => setShowRingEditor(false)}>
-                <Text style={styles.modalClose}>✕</Text>
+                <Text style={[styles.modalClose, { color: colors.textSecondary }]}>✕</Text>
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.ringEditorSubtitle}>{t('you.activeRings')}</Text>
+            <Text style={[styles.ringEditorSubtitle, { color: colors.textSecondary }]}>{t('you.activeRings')}</Text>
             {ringConfigs.map((config) => {
               const preset = RING_PRESETS[config.id];
               return (
-                <View key={config.id} style={styles.ringToggleRow}>
+                <View key={config.id} style={[styles.ringToggleRow, { borderBottomColor: colors.border }]}>
                   <View style={[styles.ringToggleDot, { backgroundColor: preset.color }]} />
                   <Text style={styles.ringToggleIcon}>{preset.icon}</Text>
-                  <Text style={styles.ringToggleLabel}>{t(`you.ring.${config.id}`)}</Text>
+                  <Text style={[styles.ringToggleLabel, { color: colors.text }]}>{t(`you.ring.${config.id}`)}</Text>
                   <Switch
                     value={config.enabled}
                     onValueChange={(v) => handleToggleRing(config.id, v)}
@@ -493,7 +501,7 @@ export const YouScreen: React.FC = () => {
 
             {availableRings.length > 0 && (
               <>
-                <Text style={[styles.ringEditorSubtitle, { marginTop: SPACING.lg }]}>
+                <Text style={[styles.ringEditorSubtitle, { marginTop: SPACING.lg, color: colors.textSecondary }]}>
                   {t('you.addRing')}
                 </Text>
                 {availableRings.map((ringId) => {
@@ -501,12 +509,12 @@ export const YouScreen: React.FC = () => {
                   return (
                     <TouchableOpacity
                       key={ringId}
-                      style={styles.addRingRow}
+                      style={[styles.addRingRow, { borderBottomColor: colors.border }]}
                       onPress={() => handleAddRing(ringId)}
                     >
                       <View style={[styles.ringToggleDot, { backgroundColor: preset.color }]} />
                       <Text style={styles.ringToggleIcon}>{preset.icon}</Text>
-                      <Text style={styles.ringToggleLabel}>{t(`you.ring.${ringId}`)}</Text>
+                      <Text style={[styles.ringToggleLabel, { color: colors.text }]}>{t(`you.ring.${ringId}`)}</Text>
                       <Text style={styles.addRingPlus}>+</Text>
                     </TouchableOpacity>
                   );
@@ -525,26 +533,26 @@ export const YouScreen: React.FC = () => {
         onRequestClose={() => setEditingRing(null)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
+          <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>
               {editingRing?.icon} {editingRing?.label}
             </Text>
 
-            <Text style={styles.inputLabel}>{t('you.currentValue')}</Text>
+            <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('you.currentValue')}</Text>
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, { backgroundColor: inputBgColor, color: colors.text }]}
               placeholder="0"
-              placeholderTextColor={COLORS.gray[500]}
+              placeholderTextColor={colors.textTertiary}
               keyboardType="decimal-pad"
               value={editValue}
               onChangeText={setEditValue}
             />
 
-            <Text style={styles.inputLabel}>{t('you.goal')}</Text>
+            <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('you.goal')}</Text>
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, { backgroundColor: inputBgColor, color: colors.text }]}
               placeholder="0"
-              placeholderTextColor={COLORS.gray[500]}
+              placeholderTextColor={colors.textTertiary}
               keyboardType="decimal-pad"
               value={editGoal}
               onChangeText={setEditGoal}
@@ -552,10 +560,10 @@ export const YouScreen: React.FC = () => {
 
             <View style={styles.modalButtons}>
               <TouchableOpacity
-                style={styles.modalButtonCancel}
+                style={[styles.modalButtonCancel, { backgroundColor: isDark ? COLORS.gray[700] : COLORS.gray[200] }]}
                 onPress={() => setEditingRing(null)}
               >
-                <Text style={styles.modalButtonCancelText}>{t('common.cancel')}</Text>
+                <Text style={[styles.modalButtonCancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalButtonConfirm} onPress={handleSaveRingEdit}>
                 <Text style={styles.modalButtonConfirmText}>{t('common.save')}</Text>
@@ -573,12 +581,12 @@ export const YouScreen: React.FC = () => {
         onRequestClose={() => setShowCalorieInput(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{t('you.addCalories')}</Text>
+          <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.addCalories')}</Text>
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, { backgroundColor: inputBgColor, color: colors.text }]}
               placeholder="kcal"
-              placeholderTextColor={COLORS.gray[500]}
+              placeholderTextColor={colors.textTertiary}
               keyboardType="numeric"
               value={calorieInputValue}
               onChangeText={setCalorieInputValue}
@@ -586,10 +594,10 @@ export const YouScreen: React.FC = () => {
             />
             <View style={styles.modalButtons}>
               <TouchableOpacity
-                style={styles.modalButtonCancel}
+                style={[styles.modalButtonCancel, { backgroundColor: isDark ? COLORS.gray[700] : COLORS.gray[200] }]}
                 onPress={() => setShowCalorieInput(false)}
               >
-                <Text style={styles.modalButtonCancelText}>{t('common.cancel')}</Text>
+                <Text style={[styles.modalButtonCancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalButtonConfirm} onPress={handleAddCalories}>
                 <Text style={styles.modalButtonConfirmText}>{t('common.save')}</Text>
@@ -607,22 +615,22 @@ export const YouScreen: React.FC = () => {
         onRequestClose={() => setShowGoalInput(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{t('you.addGoal')}</Text>
+          <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.addGoal')}</Text>
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, { backgroundColor: inputBgColor, color: colors.text }]}
               placeholder={t('you.goalPlaceholder')}
-              placeholderTextColor={COLORS.gray[500]}
+              placeholderTextColor={colors.textTertiary}
               value={goalInputValue}
               onChangeText={setGoalInputValue}
               autoFocus
             />
             <View style={styles.modalButtons}>
               <TouchableOpacity
-                style={styles.modalButtonCancel}
+                style={[styles.modalButtonCancel, { backgroundColor: isDark ? COLORS.gray[700] : COLORS.gray[200] }]}
                 onPress={() => setShowGoalInput(false)}
               >
-                <Text style={styles.modalButtonCancelText}>{t('common.cancel')}</Text>
+                <Text style={[styles.modalButtonCancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalButtonConfirm} onPress={handleAddGoal}>
                 <Text style={styles.modalButtonConfirmText}>{t('common.save')}</Text>
@@ -636,6 +644,8 @@ export const YouScreen: React.FC = () => {
       <HealthInputModal
         visible={showHealthInput}
         onClose={() => setShowHealthInput(false)}
+        isDark={isDark}
+        colors={colors}
       />
     </SafeAreaView>
   );
@@ -644,14 +654,19 @@ export const YouScreen: React.FC = () => {
 interface HealthInputModalProps {
   visible: boolean;
   onClose: () => void;
+  isDark: boolean;
+  colors: ReturnType<typeof useTheme>['colors'];
 }
 
-const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onClose }) => {
+const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onClose, isDark, colors }) => {
   const { t } = useTranslation();
   const { addHealthEntry } = useUserGoalsStore();
   const [weight, setWeight] = useState('');
   const [systolic, setSystolic] = useState('');
   const [diastolic, setDiastolic] = useState('');
+
+  const modalBgColor = isDark ? '#1E1E2E' : COLORS.white;
+  const inputBgColor = isDark ? COLORS.gray[800] : COLORS.gray[100];
 
   const handleSave = () => {
     const entry: { weight?: number; bloodPressureSystolic?: number; bloodPressureDiastolic?: number } = {};
@@ -675,34 +690,34 @@ const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onClose })
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>{t('you.addHealthData')}</Text>
+        <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
+          <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.addHealthData')}</Text>
 
-          <Text style={styles.inputLabel}>{t('you.weight')} (kg)</Text>
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('you.weight')} (kg)</Text>
           <TextInput
-            style={styles.modalInput}
+            style={[styles.modalInput, { backgroundColor: inputBgColor, color: colors.text }]}
             placeholder="75"
-            placeholderTextColor={COLORS.gray[500]}
+            placeholderTextColor={colors.textTertiary}
             keyboardType="decimal-pad"
             value={weight}
             onChangeText={setWeight}
           />
 
-          <Text style={styles.inputLabel}>{t('you.bloodPressure')}</Text>
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('you.bloodPressure')}</Text>
           <View style={styles.bloodPressureInputs}>
             <TextInput
-              style={[styles.modalInput, styles.bpInput]}
+              style={[styles.modalInput, styles.bpInput, { backgroundColor: inputBgColor, color: colors.text }]}
               placeholder="120"
-              placeholderTextColor={COLORS.gray[500]}
+              placeholderTextColor={colors.textTertiary}
               keyboardType="numeric"
               value={systolic}
               onChangeText={setSystolic}
             />
-            <Text style={styles.bpSeparator}>/</Text>
+            <Text style={[styles.bpSeparator, { color: colors.textSecondary }]}>/</Text>
             <TextInput
-              style={[styles.modalInput, styles.bpInput]}
+              style={[styles.modalInput, styles.bpInput, { backgroundColor: inputBgColor, color: colors.text }]}
               placeholder="80"
-              placeholderTextColor={COLORS.gray[500]}
+              placeholderTextColor={colors.textTertiary}
               keyboardType="numeric"
               value={diastolic}
               onChangeText={setDiastolic}
@@ -710,8 +725,11 @@ const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onClose })
           </View>
 
           <View style={styles.modalButtons}>
-            <TouchableOpacity style={styles.modalButtonCancel} onPress={onClose}>
-              <Text style={styles.modalButtonCancelText}>{t('common.cancel')}</Text>
+            <TouchableOpacity
+              style={[styles.modalButtonCancel, { backgroundColor: isDark ? COLORS.gray[700] : COLORS.gray[200] }]}
+              onPress={onClose}
+            >
+              <Text style={[styles.modalButtonCancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalButtonConfirm} onPress={handleSave}>
               <Text style={styles.modalButtonConfirmText}>{t('common.save')}</Text>
@@ -726,7 +744,6 @@ const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onClose })
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F0F1A',
   },
   scrollView: {
     flex: 1,
@@ -765,19 +782,16 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
   },
   userName: {
     fontSize: FONT_SIZES.xl,
     fontWeight: '700',
-    color: COLORS.white,
     marginTop: 2,
   },
   settingsButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#1E1E2E',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -801,12 +815,10 @@ const styles = StyleSheet.create({
   ringsTitle: {
     fontSize: FONT_SIZES.lg,
     fontWeight: '700',
-    color: COLORS.white,
   },
   editRingsButton: {
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.xs,
-    backgroundColor: 'rgba(99, 102, 241, 0.2)',
     borderRadius: BORDER_RADIUS.full,
   },
   editRingsText: {
@@ -850,16 +862,13 @@ const styles = StyleSheet.create({
   },
   calorieLabel: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
   },
   calorieLabelBold: {
     fontSize: FONT_SIZES.md,
-    color: COLORS.white,
     fontWeight: '600',
   },
   calorieValue: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.white,
     fontWeight: '500',
   },
   calorieValueGreen: {
@@ -884,7 +893,6 @@ const styles = StyleSheet.create({
   },
   calorieDivider: {
     height: 1,
-    backgroundColor: COLORS.gray[700],
     marginVertical: SPACING.sm,
   },
   goalCard: {
@@ -903,12 +911,10 @@ const styles = StyleSheet.create({
   },
   goalText: {
     fontSize: FONT_SIZES.md,
-    color: COLORS.white,
     fontWeight: '600',
   },
   goalDeadline: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
     marginTop: 4,
   },
   goalCheckButton: {
@@ -925,13 +931,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   emptyGoalCard: {
-    backgroundColor: '#1E1E2E',
     borderRadius: BORDER_RADIUS['2xl'],
     padding: SPACING.xl,
     marginHorizontal: SPACING.lg,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: COLORS.gray[700],
     borderStyle: 'dashed',
   },
   emptyGoalIcon: {
@@ -941,7 +945,6 @@ const styles = StyleSheet.create({
   },
   emptyGoalText: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[500],
   },
   bottomSpacing: {
     height: SPACING['3xl'],
@@ -949,11 +952,10 @@ const styles = StyleSheet.create({
   // Modal styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.8)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: '#1E1E2E',
     borderTopLeftRadius: BORDER_RADIUS['2xl'],
     borderTopRightRadius: BORDER_RADIUS['2xl'],
     padding: SPACING.xl,
@@ -967,16 +969,13 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: FONT_SIZES.lg,
     fontWeight: '700',
-    color: COLORS.white,
     marginBottom: SPACING.lg,
     textAlign: 'center',
   },
   modalClose: {
     fontSize: 24,
-    color: COLORS.gray[400],
   },
   ringEditorContent: {
-    backgroundColor: '#1E1E2E',
     borderTopLeftRadius: BORDER_RADIUS['2xl'],
     borderTopRightRadius: BORDER_RADIUS['2xl'],
     padding: SPACING.xl,
@@ -984,7 +983,6 @@ const styles = StyleSheet.create({
   },
   ringEditorSubtitle: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
     marginBottom: SPACING.md,
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -994,7 +992,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: SPACING.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.gray[700],
   },
   ringToggleDot: {
     width: 12,
@@ -1009,14 +1006,12 @@ const styles = StyleSheet.create({
   ringToggleLabel: {
     flex: 1,
     fontSize: FONT_SIZES.md,
-    color: COLORS.white,
   },
   addRingRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: SPACING.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.gray[700],
   },
   addRingPlus: {
     fontSize: 24,
@@ -1025,16 +1020,13 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
     marginBottom: SPACING.xs,
     marginTop: SPACING.md,
   },
   modalInput: {
-    backgroundColor: COLORS.gray[800],
     borderRadius: BORDER_RADIUS.lg,
     padding: SPACING.md,
     fontSize: FONT_SIZES.md,
-    color: COLORS.white,
   },
   bloodPressureInputs: {
     flexDirection: 'row',
@@ -1045,7 +1037,6 @@ const styles = StyleSheet.create({
   },
   bpSeparator: {
     fontSize: FONT_SIZES.xl,
-    color: COLORS.gray[400],
     marginHorizontal: SPACING.sm,
   },
   modalButtons: {
@@ -1055,13 +1046,11 @@ const styles = StyleSheet.create({
   },
   modalButtonCancel: {
     flex: 1,
-    backgroundColor: COLORS.gray[700],
     paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.lg,
     alignItems: 'center',
   },
   modalButtonCancelText: {
-    color: COLORS.gray[300],
     fontWeight: '600',
   },
   modalButtonConfirm: {
