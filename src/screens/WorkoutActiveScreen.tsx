@@ -225,8 +225,18 @@ export const WorkoutActiveScreen: React.FC = () => {
       >
         {activeWorkout.exercises.map((exercise) => (
           <Card key={exercise.id} style={styles.exerciseCard}>
-            <Text style={styles.exerciseName}>{exercise.name}</Text>
-            <Text style={styles.muscleGroup}>{t(`muscles.${exercise.muscleGroup}`)}</Text>
+            <View style={styles.exerciseHeader}>
+              <View style={styles.exerciseHeaderLeft}>
+                <Text style={styles.exerciseName}>{exercise.name}</Text>
+                <Text style={styles.muscleGroup}>{t(`muscles.${exercise.muscleGroup}`)}</Text>
+              </View>
+              <TouchableOpacity
+                style={[styles.infoButton, { backgroundColor: colors.border }]}
+                onPress={() => navigation.navigate('ExerciseDetail', { exerciseId: exercise.id })}
+              >
+                <Text style={[styles.infoButtonText, { color: colors.textSecondary }]}>?</Text>
+              </TouchableOpacity>
+            </View>
 
             <View style={styles.setsHeader}>
               <Text style={styles.setHeaderText}>{t('workoutActive.set')}</Text>
@@ -412,6 +422,15 @@ const styles = StyleSheet.create({
   exerciseCard: {
     marginBottom: SPACING.sm,
   },
+  exerciseHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: SPACING.md,
+  },
+  exerciseHeaderLeft: {
+    flex: 1,
+  },
   exerciseName: {
     fontSize: FONT_SIZES.lg,
     fontWeight: '600',
@@ -420,7 +439,18 @@ const styles = StyleSheet.create({
   muscleGroup: {
     fontSize: FONT_SIZES.sm,
     color: COLORS.gray[500],
-    marginBottom: SPACING.md,
+  },
+  infoButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: SPACING.sm,
+  },
+  infoButtonText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '700',
   },
   setsHeader: {
     flexDirection: 'row',
