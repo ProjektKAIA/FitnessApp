@@ -1,3 +1,5 @@
+// /workspaces/claude-workspace/fitnessapp/src/components/common/Button.tsx
+
 import React from 'react';
 import {
   TouchableOpacity,
@@ -7,7 +9,9 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
+
+import { FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
+import { useTheme } from '@/contexts';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -37,14 +41,54 @@ export const Button: React.FC<Props> = ({
   style,
   textStyle,
 }) => {
+  const { colors } = useTheme();
   const isDisabled = disabled || loading;
+
+  const getBackgroundColor = () => {
+    switch (variant) {
+      case 'primary':
+        return colors.buttonPrimaryBackground;
+      case 'secondary':
+        return colors.buttonSecondaryBackground;
+      case 'outline':
+        return colors.buttonOutlineBackground;
+      case 'ghost':
+        return 'transparent';
+      default:
+        return colors.buttonPrimaryBackground;
+    }
+  };
+
+  const getBorderColor = () => {
+    if (variant === 'outline') return colors.buttonOutlineBorder;
+    return 'transparent';
+  };
+
+  const getTextColor = () => {
+    switch (variant) {
+      case 'primary':
+        return colors.buttonPrimaryText;
+      case 'secondary':
+        return colors.buttonSecondaryText;
+      case 'outline':
+        return colors.buttonOutlineText;
+      case 'ghost':
+        return colors.primary;
+      default:
+        return colors.buttonPrimaryText;
+    }
+  };
 
   return (
     <TouchableOpacity
       style={[
         styles.base,
-        styles[variant],
         styles[`size_${size}`],
+        {
+          backgroundColor: getBackgroundColor(),
+          borderColor: getBorderColor(),
+          borderWidth: variant === 'outline' ? 1 : 0,
+        },
         fullWidth && styles.fullWidth,
         isDisabled && styles.disabled,
         style,
@@ -55,7 +99,7 @@ export const Button: React.FC<Props> = ({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'primary' ? COLORS.white : COLORS.primary}
+          color={variant === 'primary' ? colors.buttonPrimaryText : colors.primary}
           size="small"
         />
       ) : (
@@ -64,8 +108,8 @@ export const Button: React.FC<Props> = ({
           <Text
             style={[
               styles.text,
-              styles[`text_${variant}`],
               styles[`text_${size}`],
+              { color: getTextColor() },
               icon ? styles.textWithIcon : undefined,
               textStyle,
             ]}
@@ -91,22 +135,6 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
-
-  primary: {
-    backgroundColor: COLORS.primary,
-  },
-  secondary: {
-    backgroundColor: COLORS.gray[200],
-  },
-  outline: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: COLORS.primary,
-  },
-  ghost: {
-    backgroundColor: 'transparent',
-  },
-
   size_sm: {
     paddingVertical: SPACING.sm,
     paddingHorizontal: SPACING.md,
@@ -122,27 +150,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.xl,
     minHeight: 52,
   },
-
   text: {
     fontWeight: '600',
   },
   textWithIcon: {
     marginLeft: SPACING.sm,
   },
-
-  text_primary: {
-    color: COLORS.white,
-  },
-  text_secondary: {
-    color: COLORS.gray[900],
-  },
-  text_outline: {
-    color: COLORS.primary,
-  },
-  text_ghost: {
-    color: COLORS.primary,
-  },
-
   text_sm: {
     fontSize: FONT_SIZES.sm,
   },

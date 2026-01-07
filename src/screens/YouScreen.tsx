@@ -16,6 +16,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
+import { useTheme } from '@/contexts';
 import { ActivityRings, MetricCard, SectionHeader } from '@/components/progress';
 import type { RingData } from '@/components/progress/ActivityRings';
 import { RootStackParamList } from '@/types';
@@ -75,6 +76,7 @@ const DEFAULT_RING_CONFIGS: RingConfig[] = [
 
 export const YouScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
 
   // Stores

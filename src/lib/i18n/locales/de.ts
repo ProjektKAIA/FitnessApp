@@ -190,6 +190,9 @@ const de = {
     unitsImperial: 'Imperial (lb, mi)',
     appearance: 'Erscheinungsbild',
     appearanceSystem: 'System',
+    themeLight: 'Hell',
+    themeDark: 'Dunkel',
+    themeSystem: 'System',
     language: 'Sprache',
     languageSubtitle: 'App-Sprache ändern',
 

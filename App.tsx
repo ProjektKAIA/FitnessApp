@@ -2,7 +2,6 @@
 import i18n from '@/lib/i18n';
 
 import React, { useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -52,9 +51,9 @@ import {
 } from '@/screens';
 import { BottomNav } from '@/components/navigation';
 import { ErrorBoundary, LoadingScreen } from '@/components/common';
+import { ThemeProvider } from '@/contexts';
 import { useAuthStore, useConsentStore, useLanguageStore } from '@/stores';
 import { RootStackParamList, MainTabParamList, OnboardingStackParamList } from '@/types';
-import { COLORS } from '@/constants/theme';
 import { initI18n } from '@/lib/i18n';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -148,7 +147,9 @@ export default function App() {
       <GestureHandlerRootView style={styles.container}>
         <I18nextProvider i18n={i18n}>
           <SafeAreaProvider>
-            <LoadingScreen message={t('common.loading')} />
+            <ThemeProvider>
+              <LoadingScreen message={t('common.loading')} />
+            </ThemeProvider>
           </SafeAreaProvider>
         </I18nextProvider>
       </GestureHandlerRootView>
@@ -159,9 +160,9 @@ export default function App() {
     <GestureHandlerRootView style={styles.container}>
       <I18nextProvider i18n={i18n}>
         <SafeAreaProvider>
-          <ErrorBoundary>
-            <NavigationContainer>
-              <StatusBar style="light" />
+          <ThemeProvider>
+            <ErrorBoundary>
+              <NavigationContainer>
               <Stack.Navigator
                 screenOptions={{
                   headerShown: false,
@@ -388,9 +389,10 @@ export default function App() {
                 />
               </>
             )}
-            </Stack.Navigator>
-            </NavigationContainer>
-          </ErrorBoundary>
+              </Stack.Navigator>
+              </NavigationContainer>
+            </ErrorBoundary>
+          </ThemeProvider>
         </SafeAreaProvider>
       </I18nextProvider>
     </GestureHandlerRootView>

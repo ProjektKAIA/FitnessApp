@@ -1,8 +1,12 @@
+// /workspaces/claude-workspace/fitnessapp/src/components/navigation/BottomNav.tsx
+
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { COLORS, FONT_SIZES, SPACING } from '@/constants';
+
+import { SPACING } from '@/constants';
+import { useTheme } from '@/contexts';
 import { scale, scaleFont, MIN_TOUCH_TARGET } from '@/lib';
 
 const TAB_ICONS: Record<string, { active: string; inactive: string }> = {
@@ -19,12 +23,21 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
   navigation,
 }) => {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useTheme();
 
-  // Dynamisches Padding basierend auf SafeArea (für iPhones mit Home-Indicator)
   const bottomPadding = Math.max(insets.bottom, SPACING.md);
 
   return (
-    <View style={[styles.container, { paddingBottom: bottomPadding }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          paddingBottom: bottomPadding,
+          backgroundColor: colors.tabBar,
+          borderTopColor: colors.tabBarBorder,
+        },
+      ]}
+    >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel ?? options.title ?? route.name;
@@ -57,7 +70,9 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
             <View
               style={[
                 styles.iconContainer,
-                isFocused && styles.iconContainerActive,
+                isFocused && {
+                  backgroundColor: colors.primary + (isDark ? '30' : '18'),
+                },
               ]}
             >
               <Text style={styles.icon}>
@@ -65,7 +80,11 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
               </Text>
             </View>
             <Text
-              style={[styles.label, isFocused && styles.labelActive]}
+              style={[
+                styles.label,
+                { color: colors.textSecondary },
+                isFocused && { color: colors.primary, fontWeight: '600' },
+              ]}
               numberOfLines={1}
             >
               {typeof label === 'string' ? label : route.name}
@@ -77,7 +96,6 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
   );
 };
 
-// Skalierte Werte für verschiedene Bildschirmgrößen
 const ICON_SIZE = scale(26);
 const ICON_CONTAINER_SIZE = scale(56);
 const LABEL_SIZE = scaleFont(11);
@@ -85,14 +103,11 @@ const LABEL_SIZE = scaleFont(11);
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: COLORS.white,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: COLORS.gray[300],
     paddingTop: SPACING.md,
-    // Schatten für bessere visuelle Trennung
     ...Platform.select({
       ios: {
-        shadowColor: COLORS.black,
+        shadowColor: '#000000',
         shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.08,
         shadowRadius: 8,
@@ -116,20 +131,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: scale(18),
   },
-  iconContainerActive: {
-    backgroundColor: COLORS.primary + '18',
-  },
   icon: {
     fontSize: ICON_SIZE,
   },
   label: {
     fontSize: LABEL_SIZE,
-    color: COLORS.gray[600],
     marginTop: SPACING.xs,
     fontWeight: '500',
-  },
-  labelActive: {
-    color: COLORS.primary,
-    fontWeight: '600',
   },
 });

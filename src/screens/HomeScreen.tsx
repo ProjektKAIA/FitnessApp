@@ -1,3 +1,5 @@
+// /workspaces/claude-workspace/fitnessapp/src/screens/HomeScreen.tsx
+
 import React, { useState, useMemo } from 'react';
 import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,6 +8,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+
 import {
   WorkoutTile,
   StatTile,
@@ -18,6 +21,7 @@ import {
 } from '@/components/tiles';
 import { WeeklyGoalModal } from '@/components/common';
 import { COLORS, FONT_SIZES, SPACING } from '@/constants';
+import { useTheme } from '@/contexts';
 import { useStatsStore, useWorkoutStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
 import { RootStackParamList, MainTabParamList, TDirection } from '@/types';
@@ -36,6 +40,7 @@ const getGreeting = (t: (key: string) => string): string => {
 
 export const HomeScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const stats = useStatsStore((state) => state.stats);
   const weeklyGoal = useStatsStore((state) => state.weeklyGoal);
@@ -43,12 +48,10 @@ export const HomeScreen: React.FC = () => {
   const getWorkoutHistory = useWorkoutStore((state) => state.getWorkoutHistory);
   const [isWeeklyGoalModalVisible, setWeeklyGoalModalVisible] = useState(false);
 
-  // Health Data
   const healthSettings = useHealthStore((state) => state.settings);
   const todaySummary = useHealthStore((state) => state.todaySummary);
   const isHealthEnabled = healthSettings.enabled && healthSettings.permissionsGranted;
 
-  // Calculate workout counts per direction
   const directionCounts = useMemo(() => {
     const workouts = getWorkoutHistory();
     const counts: Record<TDirection, number> = {
@@ -71,50 +74,47 @@ export const HomeScreen: React.FC = () => {
     navigation.navigate('WorkoutActive', { workoutId: 'new' });
   };
 
-  // Navigation zu Programs Tab
   const handleNavigateToProgress = () => {
     navigation.navigate('Programs');
   };
 
-  // Streak Tile Handler
   const handleStreakPress = () => {
     navigation.navigate('StreakDetail');
   };
 
-  // Workout History Handler
   const handleWorkoutHistoryPress = () => {
     navigation.navigate('WorkoutHistory');
   };
 
-  // Weekly Goal Modal Handler
   const handleWeeklyGoalPress = () => {
     setWeeklyGoalModalVisible(true);
   };
 
-  // Direction Tile Handler - Navigate to filtered workout history
   const handleDirectionPress = (direction: TDirection) => {
     navigation.navigate('WorkoutHistory', { direction });
   };
 
-  // Health Tile Handler
   const handleHealthPress = () => {
     navigation.navigate('Programs');
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <Text style={styles.greeting}>{getGreeting(t)}</Text>
-          <Text style={styles.title}>{t('home.readyToTrain')}</Text>
+          <Text style={[styles.greeting, { color: colors.textSecondary }]}>
+            {getGreeting(t)}
+          </Text>
+          <Text style={[styles.title, { color: colors.text }]}>
+            {t('home.readyToTrain')}
+          </Text>
         </View>
 
         <View style={styles.tilesContainer}>
-          {/* Row 1: Workout, Streak, Weekly Goal */}
           <View style={styles.row}>
             <WorkoutTile
               size="1x1"
@@ -136,7 +136,6 @@ export const HomeScreen: React.FC = () => {
             />
           </View>
 
-          {/* Health Widget - Activity Rings */}
           {isHealthEnabled && (
             <View style={styles.row}>
               <HealthTile
@@ -156,7 +155,6 @@ export const HomeScreen: React.FC = () => {
             </View>
           )}
 
-          {/* Row 2: Volume, Total Workouts, This Month */}
           <View style={styles.row}>
             <StatTile
               label={t('home.totalVolume')}
@@ -179,7 +177,6 @@ export const HomeScreen: React.FC = () => {
             />
           </View>
 
-          {/* Row 3: Directions (Top) */}
           <View style={styles.row}>
             <DirectionTile
               direction="gym"
@@ -198,7 +195,6 @@ export const HomeScreen: React.FC = () => {
             />
           </View>
 
-          {/* Row 4: Directions (Bottom) */}
           <View style={styles.row}>
             <DirectionTile
               direction="yoga"
@@ -217,7 +213,6 @@ export const HomeScreen: React.FC = () => {
             />
           </View>
 
-          {/* Ad Banner - volle Breite */}
           <AdTile
             size="3x1"
             title={t('home.premium.title')}
@@ -240,7 +235,6 @@ export const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.gray[100],
   },
   scrollView: {
     flex: 1,
@@ -254,14 +248,12 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: FONT_SIZES.xs,
-    color: COLORS.gray[500],
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
   title: {
     fontSize: FONT_SIZES.xl,
     fontWeight: '700',
-    color: COLORS.gray[900],
     marginTop: SPACING.xs,
   },
   tilesContainer: {

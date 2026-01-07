@@ -1,6 +1,10 @@
+// /workspaces/claude-workspace/fitnessapp/src/components/common/Card.tsx
+
 import React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import { COLORS, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
+
+import { SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
+import { useTheme } from '@/contexts';
 
 interface Props {
   children: React.ReactNode;
@@ -15,10 +19,13 @@ export const Card: React.FC<Props> = ({
   padded = true,
   elevated = false,
 }) => {
+  const { colors } = useTheme();
+
   return (
     <View
       style={[
         styles.card,
+        { backgroundColor: colors.card },
         padded && styles.padded,
         elevated && styles.elevated,
         style,
@@ -31,7 +38,6 @@ export const Card: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: COLORS.white,
     borderRadius: BORDER_RADIUS.lg,
   },
   padded: {

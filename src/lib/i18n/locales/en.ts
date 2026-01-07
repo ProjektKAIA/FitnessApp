@@ -190,6 +190,9 @@ const en = {
     unitsImperial: 'Imperial (lb, mi)',
     appearance: 'Appearance',
     appearanceSystem: 'System',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    themeSystem: 'System',
     language: 'Language',
     languageSubtitle: 'Change app language',
 
