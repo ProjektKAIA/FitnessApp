@@ -325,6 +325,6 @@ export type MainTabParamList = {
   Home: undefined;
   Workout: undefined;
   Plan: undefined;
-  Programs: undefined;
+  You: undefined;
   More: undefined;
 };

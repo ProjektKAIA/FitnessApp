@@ -3,6 +3,7 @@ export { WorkoutScreen } from './WorkoutScreen';
 export { PlanScreen } from './PlanScreen';
 export { ProgressScreen } from './ProgressScreen';
 export { ProgramsScreen } from './ProgramsScreen';
+export { YouScreen } from './YouScreen';
 export { MoreScreen } from './MoreScreen';
 export { WorkoutActiveScreen } from './WorkoutActiveScreen';
 export { WorkoutHistoryScreen } from './WorkoutHistoryScreen';

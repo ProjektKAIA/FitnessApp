@@ -9,7 +9,7 @@ const TAB_ICONS: Record<string, { active: string; inactive: string }> = {
   Home: { active: '🏠', inactive: '🏠' },
   Workout: { active: '💪', inactive: '💪' },
   Plan: { active: '📋', inactive: '📋' },
-  Programs: { active: '📊', inactive: '📊' },
+  You: { active: '👤', inactive: '👤' },
   More: { active: '⚙️', inactive: '⚙️' },
 };
 

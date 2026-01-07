@@ -15,7 +15,7 @@ import {
   HomeScreen,
   WorkoutScreen,
   PlanScreen,
-  ProgramsScreen,
+  YouScreen,
   MoreScreen,
   WorkoutActiveScreen,
   WorkoutHistoryScreen,
@@ -105,9 +105,9 @@ const MainTabs: React.FC = () => {
         options={{ tabBarLabel: t('nav.plan') }}
       />
       <Tab.Screen
-        name="Programs"
-        component={ProgramsScreen}
-        options={{ tabBarLabel: t('nav.programs') }}
+        name="You"
+        component={YouScreen}
+        options={{ tabBarLabel: t('nav.you') }}
       />
       <Tab.Screen
         name="More"

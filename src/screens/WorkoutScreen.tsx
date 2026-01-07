@@ -1,41 +1,131 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+// /workspaces/claude-workspace/fitnessapp/src/screens/WorkoutScreen.tsx
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ImageBackground,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
+import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
-import { Button, Card } from '@/components/common';
-import { useWorkoutStore } from '@/stores';
-import { TDirection } from '@/types';
+import { Button } from '@/components/common';
+import { SectionHeader } from '@/components/progress';
+import { useWorkoutStore, useTrainingPlanStore } from '@/stores';
+import { RootStackParamList, TDirection, TProgramCategory } from '@/types';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+interface ProgramItem {
+  id: string;
+  name: string;
+  category: TProgramCategory;
+  imageUrl: string;
+  duration: string;
+  sessionsCount: number;
+  direction: TDirection;
+}
+
+const PROGRAMS: ProgramItem[] = [
+  {
+    id: '1',
+    name: 'Yoga Time',
+    category: 'yoga',
+    imageUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800',
+    duration: '60 hr',
+    sessionsCount: 74,
+    direction: 'yoga',
+  },
+  {
+    id: '2',
+    name: 'Meditation Time',
+    category: 'meditation',
+    imageUrl: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800',
+    duration: '22 hr',
+    sessionsCount: 62,
+    direction: 'yoga',
+  },
+  {
+    id: '3',
+    name: 'Bodybuilding',
+    category: 'bodybuilding',
+    imageUrl: 'https://images.unsplash.com/photo-1581009146145-b5ef050c149a?w=800',
+    duration: '200 hr',
+    sessionsCount: 90,
+    direction: 'gym',
+  },
+  {
+    id: '4',
+    name: 'Cardio Blast',
+    category: 'cardio',
+    imageUrl: 'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=800',
+    duration: '45 hr',
+    sessionsCount: 50,
+    direction: 'cardio',
+  },
+  {
+    id: '5',
+    name: 'Stretch & Flex',
+    category: 'stretching',
+    imageUrl: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800',
+    duration: '30 hr',
+    sessionsCount: 40,
+    direction: 'mobility',
+  },
+];
+
+const CATEGORY_COLORS: Record<TProgramCategory, string> = {
+  yoga: '#8B5CF6',
+  meditation: '#06B6D4',
+  bodybuilding: '#EF4444',
+  cardio: '#F59E0B',
+  stretching: '#10B981',
+};
 
 export const WorkoutScreen: React.FC = () => {
   const { t } = useTranslation();
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const navigation = useNavigation<NavigationProp>();
   const startWorkout = useWorkoutStore((state) => state.startWorkout);
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
+  const activePlan = useTrainingPlanStore((state) => state.getActivePlan());
 
-  const WORKOUT_TEMPLATES = [
-    { id: '1', nameKey: 'templates.pushDay', direction: 'gym' as TDirection, exercises: 6 },
-    { id: '2', nameKey: 'templates.pullDay', direction: 'gym' as TDirection, exercises: 6 },
-    { id: '3', nameKey: 'templates.legDay', direction: 'gym' as TDirection, exercises: 5 },
-    { id: '4', nameKey: 'templates.upperBody', direction: 'gym' as TDirection, exercises: 8 },
-    { id: '5', nameKey: 'templates.fullBodyHiit', direction: 'cardio' as TDirection, exercises: 10 },
-    { id: '6', nameKey: 'templates.morningYoga', direction: 'yoga' as TDirection, exercises: 12 },
-  ];
-
-  const handleStartWorkout = () => {
-    if (!selectedTemplate) return;
-
-    const template = WORKOUT_TEMPLATES.find((temp) => temp.id === selectedTemplate);
-    if (!template) return;
-
+  const handleStartProgram = (program: ProgramItem) => {
     startWorkout({
       userId: 'user-1',
-      name: t(template.nameKey),
-      direction: template.direction,
+      name: program.name,
+      direction: program.direction,
       exercises: [],
       duration: 0,
       totalVolume: 0,
     });
+    navigation.navigate('WorkoutActive', { workoutId: 'new' });
+  };
+
+  const handleQuickStart = (type: 'empty' | 'last' | 'plan') => {
+    if (type === 'empty') {
+      startWorkout({
+        userId: 'user-1',
+        name: t('workoutActive.newWorkout'),
+        direction: 'gym',
+        exercises: [],
+        duration: 0,
+        totalVolume: 0,
+      });
+      navigation.navigate('WorkoutActive', { workoutId: 'new' });
+    } else if (type === 'plan' && activePlan) {
+      navigation.navigate('SportSelection');
+    }
+  };
+
+  const handleContinueWorkout = () => {
+    if (activeWorkout) {
+      navigation.navigate('WorkoutActive', { workoutId: activeWorkout.id });
+    }
   };
 
   return (
@@ -45,11 +135,19 @@ export const WorkoutScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>{t('workout.title')}</Text>
-        <Text style={styles.subtitle}>{t('workout.subtitle')}</Text>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>{t('workout.title')}</Text>
+          <Text style={styles.subtitle}>{t('workout.subtitle')}</Text>
+        </View>
 
+        {/* Active Workout Card */}
         {activeWorkout && (
-          <Card style={styles.activeWorkoutCard} elevated>
+          <TouchableOpacity
+            style={styles.activeWorkoutCard}
+            onPress={handleContinueWorkout}
+            activeOpacity={0.9}
+          >
             <View style={styles.activeWorkoutHeader}>
               <Text style={styles.activeWorkoutLabel}>{t('workout.inProgress')}</Text>
               <View style={styles.activeDot} />
@@ -60,67 +158,114 @@ export const WorkoutScreen: React.FC = () => {
             </Text>
             <Button
               title={t('workout.continueWorkout')}
-              onPress={() => {}}
+              onPress={handleContinueWorkout}
               fullWidth
               style={styles.continueButton}
             />
-          </Card>
+          </TouchableOpacity>
         )}
 
-        <Text style={styles.sectionTitle}>{t('workout.quickStart')}</Text>
-
+        {/* Quick Start */}
+        <SectionHeader title={t('workout.quickStart')} />
         <View style={styles.quickStartRow}>
-          <TouchableOpacity style={styles.quickStartButton}>
+          <TouchableOpacity
+            style={styles.quickStartButton}
+            onPress={() => handleQuickStart('empty')}
+          >
             <Text style={styles.quickStartIcon}>⚡</Text>
             <Text style={styles.quickStartText}>{t('workout.empty')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.quickStartButton}>
+          <TouchableOpacity
+            style={styles.quickStartButton}
+            onPress={() => handleQuickStart('last')}
+          >
             <Text style={styles.quickStartIcon}>📋</Text>
             <Text style={styles.quickStartText}>{t('workout.last')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.quickStartButton}>
-            <Text style={styles.quickStartIcon}>🤖</Text>
-            <Text style={styles.quickStartText}>{t('workout.ai')}</Text>
+          <TouchableOpacity
+            style={styles.quickStartButton}
+            onPress={() => handleQuickStart('plan')}
+          >
+            <Text style={styles.quickStartIcon}>📅</Text>
+            <Text style={styles.quickStartText}>{t('nav.plan')}</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.sectionTitle}>{t('workout.templates')}</Text>
+        {/* Programs */}
+        <SectionHeader
+          title={t('programs.featuredPrograms')}
+          action={{
+            label: t('common.viewAll'),
+            onPress: () => {},
+          }}
+        />
 
-        {WORKOUT_TEMPLATES.map((template) => (
+        {PROGRAMS.map((program) => (
           <TouchableOpacity
-            key={template.id}
-            style={[
-              styles.templateCard,
-              selectedTemplate === template.id && styles.templateCardSelected,
-            ]}
-            onPress={() => setSelectedTemplate(template.id)}
+            key={program.id}
+            style={styles.programCard}
+            onPress={() => handleStartProgram(program)}
+            activeOpacity={0.9}
           >
-            <View style={styles.templateInfo}>
-              <Text style={styles.templateName}>{t(template.nameKey)}</Text>
-              <Text style={styles.templateMeta}>
-                {t(`directions.${template.direction}`)} • {template.exercises} {t('common.exercises')}
-              </Text>
-            </View>
-            <View
-              style={[
-                styles.radioButton,
-                selectedTemplate === template.id && styles.radioButtonSelected,
-              ]}
+            <ImageBackground
+              source={{ uri: program.imageUrl }}
+              style={styles.programImage}
+              imageStyle={styles.programImageStyle}
             >
-              {selectedTemplate === template.id && (
-                <View style={styles.radioButtonInner} />
-              )}
-            </View>
+              <LinearGradient
+                colors={['transparent', 'rgba(0,0,0,0.8)']}
+                style={styles.programGradient}
+              >
+                <View style={styles.programContent}>
+                  <View
+                    style={[
+                      styles.categoryBadge,
+                      { backgroundColor: CATEGORY_COLORS[program.category] },
+                    ]}
+                  >
+                    <Text style={styles.categoryText}>
+                      {t(`programs.categories.${program.category}`)}
+                    </Text>
+                  </View>
+                  <Text style={styles.programName}>{program.name}</Text>
+                  <Text style={styles.programMeta}>
+                    {program.duration} • {program.sessionsCount} Sessions
+                  </Text>
+                </View>
+              </LinearGradient>
+            </ImageBackground>
           </TouchableOpacity>
         ))}
 
-        <Button
-          title={t('workout.startWorkout')}
-          onPress={handleStartWorkout}
-          disabled={!selectedTemplate}
-          fullWidth
-          style={styles.startButton}
-        />
+        {/* Manage Workouts */}
+        <SectionHeader title={t('workout.templates')} />
+        <TouchableOpacity
+          style={styles.manageButton}
+          onPress={() => navigation.navigate('WorkoutHistory')}
+        >
+          <Text style={styles.manageIcon}>📊</Text>
+          <View style={styles.manageContent}>
+            <Text style={styles.manageTitle}>{t('workoutHistory.title')}</Text>
+            <Text style={styles.manageSubtitle}>
+              {t('common.viewAll')} {t('common.workouts')}
+            </Text>
+          </View>
+          <Text style={styles.manageArrow}>›</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.manageButton}
+          onPress={() => navigation.navigate('SportSelection')}
+        >
+          <Text style={styles.manageIcon}>📋</Text>
+          <View style={styles.manageContent}>
+            <Text style={styles.manageTitle}>{t('plan.title')}</Text>
+            <Text style={styles.manageSubtitle}>{t('plan.subtitle')}</Text>
+          </View>
+          <Text style={styles.manageArrow}>›</Text>
+        </TouchableOpacity>
+
+        <View style={styles.bottomSpacing} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -129,30 +274,35 @@ export const WorkoutScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: COLORS.gray[900],
   },
   scrollView: {
     flex: 1,
   },
   content: {
-    paddingHorizontal: SPACING.lg,
     paddingBottom: SPACING['3xl'],
+  },
+  header: {
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.md,
+    paddingBottom: SPACING.lg,
   },
   title: {
     fontSize: FONT_SIZES['2xl'],
     fontWeight: '700',
-    color: COLORS.gray[900],
-    marginTop: SPACING.lg,
+    color: COLORS.white,
   },
   subtitle: {
-    fontSize: FONT_SIZES.base,
-    color: COLORS.gray[500],
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.gray[400],
     marginTop: SPACING.xs,
-    marginBottom: SPACING.xl,
   },
   activeWorkoutCard: {
     backgroundColor: COLORS.primary,
+    marginHorizontal: SPACING.lg,
     marginBottom: SPACING.xl,
+    borderRadius: BORDER_RADIUS.xl,
+    padding: SPACING.lg,
   },
   activeWorkoutHeader: {
     flexDirection: 'row',
@@ -164,6 +314,7 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     opacity: 0.8,
     letterSpacing: 1,
+    fontWeight: '600',
   },
   activeDot: {
     width: 8,
@@ -187,21 +338,16 @@ const styles = StyleSheet.create({
     marginTop: SPACING.lg,
     backgroundColor: COLORS.white,
   },
-  sectionTitle: {
-    fontSize: FONT_SIZES.lg,
-    fontWeight: '600',
-    color: COLORS.gray[900],
-    marginBottom: SPACING.md,
-  },
   quickStartRow: {
     flexDirection: 'row',
+    paddingHorizontal: SPACING.lg,
     gap: SPACING.md,
     marginBottom: SPACING.xl,
   },
   quickStartButton: {
     flex: 1,
-    backgroundColor: COLORS.white,
-    borderRadius: BORDER_RADIUS.lg,
+    backgroundColor: COLORS.gray[800],
+    borderRadius: BORDER_RADIUS.xl,
     padding: SPACING.lg,
     alignItems: 'center',
   },
@@ -211,54 +357,82 @@ const styles = StyleSheet.create({
   },
   quickStartText: {
     fontSize: FONT_SIZES.sm,
-    fontWeight: '500',
-    color: COLORS.gray[700],
+    fontWeight: '600',
+    color: COLORS.white,
   },
-  templateCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    borderRadius: BORDER_RADIUS.lg,
-    padding: SPACING.lg,
-    marginBottom: SPACING.sm,
-    borderWidth: 2,
-    borderColor: 'transparent',
+  programCard: {
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.md,
+    borderRadius: BORDER_RADIUS.xl,
+    overflow: 'hidden',
+    height: 160,
   },
-  templateCardSelected: {
-    borderColor: COLORS.primary,
-  },
-  templateInfo: {
+  programImage: {
     flex: 1,
   },
-  templateName: {
-    fontSize: FONT_SIZES.base,
-    fontWeight: '600',
-    color: COLORS.gray[900],
+  programImageStyle: {
+    borderRadius: BORDER_RADIUS.xl,
   },
-  templateMeta: {
+  programGradient: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  programContent: {
+    padding: SPACING.lg,
+  },
+  categoryBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: BORDER_RADIUS.full,
+    marginBottom: SPACING.sm,
+  },
+  categoryText: {
+    fontSize: FONT_SIZES.xs,
+    fontWeight: '600',
+    color: COLORS.white,
+  },
+  programName: {
+    fontSize: FONT_SIZES.xl,
+    fontWeight: '700',
+    color: COLORS.white,
+  },
+  programMeta: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[500],
+    color: COLORS.gray[300],
+    marginTop: 4,
+  },
+  manageButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.gray[800],
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.sm,
+    borderRadius: BORDER_RADIUS.xl,
+    padding: SPACING.lg,
+  },
+  manageIcon: {
+    fontSize: 28,
+    marginRight: SPACING.md,
+  },
+  manageContent: {
+    flex: 1,
+  },
+  manageTitle: {
+    fontSize: FONT_SIZES.md,
+    fontWeight: '600',
+    color: COLORS.white,
+  },
+  manageSubtitle: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.gray[400],
     marginTop: 2,
   },
-  radioButton: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: COLORS.gray[300],
-    justifyContent: 'center',
-    alignItems: 'center',
+  manageArrow: {
+    fontSize: 24,
+    color: COLORS.gray[500],
   },
-  radioButtonSelected: {
-    borderColor: COLORS.primary,
-  },
-  radioButtonInner: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: COLORS.primary,
-  },
-  startButton: {
-    marginTop: SPACING.xl,
+  bottomSpacing: {
+    height: SPACING['3xl'],
   },
 });
