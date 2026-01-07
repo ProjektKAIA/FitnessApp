@@ -1,5 +1,5 @@
 // /workspaces/claude-workspace/fitnessapp/src/screens/YouScreen.tsx
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,28 +8,70 @@ import {
   TouchableOpacity,
   TextInput,
   Modal,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
+import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
-import {
-  ActivityRings,
-  MetricCard,
-  SectionHeader,
-} from '@/components/progress';
+import { ActivityRings, MetricCard, SectionHeader } from '@/components/progress';
+import type { RingData } from '@/components/progress/ActivityRings';
 import { RootStackParamList } from '@/types';
 import { useStatsStore, useUserGoalsStore, useUserStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const RING_COLORS = {
-  move: '#FF2D55',
-  exercise: '#30D158',
-  stand: '#007AFF',
+// Angenehmere, moderne Farbpalette
+const RING_PRESETS = {
+  steps: {
+    color: '#6366F1', // Indigo
+    gradientEnd: '#A5B4FC',
+    icon: '👟',
+  },
+  calories: {
+    color: '#F59E0B', // Amber
+    gradientEnd: '#FCD34D',
+    icon: '🔥',
+  },
+  activeMinutes: {
+    color: '#10B981', // Emerald
+    gradientEnd: '#6EE7B7',
+    icon: '⏱️',
+  },
+  heartRate: {
+    color: '#EC4899', // Pink
+    gradientEnd: '#F9A8D4',
+    icon: '❤️',
+  },
+  distance: {
+    color: '#06B6D4', // Cyan
+    gradientEnd: '#67E8F9',
+    icon: '📍',
+  },
+  water: {
+    color: '#3B82F6', // Blue
+    gradientEnd: '#93C5FD',
+    icon: '💧',
+  },
 };
+
+type RingType = keyof typeof RING_PRESETS;
+
+interface RingConfig {
+  id: RingType;
+  enabled: boolean;
+  goal: number;
+  manualValue?: number;
+}
+
+const DEFAULT_RING_CONFIGS: RingConfig[] = [
+  { id: 'steps', enabled: true, goal: 10000 },
+  { id: 'calories', enabled: true, goal: 500 },
+  { id: 'activeMinutes', enabled: true, goal: 30 },
+];
 
 export const YouScreen: React.FC = () => {
   const { t } = useTranslation();
@@ -48,7 +90,6 @@ export const YouScreen: React.FC = () => {
     calorieTarget,
     targetAmount,
     goals,
-    healthEntries,
     getTodayCalories,
     getCalorieBalance,
     addGoal,
@@ -60,6 +101,13 @@ export const YouScreen: React.FC = () => {
   const calorieBalance = getCalorieBalance();
   const latestHealth = getLatestHealthEntry();
 
+  // Ring configuration state
+  const [ringConfigs, setRingConfigs] = useState<RingConfig[]>(DEFAULT_RING_CONFIGS);
+  const [showRingEditor, setShowRingEditor] = useState(false);
+  const [editingRing, setEditingRing] = useState<RingData | null>(null);
+  const [editValue, setEditValue] = useState('');
+  const [editGoal, setEditGoal] = useState('');
+
   // Modal states
   const [showCalorieInput, setShowCalorieInput] = useState(false);
   const [showGoalInput, setShowGoalInput] = useState(false);
@@ -67,39 +115,99 @@ export const YouScreen: React.FC = () => {
   const [calorieInputValue, setCalorieInputValue] = useState('');
   const [goalInputValue, setGoalInputValue] = useState('');
 
-  // Activity Rings Data
-  const activityRings = useMemo(() => {
-    const steps = todaySummary?.steps?.count ?? 0;
-    const calories = todaySummary?.calories?.active ?? 0;
-    const activeMinutes = todaySummary?.activeMinutes ?? 0;
+  // Build rings from config
+  const activityRings = useMemo((): RingData[] => {
+    return ringConfigs
+      .filter((config) => config.enabled)
+      .map((config) => {
+        const preset = RING_PRESETS[config.id];
+        let value = 0;
+        let unit = '';
 
-    return [
-      {
-        value: steps,
-        goal: healthSettings.stepsGoal,
-        color: RING_COLORS.move,
-        gradientEnd: '#FF6B8A',
-        label: t('you.steps'),
-        unit: t('health.summary.steps'),
-      },
-      {
-        value: calories,
-        goal: 500,
-        color: RING_COLORS.exercise,
-        gradientEnd: '#5AE17E',
-        label: t('you.calories'),
-        unit: 'kcal',
-      },
-      {
-        value: activeMinutes,
-        goal: 30,
-        color: RING_COLORS.stand,
-        gradientEnd: '#5AC8FA',
-        label: t('you.activeMinutes'),
-        unit: 'min',
-      },
-    ];
-  }, [todaySummary, healthSettings.stepsGoal, t]);
+        switch (config.id) {
+          case 'steps':
+            value = config.manualValue ?? todaySummary?.steps?.count ?? 0;
+            unit = t('you.stepsUnit');
+            break;
+          case 'calories':
+            value = config.manualValue ?? todaySummary?.calories?.active ?? 0;
+            unit = 'kcal';
+            break;
+          case 'activeMinutes':
+            value = config.manualValue ?? todaySummary?.activeMinutes ?? 0;
+            unit = 'min';
+            break;
+          case 'heartRate':
+            value = config.manualValue ?? todaySummary?.restingHeartRate ?? 0;
+            unit = 'bpm';
+            break;
+          case 'distance':
+            value = config.manualValue ?? (todaySummary?.distance ?? 0) / 1000;
+            unit = 'km';
+            break;
+          case 'water':
+            value = config.manualValue ?? 0;
+            unit = 'L';
+            break;
+        }
+
+        return {
+          id: config.id,
+          value,
+          goal: config.goal,
+          color: preset.color,
+          gradientEnd: preset.gradientEnd,
+          label: t(`you.ring.${config.id}`),
+          unit,
+          icon: preset.icon,
+        };
+      });
+  }, [ringConfigs, todaySummary, t]);
+
+  const handleRingPress = useCallback((ring: RingData) => {
+    setEditingRing(ring);
+    setEditValue(ring.value.toString());
+    const config = ringConfigs.find((c) => c.id === ring.id);
+    setEditGoal(config?.goal.toString() || '');
+  }, [ringConfigs]);
+
+  const handleSaveRingEdit = () => {
+    if (!editingRing) return;
+
+    setRingConfigs((prev) =>
+      prev.map((config) => {
+        if (config.id === editingRing.id) {
+          return {
+            ...config,
+            manualValue: editValue ? parseFloat(editValue) : undefined,
+            goal: editGoal ? parseFloat(editGoal) : config.goal,
+          };
+        }
+        return config;
+      })
+    );
+    setEditingRing(null);
+  };
+
+  const handleToggleRing = (ringId: RingType, enabled: boolean) => {
+    setRingConfigs((prev) =>
+      prev.map((config) => (config.id === ringId ? { ...config, enabled } : config))
+    );
+  };
+
+  const handleAddRing = (ringId: RingType) => {
+    if (!ringConfigs.find((c) => c.id === ringId)) {
+      const defaultGoals: Record<RingType, number> = {
+        steps: 10000,
+        calories: 500,
+        activeMinutes: 30,
+        heartRate: 70,
+        distance: 5,
+        water: 2,
+      };
+      setRingConfigs((prev) => [...prev, { id: ringId, enabled: true, goal: defaultGoals[ringId] }]);
+    }
+  };
 
   const handleAddCalories = () => {
     const value = parseInt(calorieInputValue, 10);
@@ -126,6 +234,10 @@ export const YouScreen: React.FC = () => {
 
   const activeGoal = goals.find((g) => !g.completed);
 
+  const availableRings = Object.keys(RING_PRESETS).filter(
+    (key) => !ringConfigs.find((c) => c.id === key)
+  ) as RingType[];
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView
@@ -136,14 +248,17 @@ export const YouScreen: React.FC = () => {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerContent}>
-            <View style={styles.avatarContainer}>
+            <LinearGradient
+              colors={['#6366F1', '#8B5CF6']}
+              style={styles.avatarContainer}
+            >
               <Text style={styles.avatarText}>
                 {user?.name?.charAt(0)?.toUpperCase() || '👤'}
               </Text>
-            </View>
+            </LinearGradient>
             <View style={styles.headerTextContainer}>
-              <Text style={styles.title}>{t('you.title')}</Text>
-              <Text style={styles.subtitle}>{user?.name || t('you.guest')}</Text>
+              <Text style={styles.greeting}>{t('home.greeting')}</Text>
+              <Text style={styles.userName}>{user?.name || t('you.guest')}</Text>
             </View>
           </View>
           <TouchableOpacity
@@ -154,44 +269,51 @@ export const YouScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Activity Rings */}
+        {/* Activity Rings Card */}
         <View style={styles.ringsSection}>
-          <View style={styles.ringsCard}>
+          <LinearGradient
+            colors={['#1E1E2E', '#2D2D44']}
+            style={styles.ringsCard}
+          >
+            <View style={styles.ringsHeader}>
+              <Text style={styles.ringsTitle}>{t('you.todayActivity')}</Text>
+              <TouchableOpacity
+                style={styles.editRingsButton}
+                onPress={() => setShowRingEditor(true)}
+              >
+                <Text style={styles.editRingsText}>{t('common.edit')}</Text>
+              </TouchableOpacity>
+            </View>
+
             <ActivityRings
               rings={activityRings}
-              size={160}
-              strokeWidth={14}
+              size={180}
+              strokeWidth={16}
               showLabels={true}
+              onRingPress={handleRingPress}
+              darkMode={true}
             />
+
             {!isHealthEnabled && (
               <TouchableOpacity
                 style={styles.connectHealthButton}
                 onPress={() => navigation.navigate('HealthSettings')}
               >
-                <Text style={styles.connectHealthText}>{t('you.connectHealth')}</Text>
+                <LinearGradient
+                  colors={['#6366F1', '#8B5CF6']}
+                  style={styles.connectHealthGradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                >
+                  <Text style={styles.connectHealthText}>{t('you.connectHealth')}</Text>
+                </LinearGradient>
               </TouchableOpacity>
             )}
-          </View>
+          </LinearGradient>
         </View>
 
         {/* Health Stats Grid */}
         <SectionHeader title={t('you.healthStats')} />
-        <View style={styles.statsGrid}>
-          <MetricCard
-            icon="👣"
-            title={t('you.steps')}
-            value={todaySummary?.steps?.count ?? 0}
-            subtitle={`${t('you.goal')}: ${healthSettings.stepsGoal}`}
-            compact
-          />
-          <MetricCard
-            icon="❤️"
-            title={t('you.heartRate')}
-            value={todaySummary?.restingHeartRate ?? '--'}
-            unit="bpm"
-            compact
-          />
-        </View>
         <View style={styles.statsGrid}>
           <TouchableOpacity
             style={styles.metricCardTouchable}
@@ -227,7 +349,7 @@ export const YouScreen: React.FC = () => {
         <View style={styles.statsGrid}>
           <MetricCard
             icon="🔥"
-            iconColor={COLORS.accent}
+            iconColor="#F59E0B"
             title={t('you.streak')}
             value={stats.currentStreak}
             unit={t('progress.days')}
@@ -250,7 +372,10 @@ export const YouScreen: React.FC = () => {
             onPress: () => setShowCalorieInput(true),
           }}
         />
-        <View style={styles.calorieCard}>
+        <LinearGradient
+          colors={['#1E1E2E', '#2D2D44']}
+          style={styles.calorieCard}
+        >
           <View style={styles.calorieRow}>
             <Text style={styles.calorieLabel}>{t('you.dailyNeed')}</Text>
             <Text style={styles.calorieValue}>{dailyCalorieGoal} kcal</Text>
@@ -282,13 +407,7 @@ export const YouScreen: React.FC = () => {
               {calorieBalance} kcal
             </Text>
           </View>
-          <TouchableOpacity
-            style={styles.calculateButton}
-            onPress={() => navigation.navigate('HealthSettings')}
-          >
-            <Text style={styles.calculateButtonText}>{t('you.calculateDailyNeed')}</Text>
-          </TouchableOpacity>
-        </View>
+        </LinearGradient>
 
         {/* Goals Section */}
         <SectionHeader
@@ -299,7 +418,7 @@ export const YouScreen: React.FC = () => {
           }}
         />
         {activeGoal ? (
-          <View style={styles.goalCard}>
+          <LinearGradient colors={['#1E1E2E', '#2D2D44']} style={styles.goalCard}>
             <Text style={styles.goalIcon}>🎯</Text>
             <View style={styles.goalContent}>
               <Text style={styles.goalText}>{activeGoal.text}</Text>
@@ -315,7 +434,7 @@ export const YouScreen: React.FC = () => {
             >
               <Text style={styles.goalCheckIcon}>✓</Text>
             </TouchableOpacity>
-          </View>
+          </LinearGradient>
         ) : (
           <TouchableOpacity
             style={styles.emptyGoalCard}
@@ -328,6 +447,114 @@ export const YouScreen: React.FC = () => {
 
         <View style={styles.bottomSpacing} />
       </ScrollView>
+
+      {/* Ring Editor Modal */}
+      <Modal
+        visible={showRingEditor}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowRingEditor(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.ringEditorContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{t('you.editRings')}</Text>
+              <TouchableOpacity onPress={() => setShowRingEditor(false)}>
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.ringEditorSubtitle}>{t('you.activeRings')}</Text>
+            {ringConfigs.map((config) => {
+              const preset = RING_PRESETS[config.id];
+              return (
+                <View key={config.id} style={styles.ringToggleRow}>
+                  <View style={[styles.ringToggleDot, { backgroundColor: preset.color }]} />
+                  <Text style={styles.ringToggleIcon}>{preset.icon}</Text>
+                  <Text style={styles.ringToggleLabel}>{t(`you.ring.${config.id}`)}</Text>
+                  <Switch
+                    value={config.enabled}
+                    onValueChange={(v) => handleToggleRing(config.id, v)}
+                    trackColor={{ false: COLORS.gray[600], true: preset.color }}
+                    thumbColor={COLORS.white}
+                  />
+                </View>
+              );
+            })}
+
+            {availableRings.length > 0 && (
+              <>
+                <Text style={[styles.ringEditorSubtitle, { marginTop: SPACING.lg }]}>
+                  {t('you.addRing')}
+                </Text>
+                {availableRings.map((ringId) => {
+                  const preset = RING_PRESETS[ringId];
+                  return (
+                    <TouchableOpacity
+                      key={ringId}
+                      style={styles.addRingRow}
+                      onPress={() => handleAddRing(ringId)}
+                    >
+                      <View style={[styles.ringToggleDot, { backgroundColor: preset.color }]} />
+                      <Text style={styles.ringToggleIcon}>{preset.icon}</Text>
+                      <Text style={styles.ringToggleLabel}>{t(`you.ring.${ringId}`)}</Text>
+                      <Text style={styles.addRingPlus}>+</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
+
+      {/* Ring Edit Modal */}
+      <Modal
+        visible={!!editingRing}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setEditingRing(null)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>
+              {editingRing?.icon} {editingRing?.label}
+            </Text>
+
+            <Text style={styles.inputLabel}>{t('you.currentValue')}</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="0"
+              placeholderTextColor={COLORS.gray[500]}
+              keyboardType="decimal-pad"
+              value={editValue}
+              onChangeText={setEditValue}
+            />
+
+            <Text style={styles.inputLabel}>{t('you.goal')}</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="0"
+              placeholderTextColor={COLORS.gray[500]}
+              keyboardType="decimal-pad"
+              value={editGoal}
+              onChangeText={setEditGoal}
+            />
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.modalButtonCancel}
+                onPress={() => setEditingRing(null)}
+              >
+                <Text style={styles.modalButtonCancelText}>{t('common.cancel')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalButtonConfirm} onPress={handleSaveRingEdit}>
+                <Text style={styles.modalButtonConfirmText}>{t('common.save')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* Calorie Input Modal */}
       <Modal
@@ -490,7 +717,7 @@ const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onClose })
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.gray[900],
+    backgroundColor: '#0F0F1A',
   },
   scrollView: {
     flex: 1,
@@ -511,10 +738,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   avatarContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: COLORS.primary,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: SPACING.md,
@@ -522,19 +748,19 @@ const styles = StyleSheet.create({
   avatarText: {
     fontSize: FONT_SIZES.xl,
     color: COLORS.white,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   headerTextContainer: {
     flex: 1,
   },
-  title: {
-    fontSize: FONT_SIZES['2xl'],
-    fontWeight: '700',
-    color: COLORS.white,
-  },
-  subtitle: {
+  greeting: {
     fontSize: FONT_SIZES.sm,
     color: COLORS.gray[400],
+  },
+  userName: {
+    fontSize: FONT_SIZES.xl,
+    fontWeight: '700',
+    color: COLORS.white,
     marginTop: 2,
   },
   settingsButton: {
@@ -548,17 +774,39 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.xl,
   },
   ringsCard: {
-    backgroundColor: COLORS.gray[800],
-    borderRadius: BORDER_RADIUS.xl,
+    borderRadius: BORDER_RADIUS['2xl'],
     padding: SPACING.xl,
+  },
+  ringsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: SPACING.lg,
+  },
+  ringsTitle: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '700',
+    color: COLORS.white,
+  },
+  editRingsButton: {
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.xs,
+    backgroundColor: 'rgba(99, 102, 241, 0.2)',
+    borderRadius: BORDER_RADIUS.full,
+  },
+  editRingsText: {
+    fontSize: FONT_SIZES.sm,
+    color: '#6366F1',
+    fontWeight: '600',
   },
   connectHealthButton: {
     marginTop: SPACING.lg,
-    backgroundColor: COLORS.primary,
+  },
+  connectHealthGradient: {
     paddingHorizontal: SPACING.xl,
-    paddingVertical: SPACING.sm,
+    paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.full,
+    alignItems: 'center',
   },
   connectHealthText: {
     color: COLORS.white,
@@ -575,8 +823,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   calorieCard: {
-    backgroundColor: COLORS.gray[800],
-    borderRadius: BORDER_RADIUS.xl,
+    borderRadius: BORDER_RADIUS['2xl'],
     padding: SPACING.lg,
     marginHorizontal: SPACING.lg,
   },
@@ -602,12 +849,12 @@ const styles = StyleSheet.create({
   },
   calorieValueGreen: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.success,
+    color: '#10B981',
     fontWeight: '500',
   },
   calorieTargetLabel: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.primary,
+    color: '#6366F1',
     fontWeight: '500',
   },
   calorieBalanceValue: {
@@ -615,31 +862,18 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   caloriePositive: {
-    color: COLORS.success,
+    color: '#10B981',
   },
   calorieNegative: {
-    color: COLORS.error,
+    color: '#EF4444',
   },
   calorieDivider: {
     height: 1,
     backgroundColor: COLORS.gray[700],
     marginVertical: SPACING.sm,
   },
-  calculateButton: {
-    marginTop: SPACING.md,
-    backgroundColor: COLORS.gray[700],
-    paddingVertical: SPACING.sm,
-    borderRadius: BORDER_RADIUS.md,
-    alignItems: 'center',
-  },
-  calculateButtonText: {
-    color: COLORS.primary,
-    fontWeight: '600',
-    fontSize: FONT_SIZES.sm,
-  },
   goalCard: {
-    backgroundColor: COLORS.gray[800],
-    borderRadius: BORDER_RADIUS.xl,
+    borderRadius: BORDER_RADIUS['2xl'],
     padding: SPACING.lg,
     marginHorizontal: SPACING.lg,
     flexDirection: 'row',
@@ -663,10 +897,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   goalCheckButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.success,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#10B981',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -676,8 +910,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   emptyGoalCard: {
-    backgroundColor: COLORS.gray[800],
-    borderRadius: BORDER_RADIUS.xl,
+    backgroundColor: '#1E1E2E',
+    borderRadius: BORDER_RADIUS['2xl'],
     padding: SPACING.xl,
     marginHorizontal: SPACING.lg,
     alignItems: 'center',
@@ -700,17 +934,20 @@ const styles = StyleSheet.create({
   // Modal styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: SPACING.lg,
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: COLORS.gray[800],
-    borderRadius: BORDER_RADIUS.xl,
+    backgroundColor: '#1E1E2E',
+    borderTopLeftRadius: BORDER_RADIUS['2xl'],
+    borderTopRightRadius: BORDER_RADIUS['2xl'],
     padding: SPACING.xl,
-    width: '100%',
-    maxWidth: 340,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.lg,
   },
   modalTitle: {
     fontSize: FONT_SIZES.lg,
@@ -719,6 +956,58 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.lg,
     textAlign: 'center',
   },
+  modalClose: {
+    fontSize: 24,
+    color: COLORS.gray[400],
+  },
+  ringEditorContent: {
+    backgroundColor: '#1E1E2E',
+    borderTopLeftRadius: BORDER_RADIUS['2xl'],
+    borderTopRightRadius: BORDER_RADIUS['2xl'],
+    padding: SPACING.xl,
+    maxHeight: '80%',
+  },
+  ringEditorSubtitle: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.gray[400],
+    marginBottom: SPACING.md,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  ringToggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: SPACING.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: COLORS.gray[700],
+  },
+  ringToggleDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: SPACING.sm,
+  },
+  ringToggleIcon: {
+    fontSize: 20,
+    marginRight: SPACING.sm,
+  },
+  ringToggleLabel: {
+    flex: 1,
+    fontSize: FONT_SIZES.md,
+    color: COLORS.white,
+  },
+  addRingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: SPACING.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: COLORS.gray[700],
+  },
+  addRingPlus: {
+    fontSize: 24,
+    color: '#6366F1',
+    fontWeight: '600',
+  },
   inputLabel: {
     fontSize: FONT_SIZES.sm,
     color: COLORS.gray[400],
@@ -726,8 +1015,8 @@ const styles = StyleSheet.create({
     marginTop: SPACING.md,
   },
   modalInput: {
-    backgroundColor: COLORS.gray[700],
-    borderRadius: BORDER_RADIUS.md,
+    backgroundColor: COLORS.gray[800],
+    borderRadius: BORDER_RADIUS.lg,
     padding: SPACING.md,
     fontSize: FONT_SIZES.md,
     color: COLORS.white,
@@ -753,7 +1042,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.gray[700],
     paddingVertical: SPACING.md,
-    borderRadius: BORDER_RADIUS.md,
+    borderRadius: BORDER_RADIUS.lg,
     alignItems: 'center',
   },
   modalButtonCancelText: {
@@ -762,9 +1051,9 @@ const styles = StyleSheet.create({
   },
   modalButtonConfirm: {
     flex: 1,
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#6366F1',
     paddingVertical: SPACING.md,
-    borderRadius: BORDER_RADIUS.md,
+    borderRadius: BORDER_RADIUS.lg,
     alignItems: 'center',
   },
   modalButtonConfirmText: {

@@ -832,6 +832,7 @@ const de = {
     connectHealth: 'Health verbinden',
     healthStats: 'Gesundheitsdaten',
     steps: 'Schritte',
+    stepsUnit: 'Schritte',
     calories: 'Kalorien',
     activeMinutes: 'Aktive Min.',
     heartRate: 'Herzfrequenz',
@@ -858,6 +859,19 @@ const de = {
     goalPlaceholder: 'z.B. 75kg erreichen',
     until: 'Bis',
     addHealthData: 'Gesundheitsdaten eintragen',
+    todayActivity: 'Heute',
+    editRings: 'Ringe bearbeiten',
+    activeRings: 'Aktive Ringe',
+    addRing: 'Ring hinzufügen',
+    currentValue: 'Aktueller Wert',
+    ring: {
+      steps: 'Schritte',
+      calories: 'Kalorien',
+      activeMinutes: 'Aktive Minuten',
+      heartRate: 'Herzfrequenz',
+      distance: 'Distanz',
+      water: 'Wasser',
+    },
   },
 
   // Contact Screen

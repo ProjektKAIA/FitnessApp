@@ -1,17 +1,18 @@
 // /workspaces/claude-workspace/fitnessapp/src/components/progress/ActivityRings.tsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
-import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING } from '@/constants';
 
-interface RingData {
+export interface RingData {
+  id: string;
   value: number;
   goal: number;
   color: string;
   gradientEnd?: string;
   label: string;
   unit?: string;
+  icon?: string;
 }
 
 interface Props {
@@ -21,6 +22,8 @@ interface Props {
   showLabels?: boolean;
   showCenter?: boolean;
   centerContent?: React.ReactNode;
+  onRingPress?: (ring: RingData, index: number) => void;
+  darkMode?: boolean;
 }
 
 export const ActivityRings: React.FC<Props> = ({
@@ -30,10 +33,11 @@ export const ActivityRings: React.FC<Props> = ({
   showLabels = true,
   showCenter = true,
   centerContent,
+  onRingPress,
+  darkMode = true,
 }) => {
-  const { t } = useTranslation();
   const center = size / 2;
-  const gap = 4;
+  const gap = 6;
 
   const formatValue = (value: number): string => {
     if (value >= 10000) {
@@ -41,6 +45,11 @@ export const ActivityRings: React.FC<Props> = ({
     }
     return value.toLocaleString();
   };
+
+  const bgColor = darkMode ? COLORS.gray[700] : COLORS.gray[200];
+  const textColor = darkMode ? COLORS.white : COLORS.gray[900];
+  const subtextColor = darkMode ? COLORS.gray[400] : COLORS.gray[600];
+  const borderColor = darkMode ? COLORS.gray[700] : COLORS.gray[200];
 
   return (
     <View style={styles.container}>
@@ -75,9 +84,10 @@ export const ActivityRings: React.FC<Props> = ({
                   cx={center}
                   cy={center}
                   r={radius}
-                  stroke={COLORS.gray[200]}
+                  stroke={bgColor}
                   strokeWidth={strokeWidth}
                   fill="none"
+                  opacity={0.3}
                 />
                 {/* Progress circle */}
                 <Circle
@@ -108,19 +118,38 @@ export const ActivityRings: React.FC<Props> = ({
         <View style={styles.labelsContainer}>
           {rings.map((ring, index) => {
             const progress = ring.goal > 0 ? Math.round((ring.value / ring.goal) * 100) : 0;
-            return (
-              <View key={index} style={styles.labelRow}>
+            const isComplete = progress >= 100;
+
+            const LabelContent = (
+              <View style={[styles.labelRow, { borderBottomColor: borderColor }]}>
                 <View style={[styles.labelDot, { backgroundColor: ring.color }]} />
-                <Text style={styles.labelText}>{ring.label}</Text>
-                <Text style={styles.labelValue}>
+                {ring.icon && <Text style={styles.labelIcon}>{ring.icon}</Text>}
+                <Text style={[styles.labelText, { color: subtextColor }]}>{ring.label}</Text>
+                <Text style={[styles.labelValue, { color: textColor }]}>
                   {formatValue(ring.value)}
-                  {ring.unit && <Text style={styles.labelUnit}> {ring.unit}</Text>}
+                  {ring.unit && <Text style={[styles.labelUnit, { color: subtextColor }]}> {ring.unit}</Text>}
                 </Text>
-                <Text style={[styles.labelProgress, progress >= 100 && styles.labelProgressComplete]}>
-                  {progress}%
-                </Text>
+                <View style={[styles.progressBadge, isComplete && styles.progressBadgeComplete]}>
+                  <Text style={[styles.labelProgress, isComplete && styles.labelProgressComplete]}>
+                    {progress}%
+                  </Text>
+                </View>
               </View>
             );
+
+            if (onRingPress) {
+              return (
+                <TouchableOpacity
+                  key={ring.id}
+                  onPress={() => onRingPress(ring, index)}
+                  activeOpacity={0.7}
+                >
+                  {LabelContent}
+                </TouchableOpacity>
+              );
+            }
+
+            return <View key={ring.id}>{LabelContent}</View>;
           })}
         </View>
       )}
@@ -148,37 +177,47 @@ const styles = StyleSheet.create({
   labelRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: SPACING.sm,
+    paddingVertical: SPACING.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.gray[200],
   },
   labelDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
     marginRight: SPACING.sm,
+  },
+  labelIcon: {
+    fontSize: 16,
+    marginRight: SPACING.xs,
   },
   labelText: {
     flex: 1,
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[600],
   },
   labelValue: {
     fontSize: FONT_SIZES.base,
     fontWeight: '600',
-    color: COLORS.gray[900],
     marginRight: SPACING.md,
   },
   labelUnit: {
     fontSize: FONT_SIZES.xs,
-    color: COLORS.gray[500],
     fontWeight: '400',
   },
+  progressBadge: {
+    backgroundColor: COLORS.gray[700],
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: 12,
+    minWidth: 50,
+    alignItems: 'center',
+  },
+  progressBadgeComplete: {
+    backgroundColor: 'rgba(52, 199, 89, 0.2)',
+  },
   labelProgress: {
-    fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[500],
-    width: 45,
-    textAlign: 'right',
+    fontSize: FONT_SIZES.xs,
+    color: COLORS.gray[400],
+    fontWeight: '600',
   },
   labelProgressComplete: {
     color: COLORS.success,

@@ -832,6 +832,7 @@ const en = {
     connectHealth: 'Connect Health',
     healthStats: 'Health Stats',
     steps: 'Steps',
+    stepsUnit: 'steps',
     calories: 'Calories',
     activeMinutes: 'Active Min.',
     heartRate: 'Heart Rate',
@@ -858,6 +859,19 @@ const en = {
     goalPlaceholder: 'e.g. Reach 75kg',
     until: 'Until',
     addHealthData: 'Add Health Data',
+    todayActivity: 'Today',
+    editRings: 'Edit Rings',
+    activeRings: 'Active Rings',
+    addRing: 'Add Ring',
+    currentValue: 'Current Value',
+    ring: {
+      steps: 'Steps',
+      calories: 'Calories',
+      activeMinutes: 'Active Minutes',
+      heartRate: 'Heart Rate',
+      distance: 'Distance',
+      water: 'Water',
+    },
   },
 
   // Contact Screen
