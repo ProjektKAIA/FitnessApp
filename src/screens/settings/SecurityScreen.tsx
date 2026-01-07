@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useUserStore } from '@/stores';
 import { useSecurityStore } from '@/stores/securityStore';
+import { useTheme } from '@/contexts';
 
 // Dynamically import LocalAuthentication to avoid crash if not available
 let LocalAuthentication: typeof import('expo-local-authentication') | null = null;
@@ -35,6 +36,7 @@ import { auth } from '@/services/firebase/client';
 
 export const SecurityScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const user = useUserStore((state) => state.user);
 
@@ -214,13 +216,13 @@ export const SecurityScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>←</Text>
+          <Text style={[styles.backIcon, { color: colors.text }]}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('security.title')}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('security.title')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -232,16 +234,16 @@ export const SecurityScreen: React.FC = () => {
         {/* Biometric Section */}
         {isBiometricAvailable && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t('security.biometricTitle')}</Text>
-            <View style={styles.card}>
+            <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('security.biometricTitle')}</Text>
+            <View style={[styles.card, { backgroundColor: colors.card }]}>
               <View style={styles.settingRow}>
                 <View style={styles.settingInfo}>
                   <Text style={styles.settingIcon}>
                     {biometricType === 'Face ID' ? '🔐' : '👆'}
                   </Text>
                   <View>
-                    <Text style={styles.settingTitle}>{biometricType}</Text>
-                    <Text style={styles.settingSubtitle}>
+                    <Text style={[styles.settingTitle, { color: colors.text }]}>{biometricType}</Text>
+                    <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
                       {t('security.biometricSubtitle')}
                     </Text>
                   </View>
@@ -249,7 +251,7 @@ export const SecurityScreen: React.FC = () => {
                 <Switch
                   value={biometricEnabled}
                   onValueChange={handleToggleBiometric}
-                  trackColor={{ false: COLORS.gray[300], true: COLORS.primary }}
+                  trackColor={{ false: colors.border, true: colors.primary }}
                 />
               </View>
             </View>
@@ -258,8 +260,8 @@ export const SecurityScreen: React.FC = () => {
 
         {/* Password Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('security.passwordTitle')}</Text>
-          <View style={styles.card}>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('security.passwordTitle')}</Text>
+          <View style={[styles.card, { backgroundColor: colors.card }]}>
             {!showPasswordForm ? (
               <TouchableOpacity
                 style={styles.actionRow}
@@ -268,46 +270,46 @@ export const SecurityScreen: React.FC = () => {
                 <View style={styles.settingInfo}>
                   <Text style={styles.settingIcon}>🔑</Text>
                   <View>
-                    <Text style={styles.settingTitle}>{t('security.changePassword')}</Text>
-                    <Text style={styles.settingSubtitle}>
+                    <Text style={[styles.settingTitle, { color: colors.text }]}>{t('security.changePassword')}</Text>
+                    <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
                       {t('security.changePasswordSubtitle')}
                     </Text>
                   </View>
                 </View>
-                <Text style={styles.arrow}>→</Text>
+                <Text style={[styles.arrow, { color: colors.textTertiary }]}>→</Text>
               </TouchableOpacity>
             ) : (
-              <View style={styles.form}>
+              <View style={[styles.form, { borderTopColor: colors.border }]}>
                 <View style={styles.inputGroup}>
-                  <Text style={styles.label}>{t('security.currentPassword')}</Text>
+                  <Text style={[styles.label, { color: colors.textSecondary }]}>{t('security.currentPassword')}</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                     value={currentPassword}
                     onChangeText={setCurrentPassword}
                     placeholder="••••••••"
-                    placeholderTextColor={COLORS.gray[400]}
+                    placeholderTextColor={colors.textTertiary}
                     secureTextEntry
                   />
                 </View>
                 <View style={styles.inputGroup}>
-                  <Text style={styles.label}>{t('security.newPassword')}</Text>
+                  <Text style={[styles.label, { color: colors.textSecondary }]}>{t('security.newPassword')}</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                     value={newPassword}
                     onChangeText={setNewPassword}
                     placeholder="••••••••"
-                    placeholderTextColor={COLORS.gray[400]}
+                    placeholderTextColor={colors.textTertiary}
                     secureTextEntry
                   />
                 </View>
                 <View style={styles.inputGroup}>
-                  <Text style={styles.label}>{t('security.confirmPassword')}</Text>
+                  <Text style={[styles.label, { color: colors.textSecondary }]}>{t('security.confirmPassword')}</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
                     placeholder="••••••••"
-                    placeholderTextColor={COLORS.gray[400]}
+                    placeholderTextColor={colors.textTertiary}
                     secureTextEntry
                   />
                 </View>
@@ -342,11 +344,11 @@ export const SecurityScreen: React.FC = () => {
 
         {/* Email Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('security.emailTitle')}</Text>
-          <View style={styles.card}>
-            <View style={styles.currentEmail}>
-              <Text style={styles.currentEmailLabel}>{t('security.currentEmail')}</Text>
-              <Text style={styles.currentEmailValue}>{user?.email || '-'}</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('security.emailTitle')}</Text>
+          <View style={[styles.card, { backgroundColor: colors.card }]}>
+            <View style={[styles.currentEmail, { borderBottomColor: colors.border }]}>
+              <Text style={[styles.currentEmailLabel, { color: colors.textSecondary }]}>{t('security.currentEmail')}</Text>
+              <Text style={[styles.currentEmailValue, { color: colors.text }]}>{user?.email || '-'}</Text>
             </View>
 
             {!showEmailForm ? (
@@ -357,36 +359,36 @@ export const SecurityScreen: React.FC = () => {
                 <View style={styles.settingInfo}>
                   <Text style={styles.settingIcon}>✉️</Text>
                   <View>
-                    <Text style={styles.settingTitle}>{t('security.changeEmail')}</Text>
-                    <Text style={styles.settingSubtitle}>
+                    <Text style={[styles.settingTitle, { color: colors.text }]}>{t('security.changeEmail')}</Text>
+                    <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
                       {t('security.changeEmailSubtitle')}
                     </Text>
                   </View>
                 </View>
-                <Text style={styles.arrow}>→</Text>
+                <Text style={[styles.arrow, { color: colors.textTertiary }]}>→</Text>
               </TouchableOpacity>
             ) : (
-              <View style={styles.form}>
+              <View style={[styles.form, { borderTopColor: colors.border }]}>
                 <View style={styles.inputGroup}>
-                  <Text style={styles.label}>{t('security.newEmail')}</Text>
+                  <Text style={[styles.label, { color: colors.textSecondary }]}>{t('security.newEmail')}</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                     value={newEmail}
                     onChangeText={setNewEmail}
                     placeholder="neue@email.de"
-                    placeholderTextColor={COLORS.gray[400]}
+                    placeholderTextColor={colors.textTertiary}
                     keyboardType="email-address"
                     autoCapitalize="none"
                   />
                 </View>
                 <View style={styles.inputGroup}>
-                  <Text style={styles.label}>{t('security.confirmWithPassword')}</Text>
+                  <Text style={[styles.label, { color: colors.textSecondary }]}>{t('security.confirmWithPassword')}</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                     value={emailPassword}
                     onChangeText={setEmailPassword}
                     placeholder="••••••••"
-                    placeholderTextColor={COLORS.gray[400]}
+                    placeholderTextColor={colors.textTertiary}
                     secureTextEntry
                   />
                 </View>
@@ -419,9 +421,9 @@ export const SecurityScreen: React.FC = () => {
         </View>
 
         {/* Info */}
-        <View style={styles.infoBox}>
+        <View style={[styles.infoBox, { backgroundColor: colors.primary + '15' }]}>
           <Text style={styles.infoIcon}>ℹ️</Text>
-          <Text style={styles.infoText}>{t('security.infoText')}</Text>
+          <Text style={[styles.infoText, { color: colors.textSecondary }]}>{t('security.infoText')}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

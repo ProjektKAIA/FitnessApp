@@ -13,6 +13,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
+import { useTheme } from '@/contexts';
 import {
   RootStackParamList,
   IPlannedWorkout,
@@ -36,6 +37,7 @@ const generateId = () => Math.random().toString(36).substring(2, 15);
 
 export const WorkoutDayEditorScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
   const insets = useSafeAreaInsets();
@@ -151,17 +153,17 @@ export const WorkoutDayEditorScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + SPACING.md }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { paddingTop: insets.top + SPACING.md, backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backIcon}>{'<'}</Text>
+          <Text style={[styles.backIcon, { color: colors.text }]}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t(`days.${day}`)}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t(`days.${day}`)}</Text>
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveText}>{t('common.save')}</Text>
+          <Text style={[styles.saveText, { color: colors.primary }]}>{t('common.save')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -171,16 +173,16 @@ export const WorkoutDayEditorScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         <Card style={styles.infoCard}>
-          <Text style={styles.label}>{t('workoutEditor.workoutName')}</Text>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>{t('workoutEditor.workoutName')}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
             value={workoutName}
             onChangeText={setWorkoutName}
             placeholder={t('workoutEditor.workoutNamePlaceholder')}
-            placeholderTextColor={COLORS.gray[400]}
+            placeholderTextColor={colors.textTertiary}
           />
 
-          <Text style={[styles.label, styles.labelSpacing]}>
+          <Text style={[styles.label, styles.labelSpacing, { color: colors.textSecondary }]}>
             {t('workoutEditor.direction')}
           </Text>
           <View style={styles.directionPicker}>
@@ -210,15 +212,15 @@ export const WorkoutDayEditorScreen: React.FC = () => {
         </Card>
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>{t('workoutEditor.exercises')}</Text>
-          <Text style={styles.exerciseCount}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('workoutEditor.exercises')}</Text>
+          <Text style={[styles.exerciseCount, { color: colors.textSecondary }]}>
             {t('workoutEditor.exerciseCount', { count: exercises.length })}
           </Text>
         </View>
 
         {exercises.length === 0 ? (
           <Card style={styles.emptyCard}>
-            <Text style={styles.emptyText}>{t('workoutEditor.noExercises')}</Text>
+            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('workoutEditor.noExercises')}</Text>
             <TouchableOpacity
               style={styles.addFirstButton}
               onPress={handleAddExercise}
@@ -300,11 +302,11 @@ export const WorkoutDayEditorScreen: React.FC = () => {
             ))}
 
             <TouchableOpacity
-              style={styles.addExerciseButton}
+              style={[styles.addExerciseButton, { borderColor: colors.border }]}
               onPress={handleAddExercise}
             >
-              <Text style={styles.addExerciseIcon}>+</Text>
-              <Text style={styles.addExerciseText}>
+              <Text style={[styles.addExerciseIcon, { color: colors.textTertiary }]}>+</Text>
+              <Text style={[styles.addExerciseText, { color: colors.textSecondary }]}>
                 {t('workoutEditor.addExercise')}
               </Text>
             </TouchableOpacity>

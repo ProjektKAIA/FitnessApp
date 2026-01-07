@@ -11,9 +11,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useConsentStore } from '@/stores';
+import { useTheme } from '@/contexts';
 
 export const ConsentScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const acceptAllLegal = useConsentStore((state) => state.acceptAllLegal);
   const setTrackingResponse = useConsentStore((state) => state.setTrackingResponse);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
@@ -36,7 +38,7 @@ export const ConsentScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.surface }]}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
@@ -46,20 +48,20 @@ export const ConsentScreen: React.FC = () => {
           <Text style={styles.icon}>🏋️</Text>
         </View>
 
-        <Text style={styles.title}>{t('consent.title')}</Text>
-        <Text style={styles.subtitle}>{t('consent.subtitle')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('consent.title')}</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('consent.subtitle')}</Text>
 
         <View style={styles.consentSection}>
-          <Text style={styles.sectionTitle}>{t('consent.legalSection')}</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('consent.legalSection')}</Text>
 
           <TouchableOpacity
             style={styles.checkboxRow}
             onPress={() => setPrivacyAccepted(!privacyAccepted)}
           >
-            <View style={[styles.checkbox, privacyAccepted && styles.checkboxChecked]}>
+            <View style={[styles.checkbox, { borderColor: colors.border }, privacyAccepted && styles.checkboxChecked]}>
               {privacyAccepted && <Text style={styles.checkmark}>✓</Text>}
             </View>
-            <Text style={styles.checkboxLabel}>
+            <Text style={[styles.checkboxLabel, { color: colors.textSecondary }]}>
               {t('consent.privacyCheckbox').split(t('consent.privacyPolicy'))[0]}
               <Text
                 style={styles.link}
@@ -75,10 +77,10 @@ export const ConsentScreen: React.FC = () => {
             style={styles.checkboxRow}
             onPress={() => setTermsAccepted(!termsAccepted)}
           >
-            <View style={[styles.checkbox, termsAccepted && styles.checkboxChecked]}>
+            <View style={[styles.checkbox, { borderColor: colors.border }, termsAccepted && styles.checkboxChecked]}>
               {termsAccepted && <Text style={styles.checkmark}>✓</Text>}
             </View>
-            <Text style={styles.checkboxLabel}>
+            <Text style={[styles.checkboxLabel, { color: colors.textSecondary }]}>
               {t('consent.termsCheckbox').split(t('consent.termsOfService'))[0]}
               <Text
                 style={styles.link}
@@ -91,20 +93,20 @@ export const ConsentScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.trackingSection}>
-          <Text style={styles.sectionTitle}>{t('consent.trackingSection')}</Text>
-          <Text style={styles.trackingDescription}>{t('consent.trackingDescription')}</Text>
-          <Text style={styles.trackingNote}>{t('consent.trackingNote')}</Text>
+        <View style={[styles.trackingSection, { backgroundColor: colors.background }]}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('consent.trackingSection')}</Text>
+          <Text style={[styles.trackingDescription, { color: colors.textSecondary }]}>{t('consent.trackingDescription')}</Text>
+          <Text style={[styles.trackingNote, { color: colors.textTertiary }]}>{t('consent.trackingNote')}</Text>
         </View>
       </ScrollView>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.button, styles.denyButton, !canContinue && styles.buttonDisabled]}
+          style={[styles.button, { backgroundColor: colors.background }, !canContinue && styles.buttonDisabled]}
           onPress={handleDenyTracking}
           disabled={!canContinue}
         >
-          <Text style={[styles.buttonText, styles.denyButtonText]}>
+          <Text style={[styles.buttonText, { color: colors.textSecondary }]}>
             {t('consent.denyTracking')}
           </Text>
         </TouchableOpacity>

@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, REST_TIMER_DEFAULT } from '@/constants';
 import { Button, Card, Modal, LoadingScreen } from '@/components/common';
 import { useWorkoutStore, useUserStore } from '@/stores';
+import { useTheme } from '@/contexts';
 import { RootStackParamList } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -22,6 +23,7 @@ type WorkoutActiveRouteProp = RouteProp<RootStackParamList, 'WorkoutActive'>;
 
 export const WorkoutActiveScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<WorkoutActiveRouteProp>();
   const insets = useSafeAreaInsets();
@@ -134,17 +136,17 @@ export const WorkoutActiveScreen: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + SPACING.md }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { paddingTop: insets.top + SPACING.md, backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => setShowEndModal(true)}>
-          <Text style={styles.cancelText}>{t('workoutActive.cancel')}</Text>
+          <Text style={[styles.cancelText, { color: COLORS.error }]}>{t('workoutActive.cancel')}</Text>
         </TouchableOpacity>
         <View style={styles.headerCenter}>
-          <Text style={styles.workoutName}>{activeWorkout.name}</Text>
-          <Text style={styles.timer}>{formatTime(elapsedTime)}</Text>
+          <Text style={[styles.workoutName, { color: colors.text }]}>{activeWorkout.name}</Text>
+          <Text style={[styles.timer, { color: colors.textSecondary }]}>{formatTime(elapsedTime)}</Text>
         </View>
         <TouchableOpacity onPress={handleEndWorkout}>
-          <Text style={styles.finishText}>{t('workoutActive.finish')}</Text>
+          <Text style={[styles.finishText, { color: colors.primary }]}>{t('workoutActive.finish')}</Text>
         </TouchableOpacity>
       </View>
 

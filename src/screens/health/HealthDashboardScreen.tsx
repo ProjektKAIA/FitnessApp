@@ -14,6 +14,7 @@ import {
 } from '@/components/health';
 import { useHealthStore } from '@/stores/healthStore';
 import { getHealthService } from '@/services/health';
+import { useTheme } from '@/contexts';
 import { IHealthWorkout } from '@/types/health';
 import { RootStackParamList } from '@/types';
 
@@ -25,6 +26,7 @@ interface WorkoutItemProps {
 
 const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
 
   const formatDuration = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -55,15 +57,15 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   };
 
   return (
-    <View style={styles.workoutItem}>
+    <View style={[styles.workoutItem, { borderBottomColor: colors.border }]}>
       <Text style={styles.workoutIcon}>{getWorkoutIcon(workout.type)}</Text>
       <View style={styles.workoutInfo}>
-        <Text style={styles.workoutType}>{workout.type}</Text>
-        <Text style={styles.workoutDate}>{formatDate(workout.startDate)}</Text>
+        <Text style={[styles.workoutType, { color: colors.text }]}>{workout.type}</Text>
+        <Text style={[styles.workoutDate, { color: colors.textSecondary }]}>{formatDate(workout.startDate)}</Text>
       </View>
       <View style={styles.workoutStats}>
-        <Text style={styles.workoutDuration}>{formatDuration(workout.duration)}</Text>
-        <Text style={styles.workoutCalories}>{workout.calories} kcal</Text>
+        <Text style={[styles.workoutDuration, { color: colors.text }]}>{formatDuration(workout.duration)}</Text>
+        <Text style={[styles.workoutCalories, { color: colors.textSecondary }]}>{workout.calories} kcal</Text>
       </View>
     </View>
   );
@@ -71,6 +73,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
 
 export const HealthDashboardScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
 
   const {
@@ -130,13 +133,13 @@ export const HealthDashboardScreen: React.FC = () => {
 
   if (!settings.enabled) {
     return (
-      <SafeAreaView style={styles.container} edges={['top']}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-          <Text style={styles.title}>{t('health.dashboard')}</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('health.dashboard')}</Text>
           <Card style={styles.emptyCard}>
             <Text style={styles.emptyIcon}>❤️</Text>
-            <Text style={styles.emptyTitle}>{t('health.notConnected')}</Text>
-            <Text style={styles.emptyText}>{t('health.privacy.description')}</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('health.notConnected')}</Text>
+            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('health.privacy.description')}</Text>
             <TouchableOpacity style={styles.connectButton} onPress={navigateToSettings}>
               <Text style={styles.connectButtonText}>{t('health.connectNow')}</Text>
             </TouchableOpacity>
@@ -147,16 +150,16 @@ export const HealthDashboardScreen: React.FC = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
         refreshControl={
-          <RefreshControl refreshing={isSyncing} onRefresh={handleRefresh} tintColor={COLORS.primary} />
+          <RefreshControl refreshing={isSyncing} onRefresh={handleRefresh} tintColor={colors.primary} />
         }
       >
         <View style={styles.header}>
-          <Text style={styles.title}>{t('health.dashboard')}</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('health.dashboard')}</Text>
           <TouchableOpacity onPress={navigateToSettings}>
             <Text style={styles.settingsIcon}>⚙️</Text>
           </TouchableOpacity>
@@ -185,7 +188,7 @@ export const HealthDashboardScreen: React.FC = () => {
         {/* Recent Workouts */}
         {settings.dataTypes.workouts && todaySummary?.workouts && todaySummary.workouts.length > 0 && (
           <>
-            <Text style={styles.sectionTitle}>{t('health.workouts.title')}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('health.workouts.title')}</Text>
             <Card style={styles.workoutsCard}>
               {todaySummary.workouts.slice(0, 5).map((workout) => (
                 <WorkoutItem key={workout.id} workout={workout} />
@@ -196,7 +199,7 @@ export const HealthDashboardScreen: React.FC = () => {
 
         {/* Last Sync */}
         {settings.lastSyncAt && (
-          <Text style={styles.lastSync}>
+          <Text style={[styles.lastSync, { color: colors.textTertiary }]}>
             {t('health.sync.lastSync')}: {new Date(settings.lastSyncAt).toLocaleTimeString()}
           </Text>
         )}

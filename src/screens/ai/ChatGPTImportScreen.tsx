@@ -16,12 +16,14 @@ import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
 import { chatGPTExportService, ParsedConversation } from '@/services/ai';
 import { useAICoachStore } from '@/stores';
+import { useTheme } from '@/contexts';
 import { RootStackParamList } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const ChatGPTImportScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const [isLoading, setIsLoading] = useState(false);
   const [conversations, setConversations] = useState<ParsedConversation[]>([]);
@@ -84,15 +86,15 @@ export const ChatGPTImportScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <Text style={[styles.backButtonText, { color: colors.primary }]}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('aiCoach.importTitle')}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('aiCoach.importTitle')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -101,26 +103,26 @@ export const ChatGPTImportScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.subtitle}>{t('aiCoach.importSubtitle')}</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('aiCoach.importSubtitle')}</Text>
 
         <Card style={styles.instructionCard}>
-          <Text style={styles.instructionTitle}>{t('aiCoach.howToExport')}</Text>
+          <Text style={[styles.instructionTitle, { color: colors.text }]}>{t('aiCoach.howToExport')}</Text>
           <View style={styles.stepContainer}>
             <View style={styles.step}>
               <Text style={styles.stepNumber}>1</Text>
-              <Text style={styles.stepText}>{t('aiCoach.step1')}</Text>
+              <Text style={[styles.stepText, { color: colors.textSecondary }]}>{t('aiCoach.step1')}</Text>
             </View>
             <View style={styles.step}>
               <Text style={styles.stepNumber}>2</Text>
-              <Text style={styles.stepText}>{t('aiCoach.step2')}</Text>
+              <Text style={[styles.stepText, { color: colors.textSecondary }]}>{t('aiCoach.step2')}</Text>
             </View>
             <View style={styles.step}>
               <Text style={styles.stepNumber}>3</Text>
-              <Text style={styles.stepText}>{t('aiCoach.step3')}</Text>
+              <Text style={[styles.stepText, { color: colors.textSecondary }]}>{t('aiCoach.step3')}</Text>
             </View>
             <View style={styles.step}>
               <Text style={styles.stepNumber}>4</Text>
-              <Text style={styles.stepText}>{t('aiCoach.step4')}</Text>
+              <Text style={[styles.stepText, { color: colors.textSecondary }]}>{t('aiCoach.step4')}</Text>
             </View>
           </View>
         </Card>
@@ -143,7 +145,7 @@ export const ChatGPTImportScreen: React.FC = () => {
         {conversations.length > 0 && (
           <>
             <View style={styles.filterRow}>
-              <Text style={styles.conversationsTitle}>
+              <Text style={[styles.conversationsTitle, { color: colors.text }]}>
                 {t('aiCoach.foundConversations', { count: displayedConversations.length })}
               </Text>
               <TouchableOpacity
@@ -164,9 +166,9 @@ export const ChatGPTImportScreen: React.FC = () => {
             {displayedConversations.length === 0 ? (
               <Card style={styles.emptyCard}>
                 <Text style={styles.emptyIcon}>🔍</Text>
-                <Text style={styles.emptyText}>{t('aiCoach.noFitnessChats')}</Text>
+                <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('aiCoach.noFitnessChats')}</Text>
                 <TouchableOpacity onPress={() => setShowFitnessOnly(false)}>
-                  <Text style={styles.showAllLink}>{t('aiCoach.showAllChats')}</Text>
+                  <Text style={[styles.showAllLink, { color: colors.primary }]}>{t('aiCoach.showAllChats')}</Text>
                 </TouchableOpacity>
               </Card>
             ) : (
@@ -176,12 +178,12 @@ export const ChatGPTImportScreen: React.FC = () => {
                 return (
                   <TouchableOpacity
                     key={conversation.id}
-                    style={[styles.conversationCard, imported && styles.conversationCardImported]}
+                    style={[styles.conversationCard, { backgroundColor: colors.surface }, imported && styles.conversationCardImported]}
                     onPress={() => !imported && handleSelectConversation(conversation)}
                     disabled={imported}
                   >
                     <View style={styles.conversationHeader}>
-                      <Text style={styles.conversationTitle} numberOfLines={1}>
+                      <Text style={[styles.conversationTitle, { color: colors.text }]} numberOfLines={1}>
                         {conversation.title}
                       </Text>
                       {imported && (
@@ -190,14 +192,14 @@ export const ChatGPTImportScreen: React.FC = () => {
                         </View>
                       )}
                     </View>
-                    <Text style={styles.conversationPreview} numberOfLines={2}>
+                    <Text style={[styles.conversationPreview, { color: colors.textSecondary }]} numberOfLines={2}>
                       {conversation.preview}
                     </Text>
                     <View style={styles.conversationMeta}>
-                      <Text style={styles.conversationDate}>
+                      <Text style={[styles.conversationDate, { color: colors.textTertiary }]}>
                         {formatDate(conversation.updatedAt)}
                       </Text>
-                      <Text style={styles.conversationCount}>
+                      <Text style={[styles.conversationCount, { color: colors.textTertiary }]}>
                         {t('aiCoach.messageCount', { count: conversation.messageCount })}
                       </Text>
                     </View>

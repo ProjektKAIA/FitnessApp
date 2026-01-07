@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
 import { useAICoachStore } from '@/stores';
+import { useTheme } from '@/contexts';
 import { RootStackParamList } from '@/types';
 
 type ChatDetailRouteProp = RouteProp<RootStackParamList, 'ChatDetail'>;
@@ -20,6 +21,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const ChatDetailScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<ChatDetailRouteProp>();
   const { chatId } = route.params;
@@ -29,19 +31,19 @@ export const ChatDetailScreen: React.FC = () => {
 
   if (!chat) {
     return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <View style={styles.header}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+        <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Text style={styles.backButtonText}>←</Text>
+            <Text style={[styles.backButtonText, { color: colors.primary }]}>←</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t('aiCoach.title')}</Text>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('aiCoach.title')}</Text>
           <View style={styles.headerSpacer} />
         </View>
         <View style={styles.notFound}>
-          <Text style={styles.notFoundText}>{t('aiCoach.chatNotFound')}</Text>
+          <Text style={[styles.notFoundText, { color: colors.textSecondary }]}>{t('aiCoach.chatNotFound')}</Text>
         </View>
       </SafeAreaView>
     );
@@ -56,15 +58,15 @@ export const ChatDetailScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <Text style={[styles.backButtonText, { color: colors.primary }]}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle} numberOfLines={1}>{chat.title}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]} numberOfLines={1}>{chat.title}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -73,7 +75,7 @@ export const ChatDetailScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.messageCount}>
+        <Text style={[styles.messageCount, { color: colors.textSecondary }]}>
           {t('aiCoach.messageCount', { count: chat.messages.length })}
         </Text>
 
@@ -92,25 +94,25 @@ export const ChatDetailScreen: React.FC = () => {
           </Card>
         )}
 
-        <Text style={styles.sectionTitle}>{t('aiCoach.conversation')}</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('aiCoach.conversation')}</Text>
 
         {chat.messages.map((message, index) => (
           <View
             key={message.id || index}
             style={[
               styles.messageContainer,
-              message.role === 'user' ? styles.userMessage : styles.assistantMessage,
+              message.role === 'user' ? styles.userMessage : [styles.assistantMessage, { backgroundColor: colors.surface }],
             ]}
           >
             <View style={styles.messageHeader}>
-              <Text style={styles.messageRole}>
+              <Text style={[styles.messageRole, { color: message.role === 'user' ? COLORS.white : colors.textTertiary }]}>
                 {message.role === 'user' ? t('aiCoach.you') : 'ChatGPT'}
               </Text>
               {message.timestamp && (
-                <Text style={styles.messageTime}>{formatTime(message.timestamp)}</Text>
+                <Text style={[styles.messageTime, { color: message.role === 'user' ? COLORS.white : colors.textTertiary }]}>{formatTime(message.timestamp)}</Text>
               )}
             </View>
-            <Text style={styles.messageContent}>{message.content}</Text>
+            <Text style={[styles.messageContent, { color: message.role === 'user' ? COLORS.white : colors.text }]}>{message.content}</Text>
           </View>
         ))}
       </ScrollView>

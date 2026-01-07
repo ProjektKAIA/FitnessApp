@@ -19,6 +19,7 @@ import { Card } from '@/components/common';
 import { useUserStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
+import { useTheme } from '@/contexts';
 
 interface ExportOption {
   id: string;
@@ -30,6 +31,7 @@ interface ExportOption {
 
 export const DataExportScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const user = useUserStore((state) => state.user);
   const healthSettings = useHealthStore((state) => state.settings);
@@ -159,12 +161,12 @@ export const DataExportScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>←</Text>
+          <Text style={[styles.backIcon, { color: colors.text }]}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('dataExport.title')}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('dataExport.title')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 

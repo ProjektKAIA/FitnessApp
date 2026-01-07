@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
+import { useTheme } from '@/contexts';
 import { RootStackParamList, TSportType } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -33,6 +34,7 @@ const SPORT_OPTIONS: SportOption[] = [
 
 export const SportSelectionScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
 
   const handleSelectSport = (sportType: TSportType) => {
@@ -40,15 +42,15 @@ export const SportSelectionScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backIcon}>{'<'}</Text>
+          <Text style={[styles.backIcon, { color: colors.text }]}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('sportSelection.title')}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('sportSelection.title')}</Text>
         <View style={styles.placeholder} />
       </View>
 
@@ -57,7 +59,7 @@ export const SportSelectionScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.subtitle}>{t('sportSelection.subtitle')}</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('sportSelection.subtitle')}</Text>
 
         <View style={styles.grid}>
           {SPORT_OPTIONS.map((sport) => (
@@ -65,6 +67,7 @@ export const SportSelectionScreen: React.FC = () => {
               key={sport.type}
               style={[
                 styles.sportCard,
+                { backgroundColor: colors.surface },
                 !sport.available && styles.sportCardDisabled,
               ]}
               onPress={() => sport.available && handleSelectSport(sport.type)}
@@ -81,13 +84,14 @@ export const SportSelectionScreen: React.FC = () => {
               <Text
                 style={[
                   styles.sportName,
+                  { color: colors.text },
                   !sport.available && styles.sportNameDisabled,
                 ]}
               >
                 {t(`sportTypes.${sport.type}`)}
               </Text>
               {!sport.available && (
-                <Text style={styles.comingSoon}>{t('sportSelection.comingSoon')}</Text>
+                <Text style={[styles.comingSoon, { color: colors.textTertiary }]}>{t('sportSelection.comingSoon')}</Text>
               )}
             </TouchableOpacity>
           ))}

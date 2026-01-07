@@ -1,4 +1,5 @@
 // /workspaces/claude-workspace/fitnessapp/src/screens/WorkoutScreen.tsx
+
 import React from 'react';
 import {
   View,
@@ -13,9 +14,11 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
+
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Button } from '@/components/common';
 import { SectionHeader } from '@/components/progress';
+import { useTheme } from '@/contexts';
 import { useWorkoutStore, useTrainingPlanStore } from '@/stores';
 import { RootStackParamList, TDirection, TProgramCategory } from '@/types';
 
@@ -89,6 +92,7 @@ const CATEGORY_COLORS: Record<TProgramCategory, string> = {
 
 export const WorkoutScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const startWorkout = useWorkoutStore((state) => state.startWorkout);
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
@@ -129,7 +133,7 @@ export const WorkoutScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
@@ -137,20 +141,20 @@ export const WorkoutScreen: React.FC = () => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>{t('workout.title')}</Text>
-          <Text style={styles.subtitle}>{t('workout.subtitle')}</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('workout.title')}</Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('workout.subtitle')}</Text>
         </View>
 
         {/* Active Workout Card */}
         {activeWorkout && (
           <TouchableOpacity
-            style={styles.activeWorkoutCard}
+            style={[styles.activeWorkoutCard, { backgroundColor: colors.primary }]}
             onPress={handleContinueWorkout}
             activeOpacity={0.9}
           >
             <View style={styles.activeWorkoutHeader}>
               <Text style={styles.activeWorkoutLabel}>{t('workout.inProgress')}</Text>
-              <View style={styles.activeDot} />
+              <View style={[styles.activeDot, { backgroundColor: colors.success }]} />
             </View>
             <Text style={styles.activeWorkoutName}>{activeWorkout.name}</Text>
             <Text style={styles.activeWorkoutInfo}>
@@ -160,34 +164,35 @@ export const WorkoutScreen: React.FC = () => {
               title={t('workout.continueWorkout')}
               onPress={handleContinueWorkout}
               fullWidth
-              style={styles.continueButton}
+              style={[styles.continueButton, { backgroundColor: '#FFFFFF' }]}
+              textStyle={{ color: colors.primary }}
             />
           </TouchableOpacity>
         )}
 
         {/* Quick Start */}
-        <SectionHeader title={t('workout.quickStart')} />
+        <SectionHeader title={t('workout.quickStart')} darkMode={isDark} />
         <View style={styles.quickStartRow}>
           <TouchableOpacity
-            style={styles.quickStartButton}
+            style={[styles.quickStartButton, { backgroundColor: colors.surfaceElevated }]}
             onPress={() => handleQuickStart('empty')}
           >
             <Text style={styles.quickStartIcon}>⚡</Text>
-            <Text style={styles.quickStartText}>{t('workout.empty')}</Text>
+            <Text style={[styles.quickStartText, { color: colors.text }]}>{t('workout.empty')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.quickStartButton}
+            style={[styles.quickStartButton, { backgroundColor: colors.surfaceElevated }]}
             onPress={() => handleQuickStart('last')}
           >
             <Text style={styles.quickStartIcon}>📋</Text>
-            <Text style={styles.quickStartText}>{t('workout.last')}</Text>
+            <Text style={[styles.quickStartText, { color: colors.text }]}>{t('workout.last')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.quickStartButton}
+            style={[styles.quickStartButton, { backgroundColor: colors.surfaceElevated }]}
             onPress={() => handleQuickStart('plan')}
           >
             <Text style={styles.quickStartIcon}>📅</Text>
-            <Text style={styles.quickStartText}>{t('nav.plan')}</Text>
+            <Text style={[styles.quickStartText, { color: colors.text }]}>{t('nav.plan')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -198,6 +203,7 @@ export const WorkoutScreen: React.FC = () => {
             label: t('common.viewAll'),
             onPress: () => {},
           }}
+          darkMode={isDark}
         />
 
         {PROGRAMS.map((program) => (
@@ -238,31 +244,31 @@ export const WorkoutScreen: React.FC = () => {
         ))}
 
         {/* Manage Workouts */}
-        <SectionHeader title={t('workout.templates')} />
+        <SectionHeader title={t('workout.templates')} darkMode={isDark} />
         <TouchableOpacity
-          style={styles.manageButton}
+          style={[styles.manageButton, { backgroundColor: colors.surfaceElevated }]}
           onPress={() => navigation.navigate('WorkoutHistory')}
         >
           <Text style={styles.manageIcon}>📊</Text>
           <View style={styles.manageContent}>
-            <Text style={styles.manageTitle}>{t('workoutHistory.title')}</Text>
-            <Text style={styles.manageSubtitle}>
+            <Text style={[styles.manageTitle, { color: colors.text }]}>{t('workoutHistory.title')}</Text>
+            <Text style={[styles.manageSubtitle, { color: colors.textSecondary }]}>
               {t('common.viewAll')} {t('common.workouts')}
             </Text>
           </View>
-          <Text style={styles.manageArrow}>›</Text>
+          <Text style={[styles.manageArrow, { color: colors.textTertiary }]}>›</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.manageButton}
+          style={[styles.manageButton, { backgroundColor: colors.surfaceElevated }]}
           onPress={() => navigation.navigate('SportSelection')}
         >
           <Text style={styles.manageIcon}>📋</Text>
           <View style={styles.manageContent}>
-            <Text style={styles.manageTitle}>{t('plan.title')}</Text>
-            <Text style={styles.manageSubtitle}>{t('plan.subtitle')}</Text>
+            <Text style={[styles.manageTitle, { color: colors.text }]}>{t('plan.title')}</Text>
+            <Text style={[styles.manageSubtitle, { color: colors.textSecondary }]}>{t('plan.subtitle')}</Text>
           </View>
-          <Text style={styles.manageArrow}>›</Text>
+          <Text style={[styles.manageArrow, { color: colors.textTertiary }]}>›</Text>
         </TouchableOpacity>
 
         <View style={styles.bottomSpacing} />
@@ -274,7 +280,6 @@ export const WorkoutScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.gray[900],
   },
   scrollView: {
     flex: 1,
@@ -290,15 +295,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FONT_SIZES['2xl'],
     fontWeight: '700',
-    color: COLORS.white,
   },
   subtitle: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
     marginTop: SPACING.xs,
   },
   activeWorkoutCard: {
-    backgroundColor: COLORS.primary,
     marginHorizontal: SPACING.lg,
     marginBottom: SPACING.xl,
     borderRadius: BORDER_RADIUS.xl,
@@ -320,7 +322,6 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: COLORS.success,
     marginLeft: SPACING.sm,
   },
   activeWorkoutName: {
@@ -336,7 +337,6 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     marginTop: SPACING.lg,
-    backgroundColor: COLORS.white,
   },
   quickStartRow: {
     flexDirection: 'row',
@@ -346,7 +346,6 @@ const styles = StyleSheet.create({
   },
   quickStartButton: {
     flex: 1,
-    backgroundColor: COLORS.gray[800],
     borderRadius: BORDER_RADIUS.xl,
     padding: SPACING.lg,
     alignItems: 'center',
@@ -358,7 +357,6 @@ const styles = StyleSheet.create({
   quickStartText: {
     fontSize: FONT_SIZES.sm,
     fontWeight: '600',
-    color: COLORS.white,
   },
   programCard: {
     marginHorizontal: SPACING.lg,
@@ -405,7 +403,6 @@ const styles = StyleSheet.create({
   manageButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.gray[800],
     marginHorizontal: SPACING.lg,
     marginBottom: SPACING.sm,
     borderRadius: BORDER_RADIUS.xl,
@@ -419,18 +416,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   manageTitle: {
-    fontSize: FONT_SIZES.md,
+    fontSize: FONT_SIZES.base,
     fontWeight: '600',
-    color: COLORS.white,
   },
   manageSubtitle: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
     marginTop: 2,
   },
   manageArrow: {
     fontSize: 24,
-    color: COLORS.gray[500],
   },
   bottomSpacing: {
     height: SPACING['3xl'],

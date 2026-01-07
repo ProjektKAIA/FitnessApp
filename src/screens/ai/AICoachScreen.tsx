@@ -14,12 +14,14 @@ import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
 import { useAICoachStore, ImportedChat } from '@/stores';
+import { useTheme } from '@/contexts';
 import { RootStackParamList } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const AICoachScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const importedChats = useAICoachStore((state) => state.importedChats);
   const activeChat = useAICoachStore((state) => state.activeChat);
@@ -56,15 +58,15 @@ export const AICoachScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <Text style={[styles.backButtonText, { color: colors.primary }]}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('aiCoach.title')}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('aiCoach.title')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -73,7 +75,7 @@ export const AICoachScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.subtitle}>{t('aiCoach.subtitle')}</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('aiCoach.subtitle')}</Text>
 
         <Card style={styles.infoCard}>
           <View style={styles.infoHeader}>
@@ -84,20 +86,20 @@ export const AICoachScreen: React.FC = () => {
         </Card>
 
         <TouchableOpacity
-          style={styles.importButton}
+          style={[styles.importButton, { backgroundColor: colors.surface }]}
           onPress={() => navigation.navigate('ChatGPTImport')}
         >
           <Text style={styles.importButtonIcon}>📥</Text>
           <View style={styles.importButtonContent}>
-            <Text style={styles.importButtonTitle}>{t('aiCoach.importFromChatGPT')}</Text>
-            <Text style={styles.importButtonSubtitle}>{t('aiCoach.importDescription')}</Text>
+            <Text style={[styles.importButtonTitle, { color: colors.text }]}>{t('aiCoach.importFromChatGPT')}</Text>
+            <Text style={[styles.importButtonSubtitle, { color: colors.textSecondary }]}>{t('aiCoach.importDescription')}</Text>
           </View>
-          <Text style={styles.importButtonArrow}>→</Text>
+          <Text style={[styles.importButtonArrow, { color: colors.primary }]}>→</Text>
         </TouchableOpacity>
 
         {importedChats.length > 0 && (
           <>
-            <Text style={styles.sectionTitle}>{t('aiCoach.importedChats')}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('aiCoach.importedChats')}</Text>
 
             {importedChats.map((chat) => {
               const isActive = activeChat?.id === chat.id;
@@ -112,7 +114,7 @@ export const AICoachScreen: React.FC = () => {
                     onPress={() => handleActivateChat(chat)}
                   >
                     <View style={styles.chatHeader}>
-                      <Text style={styles.chatTitle} numberOfLines={1}>
+                      <Text style={[styles.chatTitle, { color: colors.text }]} numberOfLines={1}>
                         {chat.title}
                       </Text>
                       {isActive && (
@@ -121,10 +123,10 @@ export const AICoachScreen: React.FC = () => {
                         </View>
                       )}
                     </View>
-                    <Text style={styles.chatMeta}>
+                    <Text style={[styles.chatMeta, { color: colors.textSecondary }]}>
                       {t('aiCoach.importedOn', { date: formatDate(chat.importedAt) })}
                     </Text>
-                    <Text style={styles.chatMessages}>
+                    <Text style={[styles.chatMessages, { color: colors.textTertiary }]}>
                       {t('aiCoach.messageCount', { count: chat.messages.length })}
                     </Text>
 
@@ -136,12 +138,12 @@ export const AICoachScreen: React.FC = () => {
                     )}
                   </TouchableOpacity>
 
-                  <View style={styles.chatActions}>
+                  <View style={[styles.chatActions, { borderTopColor: colors.border }]}>
                     <TouchableOpacity
-                      style={styles.actionButton}
+                      style={[styles.actionButton, { borderRightColor: colors.border }]}
                       onPress={() => navigation.navigate('ChatDetail', { chatId: chat.id })}
                     >
-                      <Text style={styles.actionButtonText}>{t('aiCoach.viewChat')}</Text>
+                      <Text style={[styles.actionButtonText, { color: colors.primary }]}>{t('aiCoach.viewChat')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={[styles.actionButton, styles.deleteButton]}
@@ -159,8 +161,8 @@ export const AICoachScreen: React.FC = () => {
         {importedChats.length === 0 && (
           <Card style={styles.emptyCard}>
             <Text style={styles.emptyIcon}>🤖</Text>
-            <Text style={styles.emptyTitle}>{t('aiCoach.noChatsYet')}</Text>
-            <Text style={styles.emptyText}>{t('aiCoach.noChatsDescription')}</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('aiCoach.noChatsYet')}</Text>
+            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('aiCoach.noChatsDescription')}</Text>
           </Card>
         )}
       </ScrollView>

@@ -1,24 +1,24 @@
+// /workspaces/claude-workspace/fitnessapp/src/components/common/LoadingScreen.tsx
+
 import React from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { COLORS, FONT_SIZES, SPACING } from '@/constants';
+
+import { FONT_SIZES, SPACING } from '@/constants';
+import { useTheme } from '@/contexts';
 
 interface Props {
   message?: string;
-  color?: string;
-  size?: 'small' | 'large';
-  backgroundColor?: string;
 }
 
-export const LoadingScreen: React.FC<Props> = ({
-  message,
-  color = COLORS.accent,
-  size = 'large',
-  backgroundColor = COLORS.gray[900],
-}) => {
+export const LoadingScreen: React.FC<Props> = ({ message }) => {
+  const { colors } = useTheme();
+
   return (
-    <View style={[styles.container, { backgroundColor }]}>
-      <ActivityIndicator size={size} color={color} />
-      {message && <Text style={styles.message}>{message}</Text>}
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <ActivityIndicator size="large" color={colors.primary} />
+      {message && (
+        <Text style={[styles.message, { color: colors.textSecondary }]}>{message}</Text>
+      )}
     </View>
   );
 };
@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
   message: {
     marginTop: SPACING.lg,
     fontSize: FONT_SIZES.base,
-    color: COLORS.gray[400],
     textAlign: 'center',
   },
 });

@@ -13,6 +13,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
+import { useTheme } from '@/contexts';
 import { RootStackParamList, ITrainingPlan, IPlannedWorkout, TTrainingDay, IWeeklySchedule } from '@/types';
 import { useTrainingPlanStore } from '@/stores';
 import { Card } from '@/components/common';
@@ -36,6 +37,7 @@ const createEmptySchedule = (): IWeeklySchedule => ({
 
 export const TrainingPlanEditorScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
   const insets = useSafeAreaInsets();
@@ -152,19 +154,19 @@ export const TrainingPlanEditorScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + SPACING.md }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { paddingTop: insets.top + SPACING.md, backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backIcon}>{'<'}</Text>
+          <Text style={[styles.backIcon, { color: colors.text }]}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>
           {isEditing ? t('planEditor.editTitle') : t('planEditor.createTitle')}
         </Text>
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveText}>{t('common.save')}</Text>
+          <Text style={[styles.saveText, { color: colors.primary }]}>{t('common.save')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -174,30 +176,30 @@ export const TrainingPlanEditorScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         <Card style={styles.infoCard}>
-          <Text style={styles.label}>{t('planEditor.planName')}</Text>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>{t('planEditor.planName')}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
             value={planName}
             onChangeText={setPlanName}
             placeholder={t('planEditor.planNamePlaceholder')}
-            placeholderTextColor={COLORS.gray[400]}
+            placeholderTextColor={colors.textTertiary}
           />
 
-          <Text style={[styles.label, styles.labelSpacing]}>
+          <Text style={[styles.label, styles.labelSpacing, { color: colors.textSecondary }]}>
             {t('planEditor.description')}
           </Text>
           <TextInput
-            style={[styles.input, styles.textArea]}
+            style={[styles.input, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
             value={description}
             onChangeText={setDescription}
             placeholder={t('planEditor.descriptionPlaceholder')}
-            placeholderTextColor={COLORS.gray[400]}
+            placeholderTextColor={colors.textTertiary}
             multiline
             numberOfLines={3}
           />
         </Card>
 
-        <Text style={styles.sectionTitle}>{t('planEditor.weeklySchedule')}</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('planEditor.weeklySchedule')}</Text>
 
         {DAYS.map((day) => {
           const workout = schedule[day];
@@ -206,7 +208,7 @@ export const TrainingPlanEditorScreen: React.FC = () => {
             <Card key={day} style={styles.dayCard}>
               <View style={styles.dayHeader}>
                 <View style={styles.dayInfo}>
-                  <Text style={styles.dayName}>{t(`days.${day}`)}</Text>
+                  <Text style={[styles.dayName, { color: colors.text }]}>{t(`days.${day}`)}</Text>
                   {workout ? (
                     <View
                       style={[
@@ -219,15 +221,15 @@ export const TrainingPlanEditorScreen: React.FC = () => {
                       </Text>
                     </View>
                   ) : (
-                    <Text style={styles.restDay}>{t('planEditor.restDay')}</Text>
+                    <Text style={[styles.restDay, { color: colors.textTertiary }]}>{t('planEditor.restDay')}</Text>
                   )}
                 </View>
               </View>
 
               {workout ? (
                 <>
-                  <Text style={styles.workoutName}>{workout.name}</Text>
-                  <Text style={styles.exerciseCount}>
+                  <Text style={[styles.workoutName, { color: colors.text }]}>{workout.name}</Text>
+                  <Text style={[styles.exerciseCount, { color: colors.textSecondary }]}>
                     {t('planEditor.exerciseCount', { count: workout.exercises.length })}
                   </Text>
                   <View style={styles.dayActions}>
@@ -249,11 +251,11 @@ export const TrainingPlanEditorScreen: React.FC = () => {
                 </>
               ) : (
                 <TouchableOpacity
-                  style={styles.addWorkoutButton}
+                  style={[styles.addWorkoutButton, { borderColor: colors.border, backgroundColor: colors.background }]}
                   onPress={() => handleAddWorkout(day)}
                 >
-                  <Text style={styles.addWorkoutIcon}>+</Text>
-                  <Text style={styles.addWorkoutText}>
+                  <Text style={[styles.addWorkoutIcon, { color: colors.textTertiary }]}>+</Text>
+                  <Text style={[styles.addWorkoutText, { color: colors.textSecondary }]}>
                     {t('planEditor.addWorkout')}
                   </Text>
                 </TouchableOpacity>

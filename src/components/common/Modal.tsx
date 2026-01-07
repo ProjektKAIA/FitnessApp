@@ -1,3 +1,5 @@
+// /workspaces/claude-workspace/fitnessapp/src/components/common/Modal.tsx
+
 import React from 'react';
 import {
   Modal as RNModal,
@@ -9,7 +11,9 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
+
+import { FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
+import { useTheme } from '@/contexts';
 
 interface Props {
   visible: boolean;
@@ -26,6 +30,8 @@ export const Modal: React.FC<Props> = ({
   children,
   showCloseButton = true,
 }) => {
+  const { colors } = useTheme();
+
   return (
     <RNModal
       visible={visible}
@@ -34,21 +40,21 @@ export const Modal: React.FC<Props> = ({
       onRequestClose={onClose}
     >
       <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.overlay}>
+        <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
           <TouchableWithoutFeedback>
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             >
-              <View style={styles.content}>
+              <View style={[styles.content, { backgroundColor: colors.surface }]}>
                 {(title || showCloseButton) && (
-                  <View style={styles.header}>
-                    <Text style={styles.title}>{title}</Text>
+                  <View style={[styles.header, { borderBottomColor: colors.border }]}>
+                    <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
                     {showCloseButton && (
                       <TouchableOpacity
                         style={styles.closeButton}
                         onPress={onClose}
                       >
-                        <Text style={styles.closeText}>✕</Text>
+                        <Text style={[styles.closeText, { color: colors.textTertiary }]}>✕</Text>
                       </TouchableOpacity>
                     )}
                   </View>
@@ -66,13 +72,11 @@ export const Modal: React.FC<Props> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: COLORS.overlay.dark,
     justifyContent: 'center',
     alignItems: 'center',
     padding: SPACING.xl,
   },
   content: {
-    backgroundColor: COLORS.white,
     borderRadius: BORDER_RADIUS.xl,
     width: '100%',
     maxWidth: 400,
@@ -84,19 +88,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: SPACING.lg,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray[200],
   },
   title: {
     fontSize: FONT_SIZES.lg,
     fontWeight: '600',
-    color: COLORS.gray[900],
   },
   closeButton: {
     padding: SPACING.xs,
   },
   closeText: {
     fontSize: FONT_SIZES.lg,
-    color: COLORS.gray[500],
   },
   body: {
     padding: SPACING.lg,

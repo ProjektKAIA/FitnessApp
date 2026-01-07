@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useWorkoutStore } from '@/stores';
+import { useTheme } from '@/contexts';
 import { RootStackParamList, IExercise, TDirection } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -121,6 +122,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise, index }) => {
 
 export const WorkoutDetailScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<WorkoutDetailRouteProp>();
   const { workoutId } = route.params;

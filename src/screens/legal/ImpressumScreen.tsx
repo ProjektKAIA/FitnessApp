@@ -3,17 +3,19 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT_SIZES, SPACING } from '@/constants';
+import { useTheme } from '@/contexts';
 
 export const ImpressumScreen: React.FC = () => {
   const navigation = useNavigation();
+  const { colors } = useTheme();
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.surface }]} edges={['top']}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backText}>← Zurück</Text>
+          <Text style={[styles.backText, { color: colors.primary }]}>← Zurück</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Impressum</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Impressum</Text>
         <View style={styles.backButton} />
       </View>
 
@@ -22,48 +24,48 @@ export const ImpressumScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.sectionTitle}>Angaben gemäß § 5 TMG</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Angaben gemäß § 5 TMG</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           FitnessApp GmbH{'\n'}
           Musterstraße 123{'\n'}
           12345 Musterstadt{'\n'}
           Deutschland
         </Text>
 
-        <Text style={styles.sectionTitle}>Vertreten durch</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Vertreten durch</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Geschäftsführer: Max Mustermann
         </Text>
 
-        <Text style={styles.sectionTitle}>Kontakt</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Kontakt</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Telefon: +49 (0) 123 456789{'\n'}
           E-Mail: info@fitnessapp-example.de{'\n'}
           Website: www.fitnessapp-example.de
         </Text>
 
-        <Text style={styles.sectionTitle}>Registereintrag</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Registereintrag</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Eintragung im Handelsregister{'\n'}
           Registergericht: Amtsgericht Musterstadt{'\n'}
           Registernummer: HRB 12345
         </Text>
 
-        <Text style={styles.sectionTitle}>Umsatzsteuer-ID</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Umsatzsteuer-ID</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:{'\n'}
           DE123456789
         </Text>
 
-        <Text style={styles.sectionTitle}>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Max Mustermann{'\n'}
           Musterstraße 123{'\n'}
           12345 Musterstadt
         </Text>
 
-        <Text style={styles.sectionTitle}>Streitschlichtung</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Streitschlichtung</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS)
           bereit: https://ec.europa.eu/consumers/odr/{'\n\n'}
           Unsere E-Mail-Adresse finden Sie oben im Impressum.{'\n\n'}
@@ -71,8 +73,8 @@ export const ImpressumScreen: React.FC = () => {
           Verbraucherschlichtungsstelle teilzunehmen.
         </Text>
 
-        <Text style={styles.sectionTitle}>Haftung für Inhalte</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Haftung für Inhalte</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen
           Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind
           wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte
@@ -85,8 +87,8 @@ export const ImpressumScreen: React.FC = () => {
           Inhalte umgehend entfernen.
         </Text>
 
-        <Text style={styles.sectionTitle}>Haftung für Links</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Haftung für Links</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir
           keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine
           Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige
@@ -98,8 +100,8 @@ export const ImpressumScreen: React.FC = () => {
           Rechtsverletzungen werden wir derartige Links umgehend entfernen.
         </Text>
 
-        <Text style={styles.sectionTitle}>Urheberrecht</Text>
-        <Text style={styles.paragraph}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Urheberrecht</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten
           unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung,
           Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes
@@ -113,8 +115,8 @@ export const ImpressumScreen: React.FC = () => {
           Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.
         </Text>
 
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
+        <View style={[styles.footer, { borderTopColor: colors.border }]}>
+          <Text style={[styles.footerText, { color: colors.textSecondary }]}>
             Stand: Januar 2025
           </Text>
         </View>

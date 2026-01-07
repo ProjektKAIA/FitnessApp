@@ -23,6 +23,7 @@ import {
 import { HeartRateCard } from '@/components/health';
 import { useStatsStore, useWorkoutStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
+import { useTheme } from '@/contexts';
 import { RootStackParamList } from '@/types';
 
 type TimeRange = 'week' | 'month' | 'year';
@@ -37,6 +38,7 @@ const RING_COLORS = {
 
 export const ProgressScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const [timeRange, setTimeRange] = useState<TimeRange>('week');
   const { width: screenWidth } = useWindowDimensions();
@@ -135,7 +137,7 @@ export const ProgressScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
@@ -143,25 +145,26 @@ export const ProgressScreen: React.FC = () => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>{t('progress.title')}</Text>
-          <Text style={styles.subtitle}>{t('progress.subtitle')}</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('progress.title')}</Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('progress.subtitle')}</Text>
         </View>
 
         {/* Time Range Selector */}
-        <View style={styles.timeRangeContainer}>
+        <View style={[styles.timeRangeContainer, { backgroundColor: colors.border }]}>
           {(['week', 'month', 'year'] as TimeRange[]).map((range) => (
             <TouchableOpacity
               key={range}
               style={[
                 styles.timeRangeButton,
-                timeRange === range && styles.timeRangeButtonActive,
+                timeRange === range && [styles.timeRangeButtonActive, { backgroundColor: colors.surface }],
               ]}
               onPress={() => setTimeRange(range)}
             >
               <Text
                 style={[
                   styles.timeRangeText,
-                  timeRange === range && styles.timeRangeTextActive,
+                  { color: colors.textSecondary },
+                  timeRange === range && { color: colors.text },
                 ]}
               >
                 {timeRangeLabels[range]}
@@ -181,7 +184,7 @@ export const ProgressScreen: React.FC = () => {
                 onPress: handleHealthSettingsPress,
               }}
             />
-            <View style={styles.ringsCard}>
+            <View style={[styles.ringsCard, { backgroundColor: colors.card }]}>
               <ActivityRings
                 rings={activityRings}
                 size={180}
@@ -282,37 +285,37 @@ export const ProgressScreen: React.FC = () => {
             />
           ))
         ) : (
-          <View style={styles.emptyState}>
+          <View style={[styles.emptyState, { backgroundColor: colors.card }]}>
             <Text style={styles.emptyIcon}>🏆</Text>
-            <Text style={styles.emptyTitle}>{t('progress.noRecordsYet')}</Text>
-            <Text style={styles.emptyText}>{t('progress.noRecordsText')}</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('progress.noRecordsYet')}</Text>
+            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('progress.noRecordsText')}</Text>
           </View>
         )}
 
         {/* Body Stats */}
         <SectionHeader title={t('progress.bodyStats')} />
-        <View style={styles.bodyStatsCard}>
+        <View style={[styles.bodyStatsCard, { backgroundColor: colors.card }]}>
           <View style={styles.bodyStatsRow}>
             <View style={styles.bodyStat}>
-              <Text style={styles.bodyStatLabel}>{t('progress.weight')}</Text>
-              <Text style={styles.bodyStatValue}>--</Text>
-              <Text style={styles.bodyStatUnit}>kg</Text>
+              <Text style={[styles.bodyStatLabel, { color: colors.textSecondary }]}>{t('progress.weight')}</Text>
+              <Text style={[styles.bodyStatValue, { color: colors.text }]}>--</Text>
+              <Text style={[styles.bodyStatUnit, { color: colors.textSecondary }]}>kg</Text>
             </View>
-            <View style={styles.bodyStatDivider} />
+            <View style={[styles.bodyStatDivider, { backgroundColor: colors.border }]} />
             <View style={styles.bodyStat}>
-              <Text style={styles.bodyStatLabel}>{t('progress.bodyFat')}</Text>
-              <Text style={styles.bodyStatValue}>--</Text>
-              <Text style={styles.bodyStatUnit}>%</Text>
+              <Text style={[styles.bodyStatLabel, { color: colors.textSecondary }]}>{t('progress.bodyFat')}</Text>
+              <Text style={[styles.bodyStatValue, { color: colors.text }]}>--</Text>
+              <Text style={[styles.bodyStatUnit, { color: colors.textSecondary }]}>%</Text>
             </View>
-            <View style={styles.bodyStatDivider} />
+            <View style={[styles.bodyStatDivider, { backgroundColor: colors.border }]} />
             <View style={styles.bodyStat}>
-              <Text style={styles.bodyStatLabel}>{t('progress.muscle')}</Text>
-              <Text style={styles.bodyStatValue}>--</Text>
-              <Text style={styles.bodyStatUnit}>kg</Text>
+              <Text style={[styles.bodyStatLabel, { color: colors.textSecondary }]}>{t('progress.muscle')}</Text>
+              <Text style={[styles.bodyStatValue, { color: colors.text }]}>--</Text>
+              <Text style={[styles.bodyStatUnit, { color: colors.textSecondary }]}>kg</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.addButton}>
-            <Text style={styles.addButtonText}>{t('progress.addMeasurement')}</Text>
+          <TouchableOpacity style={[styles.addButton, { backgroundColor: colors.background }]}>
+            <Text style={[styles.addButtonText, { color: colors.primary }]}>{t('progress.addMeasurement')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -321,21 +324,21 @@ export const ProgressScreen: React.FC = () => {
           <>
             <SectionHeader title={t('health.title')} />
             <TouchableOpacity
-              style={styles.healthPrompt}
+              style={[styles.healthPrompt, { backgroundColor: colors.card }]}
               onPress={handleHealthSettingsPress}
             >
               <View style={styles.healthPromptIcon}>
                 <Text style={styles.healthPromptEmoji}>❤️</Text>
               </View>
               <View style={styles.healthPromptContent}>
-                <Text style={styles.healthPromptTitle}>
+                <Text style={[styles.healthPromptTitle, { color: colors.text }]}>
                   {t('health.connect.title')}
                 </Text>
-                <Text style={styles.healthPromptText}>
+                <Text style={[styles.healthPromptText, { color: colors.textSecondary }]}>
                   {t('health.connect.description')}
                 </Text>
               </View>
-              <Text style={styles.healthPromptArrow}>→</Text>
+              <Text style={[styles.healthPromptArrow, { color: colors.textTertiary }]}>→</Text>
             </TouchableOpacity>
           </>
         )}

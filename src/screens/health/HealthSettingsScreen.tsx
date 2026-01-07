@@ -9,6 +9,7 @@ import { Card } from '@/components/common';
 import { HealthPermissionCard } from '@/components/health';
 import { useHealthStore } from '@/stores/healthStore';
 import { getHealthService, getHealthPlatform, isHealthSupported } from '@/services/health';
+import { useTheme } from '@/contexts';
 import { IHealthPermissionStatus, THealthDataType } from '@/types/health';
 import { RootStackParamList } from '@/types';
 
@@ -43,6 +44,7 @@ const DataTypeToggle: React.FC<DataTypeToggleProps> = ({
 
 export const HealthSettingsScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const [permissionStatus, setPermissionStatus] = useState<IHealthPermissionStatus | null>(null);
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
@@ -159,19 +161,19 @@ export const HealthSettingsScreen: React.FC = () => {
 
   if (!supported) {
     return (
-      <SafeAreaView style={styles.container} edges={['top']}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         {/* Header */}
-        <View style={styles.header}>
+        <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-            <Text style={styles.backIcon}>←</Text>
+            <Text style={[styles.backIcon, { color: colors.text }]}>←</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t('health.title')}</Text>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('health.title')}</Text>
           <View style={styles.headerSpacer} />
         </View>
 
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
           <Card style={styles.card}>
-            <Text style={styles.notSupportedText}>
+            <Text style={[styles.notSupportedText, { color: colors.textSecondary }]}>
               {t('health.notSupported')}
             </Text>
           </Card>
@@ -181,13 +183,13 @@ export const HealthSettingsScreen: React.FC = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>←</Text>
+          <Text style={[styles.backIcon, { color: colors.text }]}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('health.title')}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('health.title')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -201,10 +203,10 @@ export const HealthSettingsScreen: React.FC = () => {
                 {platform === 'apple_health' ? '🍎' : '💚'}
               </Text>
               <View>
-                <Text style={styles.masterToggleTitle}>
+                <Text style={[styles.masterToggleTitle, { color: colors.text }]}>
                   {t(`health.platform.${platform === 'apple_health' ? 'appleHealth' : 'healthConnect'}`)}
                 </Text>
-                <Text style={styles.masterToggleSubtitle}>
+                <Text style={[styles.masterToggleSubtitle, { color: colors.textSecondary }]}>
                   {settings.enabled ? t('health.connected') : t('health.notConnected')}
                 </Text>
               </View>
@@ -212,7 +214,7 @@ export const HealthSettingsScreen: React.FC = () => {
             <Switch
               value={settings.enabled}
               onValueChange={handleToggleEnabled}
-              trackColor={{ false: COLORS.gray[300], true: COLORS.primary }}
+              trackColor={{ false: colors.border, true: colors.primary }}
             />
           </View>
         </Card>
@@ -227,7 +229,7 @@ export const HealthSettingsScreen: React.FC = () => {
         )}
 
         {/* Data Types */}
-        <Text style={styles.sectionTitle}>{t('health.dataTypes.steps')}</Text>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('health.dataTypes.steps')}</Text>
         <Card style={styles.card}>
           <DataTypeToggle
             icon="👟"
@@ -267,9 +269,9 @@ export const HealthSettingsScreen: React.FC = () => {
         </Card>
 
         {/* Sync */}
-        <Text style={styles.sectionTitle}>{t('health.sync.lastSync')}</Text>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('health.sync.lastSync')}</Text>
         <Card style={styles.card}>
-          <Text style={styles.lastSyncText}>{formatLastSync()}</Text>
+          <Text style={[styles.lastSyncText, { color: colors.textSecondary }]}>{formatLastSync()}</Text>
           <TouchableOpacity
             style={[styles.syncButton, (!settings.enabled || isSyncing) && styles.syncButtonDisabled]}
             onPress={handleSync}
@@ -282,10 +284,10 @@ export const HealthSettingsScreen: React.FC = () => {
         </Card>
 
         {/* Privacy Notice */}
-        <Card style={[styles.card, styles.privacyCard]}>
+        <Card style={[styles.card, styles.privacyCard, { backgroundColor: colors.background }]}>
           <Text style={styles.privacyIcon}>🔒</Text>
-          <Text style={styles.privacyTitle}>{t('health.privacy.title')}</Text>
-          <Text style={styles.privacyText}>{t('health.privacy.description')}</Text>
+          <Text style={[styles.privacyTitle, { color: colors.textSecondary }]}>{t('health.privacy.title')}</Text>
+          <Text style={[styles.privacyText, { color: colors.textSecondary }]}>{t('health.privacy.description')}</Text>
         </Card>
       </ScrollView>
     </SafeAreaView>

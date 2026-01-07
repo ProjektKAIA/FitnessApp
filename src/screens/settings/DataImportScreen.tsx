@@ -18,6 +18,7 @@ import { Card } from '@/components/common';
 import { useUserStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
+import { useTheme } from '@/contexts';
 
 interface ImportData {
   exportDate?: string;
@@ -36,6 +37,7 @@ interface ImportData {
 
 export const DataImportScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const updateProfile = useUserStore((state) => state.updateProfile);
   const updateSettings = useUserStore((state) => state.updateSettings);
@@ -158,12 +160,12 @@ export const DataImportScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>←</Text>
+          <Text style={[styles.backIcon, { color: colors.text }]}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('dataImport.title')}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('dataImport.title')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 

@@ -13,6 +13,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useWorkoutStore } from '@/stores';
+import { useTheme } from '@/contexts';
 import { RootStackParamList, IWorkout, TDirection } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -129,6 +130,7 @@ const FilterChip: React.FC<FilterChipProps> = ({ label, isActive, color, onPress
 
 export const WorkoutHistoryScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<WorkoutHistoryRouteProp>();
   const getWorkoutHistory = useWorkoutStore((state) => state.getWorkoutHistory);
@@ -187,17 +189,17 @@ export const WorkoutHistoryScreen: React.FC = () => {
   }, [sections]);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-          <Text style={styles.backText}>{t('common.back')}</Text>
+          <Text style={[styles.backText, { color: colors.primary }]}>{t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>{t('workoutHistory.title')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('workoutHistory.title')}</Text>
         <View style={styles.placeholder} />
       </View>
 
       {/* Filter Chips */}
-      <View style={styles.filterContainer}>
+      <View style={[styles.filterContainer, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -222,8 +224,8 @@ export const WorkoutHistoryScreen: React.FC = () => {
 
       {/* Results count */}
       {activeFilter && (
-        <View style={styles.resultsInfo}>
-          <Text style={styles.resultsText}>
+        <View style={[styles.resultsInfo, { backgroundColor: colors.card }]}>
+          <Text style={[styles.resultsText, { color: colors.textSecondary }]}>
             {t('workoutHistory.filteredResults', { count: totalCount })}
           </Text>
         </View>
@@ -232,12 +234,12 @@ export const WorkoutHistoryScreen: React.FC = () => {
       {sections.length === 0 ? (
         <View style={styles.emptyState}>
           <Text style={styles.emptyIcon}>📋</Text>
-          <Text style={styles.emptyTitle}>
+          <Text style={[styles.emptyTitle, { color: colors.text }]}>
             {activeFilter
               ? t('workoutHistory.emptyFilteredTitle')
               : t('workoutHistory.emptyTitle')}
           </Text>
-          <Text style={styles.emptyText}>
+          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
             {activeFilter
               ? t('workoutHistory.emptyFilteredText', {
                   direction: t(`directions.${activeFilter}`),
@@ -267,7 +269,7 @@ export const WorkoutHistoryScreen: React.FC = () => {
           )}
           renderSectionHeader={({ section: { title } }) => (
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>{title}</Text>
+              <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{title}</Text>
             </View>
           )}
           contentContainerStyle={styles.listContent}

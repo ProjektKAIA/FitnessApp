@@ -12,6 +12,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
+import { useTheme } from '@/contexts';
 import {
   RootStackParamList,
   TMuscleGroup,
@@ -36,6 +37,7 @@ const MUSCLE_GROUPS: { value: TMuscleGroup | 'all'; labelKey: string; color: str
 
 export const ExercisePickerScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
   const insets = useSafeAreaInsets();
@@ -92,32 +94,32 @@ export const ExercisePickerScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + SPACING.md }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { paddingTop: insets.top + SPACING.md, backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backIcon}>{'<'}</Text>
+          <Text style={[styles.backIcon, { color: colors.text }]}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('exercisePicker.title')}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('exercisePicker.title')}</Text>
         <View style={styles.placeholder} />
       </View>
 
-      <View style={styles.searchContainer}>
+      <View style={[styles.searchContainer, { backgroundColor: colors.surface }]}>
         <TextInput
-          style={styles.searchInput}
+          style={[styles.searchInput, { backgroundColor: colors.background, color: colors.text }]}
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholder={t('exercisePicker.searchPlaceholder')}
-          placeholderTextColor={COLORS.gray[400]}
+          placeholderTextColor={colors.textTertiary}
         />
       </View>
 
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
+        style={[styles.filterContainer, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}
         contentContainerStyle={styles.filterContent}
       >
         {MUSCLE_GROUPS.map((group) => (
@@ -152,7 +154,7 @@ export const ExercisePickerScreen: React.FC = () => {
         {filteredExercises.length === 0 ? (
           <View style={styles.emptyState}>
             <Text style={styles.emptyIcon}>🔍</Text>
-            <Text style={styles.emptyText}>{t('exercisePicker.noResults')}</Text>
+            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('exercisePicker.noResults')}</Text>
           </View>
         ) : selectedMuscleGroup === 'all' ? (
           Object.entries(groupedExercises).map(([muscleGroup, exercises]) => (
@@ -164,21 +166,21 @@ export const ExercisePickerScreen: React.FC = () => {
                     { backgroundColor: getMuscleGroupColor(muscleGroup) },
                   ]}
                 />
-                <Text style={styles.sectionTitle}>
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>
                   {t(`muscleGroups.${muscleGroup}`)}
                 </Text>
-                <Text style={styles.sectionCount}>{exercises.length}</Text>
+                <Text style={[styles.sectionCount, { color: colors.textTertiary }]}>{exercises.length}</Text>
               </View>
               {exercises.map((exercise) => (
                 <TouchableOpacity
                   key={exercise.id}
-                  style={styles.exerciseItem}
+                  style={[styles.exerciseItem, { backgroundColor: colors.surface }]}
                   onPress={() => handleSelectExercise(exercise)}
                 >
                   <View style={styles.exerciseInfo}>
-                    <Text style={styles.exerciseName}>{exercise.name}</Text>
+                    <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
                     {exercise.category && (
-                      <Text style={styles.exerciseCategory}>
+                      <Text style={[styles.exerciseCategory, { color: colors.textSecondary }]}>
                         {t(`exerciseCategories.${exercise.category}`)}
                       </Text>
                     )}
@@ -195,13 +197,13 @@ export const ExercisePickerScreen: React.FC = () => {
             {filteredExercises.map((exercise) => (
               <TouchableOpacity
                 key={exercise.id}
-                style={styles.exerciseItem}
+                style={[styles.exerciseItem, { backgroundColor: colors.surface }]}
                 onPress={() => handleSelectExercise(exercise)}
               >
                 <View style={styles.exerciseInfo}>
-                  <Text style={styles.exerciseName}>{exercise.name}</Text>
+                  <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
                   {exercise.category && (
-                    <Text style={styles.exerciseCategory}>
+                    <Text style={[styles.exerciseCategory, { color: colors.textSecondary }]}>
                       {t(`exerciseCategories.${exercise.category}`)}
                     </Text>
                   )}

@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useStatsStore, useWorkoutStore } from '@/stores';
+import { useTheme } from '@/contexts';
 import { RootStackParamList } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -60,6 +61,7 @@ const HeatmapCell: React.FC<{ data: DayData; isToday: boolean }> = ({
 
 export const StreakDetailScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const stats = useStatsStore((state) => state.stats);
   const getWorkoutHistory = useWorkoutStore((state) => state.getWorkoutHistory);
@@ -114,12 +116,12 @@ export const StreakDetailScreen: React.FC = () => {
   const today = new Date();
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-          <Text style={styles.backText}>{t('common.back')}</Text>
+          <Text style={[styles.backText, { color: colors.primary }]}>{t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>{t('streakDetail.title')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('streakDetail.title')}</Text>
         <View style={styles.placeholder} />
       </View>
 
@@ -129,12 +131,12 @@ export const StreakDetailScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Main Streak Card */}
-        <View style={styles.streakCard}>
+        <View style={[styles.streakCard, { backgroundColor: colors.card }]}>
           <Text style={styles.streakIcon}>
             {stats.currentStreak >= 7 ? '🔥' : '⚡'}
           </Text>
-          <Text style={styles.streakValue}>{stats.currentStreak}</Text>
-          <Text style={styles.streakLabel}>{t('streakDetail.currentStreak')}</Text>
+          <Text style={[styles.streakValue, { color: colors.text }]}>{stats.currentStreak}</Text>
+          <Text style={[styles.streakLabel, { color: colors.textSecondary }]}>{t('streakDetail.currentStreak')}</Text>
 
           {daysUntilRecord > 0 && (
             <View style={styles.motivationBanner}>
@@ -155,23 +157,23 @@ export const StreakDetailScreen: React.FC = () => {
 
         {/* Stats Row */}
         <View style={styles.statsRow}>
-          <View style={styles.statCard}>
-            <Text style={styles.statValue}>{stats.longestStreak}</Text>
-            <Text style={styles.statLabel}>{t('streakDetail.longestStreak')}</Text>
+          <View style={[styles.statCard, { backgroundColor: colors.card }]}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{stats.longestStreak}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('streakDetail.longestStreak')}</Text>
           </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statValue}>{stats.thisWeekWorkouts}</Text>
-            <Text style={styles.statLabel}>{t('streakDetail.thisWeek')}</Text>
+          <View style={[styles.statCard, { backgroundColor: colors.card }]}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{stats.thisWeekWorkouts}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('streakDetail.thisWeek')}</Text>
           </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statValue}>{stats.thisMonthWorkouts}</Text>
-            <Text style={styles.statLabel}>{t('streakDetail.thisMonth')}</Text>
+          <View style={[styles.statCard, { backgroundColor: colors.card }]}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{stats.thisMonthWorkouts}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('streakDetail.thisMonth')}</Text>
           </View>
         </View>
 
         {/* Heatmap */}
-        <View style={styles.heatmapCard}>
-          <Text style={styles.sectionTitle}>
+        <View style={[styles.heatmapCard, { backgroundColor: colors.card }]}>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
             {t('streakDetail.last12Weeks')}
           </Text>
 
@@ -216,19 +218,19 @@ export const StreakDetailScreen: React.FC = () => {
         </View>
 
         {/* Tips */}
-        <View style={styles.tipsCard}>
-          <Text style={styles.sectionTitle}>{t('streakDetail.tips')}</Text>
+        <View style={[styles.tipsCard, { backgroundColor: colors.card }]}>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('streakDetail.tips')}</Text>
           <View style={styles.tipItem}>
             <Text style={styles.tipIcon}>💡</Text>
-            <Text style={styles.tipText}>{t('streakDetail.tip1')}</Text>
+            <Text style={[styles.tipText, { color: colors.textSecondary }]}>{t('streakDetail.tip1')}</Text>
           </View>
           <View style={styles.tipItem}>
             <Text style={styles.tipIcon}>🎯</Text>
-            <Text style={styles.tipText}>{t('streakDetail.tip2')}</Text>
+            <Text style={[styles.tipText, { color: colors.textSecondary }]}>{t('streakDetail.tip2')}</Text>
           </View>
           <View style={styles.tipItem}>
             <Text style={styles.tipIcon}>📅</Text>
-            <Text style={styles.tipText}>{t('streakDetail.tip3')}</Text>
+            <Text style={[styles.tipText, { color: colors.textSecondary }]}>{t('streakDetail.tip3')}</Text>
           </View>
         </View>
       </ScrollView>

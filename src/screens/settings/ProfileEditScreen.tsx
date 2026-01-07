@@ -19,9 +19,11 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
 import { useUserStore } from '@/stores';
+import { useTheme } from '@/contexts';
 
 export const ProfileEditScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const user = useUserStore((state) => state.user);
   const updateProfile = useUserStore((state) => state.updateProfile);
@@ -153,25 +155,25 @@ export const ProfileEditScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <View style={styles.header}>
+        <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Text style={styles.backText}>← {t('common.back')}</Text>
+            <Text style={[styles.backText, { color: colors.primary }]}>← {t('common.back')}</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>{t('profile.editTitle')}</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('profile.editTitle')}</Text>
           <TouchableOpacity
             style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
             onPress={handleSave}
             disabled={isSaving}
           >
-            <Text style={styles.saveText}>
+            <Text style={[styles.saveText, { color: colors.primary }]}>
               {isSaving ? t('common.loading') : t('common.save')}
             </Text>
           </TouchableOpacity>
@@ -198,20 +200,20 @@ export const ProfileEditScreen: React.FC = () => {
                 <Text style={styles.cameraIconText}>📷</Text>
               </View>
             </TouchableOpacity>
-            <Text style={styles.changePhotoText}>{t('profile.tapToChange')}</Text>
+            <Text style={[styles.changePhotoText, { color: colors.textSecondary }]}>{t('profile.tapToChange')}</Text>
           </View>
 
           <Card style={styles.formCard}>
-            <Text style={styles.sectionTitle}>{t('profile.personalInfo')}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('profile.personalInfo')}</Text>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>{t('profile.name')}</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>{t('profile.name')}</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                 value={name}
                 onChangeText={setName}
                 placeholder={t('profile.namePlaceholder')}
-                placeholderTextColor={COLORS.gray[400]}
+                placeholderTextColor={colors.textTertiary}
                 autoCapitalize="words"
               />
             </View>

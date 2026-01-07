@@ -21,9 +21,11 @@ import {
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
 import { useUserStore } from '@/stores';
+import { useTheme } from '@/contexts';
 
 export const DeleteAccountScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const logout = useUserStore((state) => state.logout);
   const [password, setPassword] = useState('');
@@ -93,12 +95,12 @@ export const DeleteAccountScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>←</Text>
+          <Text style={[styles.backIcon, { color: colors.text }]}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('deleteAccount.title')}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('deleteAccount.title')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 

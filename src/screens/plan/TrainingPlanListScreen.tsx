@@ -12,6 +12,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
+import { useTheme } from '@/contexts';
 import { RootStackParamList, ITrainingPlan, TTrainingDay } from '@/types';
 import { useTrainingPlanStore } from '@/stores';
 import { Card } from '@/components/common';
@@ -23,6 +24,7 @@ const DAYS: TTrainingDay[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
 export const TrainingPlanListScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
   const { sportType } = route.params;
@@ -98,15 +100,15 @@ export const TrainingPlanListScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backIcon}>{'<'}</Text>
+          <Text style={[styles.backIcon, { color: colors.text }]}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t(`sportTypes.${sportType}`)}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t(`sportTypes.${sportType}`)}</Text>
         <TouchableOpacity
           style={styles.addButton}
           onPress={handleCreatePlan}
@@ -123,8 +125,8 @@ export const TrainingPlanListScreen: React.FC = () => {
         {plans.length === 0 ? (
           <View style={styles.emptyState}>
             <Text style={styles.emptyIcon}>📋</Text>
-            <Text style={styles.emptyTitle}>{t('planList.emptyTitle')}</Text>
-            <Text style={styles.emptySubtitle}>{t('planList.emptySubtitle')}</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('planList.emptyTitle')}</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>{t('planList.emptySubtitle')}</Text>
             <TouchableOpacity
               style={styles.createButton}
               onPress={handleCreatePlan}
@@ -139,7 +141,7 @@ export const TrainingPlanListScreen: React.FC = () => {
                 <View style={styles.planHeader}>
                   <View style={styles.planInfo}>
                     <View style={styles.planTitleRow}>
-                      <Text style={styles.planName}>{plan.name}</Text>
+                      <Text style={[styles.planName, { color: colors.text }]}>{plan.name}</Text>
                       {plan.id === activePlanId && (
                         <View style={styles.activeBadge}>
                           <Text style={styles.activeBadgeText}>
@@ -159,14 +161,14 @@ export const TrainingPlanListScreen: React.FC = () => {
                           {getSourceLabel(plan.source)}
                         </Text>
                       </View>
-                      <Text style={styles.workoutCount}>
+                      <Text style={[styles.workoutCount, { color: colors.textSecondary }]}>
                         {t('planList.workoutsPerWeek', { count: getWorkoutCount(plan) })}
                       </Text>
                     </View>
                   </View>
                 </View>
 
-                <View style={styles.weekPreview}>
+                <View style={[styles.weekPreview, { borderTopColor: colors.border }]}>
                   {DAYS.map((day) => {
                     const workout = plan.weeklySchedule[day];
                     return (
@@ -174,12 +176,14 @@ export const TrainingPlanListScreen: React.FC = () => {
                         key={day}
                         style={[
                           styles.dayDot,
+                          { backgroundColor: colors.background },
                           workout && styles.dayDotActive,
                         ]}
                       >
                         <Text
                           style={[
                             styles.dayLabel,
+                            { color: colors.textSecondary },
                             workout && styles.dayLabelActive,
                           ]}
                         >
@@ -226,11 +230,11 @@ export const TrainingPlanListScreen: React.FC = () => {
             ))}
 
             <TouchableOpacity
-              style={styles.addPlanButton}
+              style={[styles.addPlanButton, { borderColor: colors.border }]}
               onPress={handleCreatePlan}
             >
-              <Text style={styles.addPlanIcon}>+</Text>
-              <Text style={styles.addPlanText}>{t('planList.createNew')}</Text>
+              <Text style={[styles.addPlanIcon, { color: colors.textTertiary }]}>+</Text>
+              <Text style={[styles.addPlanText, { color: colors.textSecondary }]}>{t('planList.createNew')}</Text>
             </TouchableOpacity>
           </>
         )}

@@ -17,11 +17,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useUserStore } from '@/stores';
+import { useTheme } from '@/contexts';
 
 const CONTACT_EMAIL = 'info@kaiashapes.de';
 
 export const ContactScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const user = useUserStore((state) => state.user);
 
@@ -87,17 +89,17 @@ export const ContactScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         {/* Header */}
-        <View style={styles.header}>
+        <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-            <Text style={styles.backIcon}>←</Text>
+            <Text style={[styles.backIcon, { color: colors.text }]}>←</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t('contact.title')}</Text>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('contact.title')}</Text>
           <View style={styles.headerSpacer} />
         </View>
 
@@ -110,37 +112,37 @@ export const ContactScreen: React.FC = () => {
           {/* Info Card */}
           <View style={styles.infoCard}>
             <Text style={styles.infoIcon}>📧</Text>
-            <Text style={styles.infoTitle}>{t('contact.infoTitle')}</Text>
-            <Text style={styles.infoText}>{t('contact.infoText')}</Text>
+            <Text style={[styles.infoTitle, { color: colors.text }]}>{t('contact.infoTitle')}</Text>
+            <Text style={[styles.infoText, { color: colors.textSecondary }]}>{t('contact.infoText')}</Text>
             <TouchableOpacity onPress={handleDirectEmail} style={styles.emailLink}>
               <Text style={styles.emailLinkText}>{CONTACT_EMAIL}</Text>
             </TouchableOpacity>
           </View>
 
           {/* Formular */}
-          <View style={styles.form}>
-            <Text style={styles.sectionTitle}>{t('contact.formTitle')}</Text>
+          <View style={[styles.form, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('contact.formTitle')}</Text>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>{t('contact.name')}</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>{t('contact.name')}</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                 value={name}
                 onChangeText={setName}
                 placeholder={t('contact.namePlaceholder')}
-                placeholderTextColor={COLORS.gray[400]}
+                placeholderTextColor={colors.textTertiary}
                 autoCapitalize="words"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>{t('contact.email')}</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>{t('contact.email')}</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder={t('contact.emailPlaceholder')}
-                placeholderTextColor={COLORS.gray[400]}
+                placeholderTextColor={colors.textTertiary}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -148,24 +150,24 @@ export const ContactScreen: React.FC = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>{t('contact.subject')}</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>{t('contact.subject')}</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                 value={subject}
                 onChangeText={setSubject}
                 placeholder={t('contact.subjectPlaceholder')}
-                placeholderTextColor={COLORS.gray[400]}
+                placeholderTextColor={colors.textTertiary}
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>{t('contact.message')}</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>{t('contact.message')}</Text>
               <TextInput
-                style={[styles.input, styles.textArea]}
+                style={[styles.input, styles.textArea, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                 value={message}
                 onChangeText={setMessage}
                 placeholder={t('contact.messagePlaceholder')}
-                placeholderTextColor={COLORS.gray[400]}
+                placeholderTextColor={colors.textTertiary}
                 multiline
                 numberOfLines={6}
                 textAlignVertical="top"
@@ -185,8 +187,8 @@ export const ContactScreen: React.FC = () => {
 
           {/* Weitere Kontaktmöglichkeiten */}
           <View style={styles.alternativeContact}>
-            <Text style={styles.alternativeTitle}>{t('contact.alternativeTitle')}</Text>
-            <Text style={styles.alternativeText}>{t('contact.alternativeText')}</Text>
+            <Text style={[styles.alternativeTitle, { color: colors.textSecondary }]}>{t('contact.alternativeTitle')}</Text>
+            <Text style={[styles.alternativeText, { color: colors.textTertiary }]}>{t('contact.alternativeText')}</Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
