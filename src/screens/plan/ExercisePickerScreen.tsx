@@ -88,6 +88,10 @@ export const ExercisePickerScreen: React.FC = () => {
     navigation.goBack();
   };
 
+  const handleShowDetails = (exerciseId: string) => {
+    navigation.navigate('ExerciseDetail', { exerciseId });
+  };
+
   const getMuscleGroupColor = (muscleGroup: string): string => {
     const group = MUSCLE_GROUPS.find((g) => g.value === muscleGroup);
     return group?.color || COLORS.gray[500];
@@ -172,46 +176,72 @@ export const ExercisePickerScreen: React.FC = () => {
                 <Text style={[styles.sectionCount, { color: colors.textTertiary }]}>{exercises.length}</Text>
               </View>
               {exercises.map((exercise) => (
-                <TouchableOpacity
+                <View
                   key={exercise.id}
                   style={[styles.exerciseItem, { backgroundColor: colors.surface }]}
-                  onPress={() => handleSelectExercise(exercise)}
                 >
-                  <View style={styles.exerciseInfo}>
+                  <TouchableOpacity
+                    style={styles.exerciseInfo}
+                    onPress={() => handleShowDetails(exercise.id)}
+                  >
                     <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
                     {exercise.category && (
                       <Text style={[styles.exerciseCategory, { color: colors.textSecondary }]}>
                         {t(`exerciseCategories.${exercise.category}`)}
                       </Text>
                     )}
+                  </TouchableOpacity>
+                  <View style={styles.exerciseActions}>
+                    <TouchableOpacity
+                      style={[styles.infoIcon, { backgroundColor: colors.border }]}
+                      onPress={() => handleShowDetails(exercise.id)}
+                    >
+                      <Text style={[styles.infoIconText, { color: colors.textSecondary }]}>?</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.addIcon}
+                      onPress={() => handleSelectExercise(exercise)}
+                    >
+                      <Text style={styles.addIconText}>+</Text>
+                    </TouchableOpacity>
                   </View>
-                  <View style={styles.addIcon}>
-                    <Text style={styles.addIconText}>+</Text>
-                  </View>
-                </TouchableOpacity>
+                </View>
               ))}
             </View>
           ))
         ) : (
           <View style={styles.section}>
             {filteredExercises.map((exercise) => (
-              <TouchableOpacity
+              <View
                 key={exercise.id}
                 style={[styles.exerciseItem, { backgroundColor: colors.surface }]}
-                onPress={() => handleSelectExercise(exercise)}
               >
-                <View style={styles.exerciseInfo}>
+                <TouchableOpacity
+                  style={styles.exerciseInfo}
+                  onPress={() => handleShowDetails(exercise.id)}
+                >
                   <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
                   {exercise.category && (
                     <Text style={[styles.exerciseCategory, { color: colors.textSecondary }]}>
                       {t(`exerciseCategories.${exercise.category}`)}
                     </Text>
                   )}
+                </TouchableOpacity>
+                <View style={styles.exerciseActions}>
+                  <TouchableOpacity
+                    style={[styles.infoIcon, { backgroundColor: colors.border }]}
+                    onPress={() => handleShowDetails(exercise.id)}
+                  >
+                    <Text style={[styles.infoIconText, { color: colors.textSecondary }]}>?</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.addIcon}
+                    onPress={() => handleSelectExercise(exercise)}
+                  >
+                    <Text style={styles.addIconText}>+</Text>
+                  </TouchableOpacity>
                 </View>
-                <View style={styles.addIcon}>
-                  <Text style={styles.addIconText}>+</Text>
-                </View>
-              </TouchableOpacity>
+              </View>
             ))}
           </View>
         )}
@@ -357,6 +387,22 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.sm,
     color: COLORS.gray[500],
     marginTop: 2,
+  },
+  exerciseActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  infoIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: BORDER_RADIUS.full,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  infoIconText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '700',
   },
   addIcon: {
     width: 32,

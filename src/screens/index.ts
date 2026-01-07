@@ -31,6 +31,7 @@ export {
   TrainingPlanEditorScreen,
   WorkoutDayEditorScreen,
   ExercisePickerScreen,
+  ExerciseDetailScreen,
 } from './plan';
 export { HealthSettingsScreen, HealthDashboardScreen } from './health';
 export {

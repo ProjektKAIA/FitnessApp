@@ -1090,6 +1090,48 @@ const de = {
       full: 'Ganzkörper',
     },
   },
+
+  // Exercise Detail Screen
+  exerciseDetail: {
+    notFound: 'Nicht gefunden',
+    exerciseNotFound: 'Übung nicht gefunden',
+    muscles: 'Beteiligte Muskeln',
+    primaryMuscle: 'Primär',
+    secondaryMuscles: 'Sekundär',
+    equipment: 'Benötigte Ausrüstung',
+    instructions: 'Ausführung',
+    breathing: 'Atmung',
+    tips: 'Tipps',
+    commonMistakes: 'Häufige Fehler',
+  },
+
+  // Difficulty Levels
+  difficulty: {
+    beginner: 'Anfänger',
+    intermediate: 'Fortgeschritten',
+    advanced: 'Profi',
+  },
+
+  // Exercise Categories
+  exerciseCategories: {
+    compound: 'Verbundübung',
+    isolation: 'Isolationsübung',
+  },
+
+  // Equipment
+  equipment: {
+    barbell: 'Langhantel',
+    dumbbells: 'Kurzhanteln',
+    bench: 'Bank',
+    cable: 'Kabelzug',
+    machine: 'Maschine',
+    dip_bars: 'Dip-Stangen',
+    pull_up_bar: 'Klimmzugstange',
+    ez_bar: 'SZ-Stange',
+    squat_rack: 'Squat Rack',
+    kettlebell: 'Kettlebell',
+    resistance_bands: 'Widerstandsbänder',
+  },
 } as const;
 
 export default de;

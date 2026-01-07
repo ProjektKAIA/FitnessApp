@@ -36,6 +36,7 @@ import {
   TrainingPlanEditorScreen,
   WorkoutDayEditorScreen,
   ExercisePickerScreen,
+  ExerciseDetailScreen,
   HealthSettingsScreen,
   HealthDashboardScreen,
   ContactScreen,
@@ -339,6 +340,14 @@ export default function App() {
                   options={{
                     presentation: 'modal',
                     animation: 'slide_from_bottom',
+                  }}
+                />
+                <Stack.Screen
+                  name="ExerciseDetail"
+                  component={ExerciseDetailScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
                   }}
                 />
                 <Stack.Screen

@@ -1090,6 +1090,48 @@ const en = {
       full: 'Full Body',
     },
   },
+
+  // Exercise Detail Screen
+  exerciseDetail: {
+    notFound: 'Not Found',
+    exerciseNotFound: 'Exercise not found',
+    muscles: 'Muscles Worked',
+    primaryMuscle: 'Primary',
+    secondaryMuscles: 'Secondary',
+    equipment: 'Equipment Required',
+    instructions: 'Instructions',
+    breathing: 'Breathing',
+    tips: 'Tips',
+    commonMistakes: 'Common Mistakes',
+  },
+
+  // Difficulty Levels
+  difficulty: {
+    beginner: 'Beginner',
+    intermediate: 'Intermediate',
+    advanced: 'Advanced',
+  },
+
+  // Exercise Categories
+  exerciseCategories: {
+    compound: 'Compound',
+    isolation: 'Isolation',
+  },
+
+  // Equipment
+  equipment: {
+    barbell: 'Barbell',
+    dumbbells: 'Dumbbells',
+    bench: 'Bench',
+    cable: 'Cable Machine',
+    machine: 'Machine',
+    dip_bars: 'Dip Bars',
+    pull_up_bar: 'Pull-up Bar',
+    ez_bar: 'EZ Bar',
+    squat_rack: 'Squat Rack',
+    kettlebell: 'Kettlebell',
+    resistance_bands: 'Resistance Bands',
+  },
 } as const;
 
 export default en;
