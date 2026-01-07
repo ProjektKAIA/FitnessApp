@@ -734,6 +734,7 @@ const styles = StyleSheet.create({
     paddingBottom: SPACING.lg,
   },
   headerContent: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -764,10 +765,15 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   settingsButton: {
-    padding: SPACING.sm,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#1E1E2E',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   settingsIcon: {
-    fontSize: 24,
+    fontSize: 22,
   },
   ringsSection: {
     paddingHorizontal: SPACING.lg,
