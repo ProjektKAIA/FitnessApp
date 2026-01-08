@@ -13,7 +13,7 @@ import { useTranslation, I18nextProvider } from 'react-i18next';
 import {
   HomeScreen,
   WorkoutScreen,
-  PlanScreen,
+  GuideScreen,
   YouScreen,
   MoreScreen,
   WorkoutActiveScreen,
@@ -103,9 +103,9 @@ const MainTabs: React.FC = () => {
         options={{ tabBarLabel: t('nav.workout') }}
       />
       <Tab.Screen
-        name="Plan"
-        component={PlanScreen}
-        options={{ tabBarLabel: t('nav.plan') }}
+        name="Guide"
+        component={GuideScreen}
+        options={{ tabBarLabel: t('nav.guide') }}
       />
       <Tab.Screen
         name="You"

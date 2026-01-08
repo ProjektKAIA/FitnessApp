@@ -326,7 +326,7 @@ export type AuthStackParamList = {
 export type MainTabParamList = {
   Home: undefined;
   Workout: undefined;
-  Plan: undefined;
+  Guide: undefined;
   You: undefined;
   More: undefined;
 };

@@ -16,80 +16,16 @@ import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
-import { Button } from '@/components/common';
+import { Button, Card } from '@/components/common';
 import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { SectionHeader } from '@/components/progress';
 import { useTheme } from '@/contexts';
-import { useWorkoutStore, useTrainingPlanStore } from '@/stores';
-import { RootStackParamList, TDirection, TProgramCategory } from '@/types';
+import { useWorkoutStore, useTrainingPlanStore, useUserStore } from '@/stores';
+import { RootStackParamList, TDirection, TTrainingDay } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-interface ProgramItem {
-  id: string;
-  name: string;
-  category: TProgramCategory;
-  imageUrl: string;
-  duration: string;
-  sessionsCount: number;
-  direction: TDirection;
-}
-
-const PROGRAMS: ProgramItem[] = [
-  {
-    id: '1',
-    name: 'Yoga Time',
-    category: 'yoga',
-    imageUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800',
-    duration: '60 hr',
-    sessionsCount: 74,
-    direction: 'yoga',
-  },
-  {
-    id: '2',
-    name: 'Meditation Time',
-    category: 'meditation',
-    imageUrl: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800',
-    duration: '22 hr',
-    sessionsCount: 62,
-    direction: 'yoga',
-  },
-  {
-    id: '3',
-    name: 'Bodybuilding',
-    category: 'bodybuilding',
-    imageUrl: 'https://images.unsplash.com/photo-1581009146145-b5ef050c149a?w=800',
-    duration: '200 hr',
-    sessionsCount: 90,
-    direction: 'gym',
-  },
-  {
-    id: '4',
-    name: 'Cardio Blast',
-    category: 'cardio',
-    imageUrl: 'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=800',
-    duration: '45 hr',
-    sessionsCount: 50,
-    direction: 'cardio',
-  },
-  {
-    id: '5',
-    name: 'Stretch & Flex',
-    category: 'stretching',
-    imageUrl: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800',
-    duration: '30 hr',
-    sessionsCount: 40,
-    direction: 'mobility',
-  },
-];
-
-const CATEGORY_COLORS: Record<TProgramCategory, string> = {
-  yoga: '#8B5CF6',
-  meditation: '#06B6D4',
-  bodybuilding: '#EF4444',
-  cardio: '#F59E0B',
-  stretching: '#10B981',
-};
+const DAYS: TTrainingDay[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
 export const WorkoutScreen: React.FC = () => {
   const { t } = useTranslation();
@@ -97,13 +33,38 @@ export const WorkoutScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const startWorkout = useWorkoutStore((state) => state.startWorkout);
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
+  const plans = useTrainingPlanStore((state) => state.plans);
   const activePlan = useTrainingPlanStore((state) => state.getActivePlan());
+  const user = useUserStore((state) => state.user);
 
-  const handleStartProgram = (program: ProgramItem) => {
+  const getTodayKey = (): TTrainingDay => {
+    const days: TTrainingDay[] = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    return days[new Date().getDay()];
+  };
+
+  const todayKey = getTodayKey();
+  const todayWorkout = activePlan?.weeklySchedule[todayKey];
+
+  const getDirectionColor = (direction: string): string => {
+    switch (direction) {
+      case 'gym':
+        return colors.primary;
+      case 'cardio':
+        return colors.accent;
+      case 'yoga':
+        return '#8B5CF6';
+      case 'calisthenics':
+        return colors.success;
+      default:
+        return colors.textTertiary;
+    }
+  };
+
+  const handleStartEmptyWorkout = () => {
     startWorkout({
-      userId: 'user-1',
-      name: program.name,
-      direction: program.direction,
+      userId: user?.id || 'guest',
+      name: t('workoutActive.newWorkout'),
+      direction: 'gym',
       exercises: [],
       duration: 0,
       totalVolume: 0,
@@ -111,19 +72,18 @@ export const WorkoutScreen: React.FC = () => {
     navigation.navigate('WorkoutActive', { workoutId: 'new' });
   };
 
-  const handleQuickStart = (type: 'empty' | 'last' | 'plan') => {
-    if (type === 'empty') {
-      startWorkout({
-        userId: 'user-1',
-        name: t('workoutActive.newWorkout'),
-        direction: 'gym',
-        exercises: [],
-        duration: 0,
-        totalVolume: 0,
-      });
-      navigation.navigate('WorkoutActive', { workoutId: 'new' });
-    } else if (type === 'plan' && activePlan) {
-      navigation.navigate('SportSelection');
+  const handleStartTodayWorkout = () => {
+    if (todayWorkout) {
+      navigation.navigate('WorkoutActive', { workoutId: todayWorkout.id });
+    }
+  };
+
+  const handleStartDayWorkout = (day: TTrainingDay) => {
+    if (activePlan) {
+      const workout = activePlan.weeklySchedule[day];
+      if (workout) {
+        navigation.navigate('WorkoutActive', { workoutId: workout.id });
+      }
     }
   };
 
@@ -132,6 +92,19 @@ export const WorkoutScreen: React.FC = () => {
       navigation.navigate('WorkoutActive', { workoutId: activeWorkout.id });
     }
   };
+
+  const handleEditPlan = () => {
+    if (activePlan) {
+      navigation.navigate('TrainingPlanEditor', {
+        planId: activePlan.id,
+        sportType: activePlan.sportType,
+      });
+    }
+  };
+
+  const cardGradient: [string, string] = isDark
+    ? ['#1E1E2E', '#2D2D44']
+    : [COLORS.gray[100], COLORS.gray[200]];
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
@@ -165,87 +138,149 @@ export const WorkoutScreen: React.FC = () => {
               title={t('workout.continueWorkout')}
               onPress={handleContinueWorkout}
               fullWidth
-              style={[styles.continueButton, { backgroundColor: '#FFFFFF' }]}
+              style={StyleSheet.flatten([styles.continueButton, { backgroundColor: '#FFFFFF' }])}
               textStyle={{ color: colors.primary }}
             />
           </TouchableOpacity>
         )}
 
-        {/* Quick Start */}
-        <SectionHeader title={t('workout.quickStart')} darkMode={isDark} />
-        <View style={styles.quickStartRow}>
-          <TouchableOpacity
-            style={[styles.quickStartButton, { backgroundColor: colors.surfaceElevated }]}
-            onPress={() => handleQuickStart('empty')}
+        {/* Today's Workout or Quick Start */}
+        {activePlan && todayWorkout ? (
+          <LinearGradient
+            colors={['#6366F1', '#8B5CF6']}
+            style={styles.todayCard}
           >
-            <Text style={styles.quickStartIcon}>⚡</Text>
-            <Text style={[styles.quickStartText, { color: colors.text }]}>{t('workout.empty')}</Text>
-          </TouchableOpacity>
+            <View style={styles.todayHeader}>
+              <Text style={styles.todayLabel}>{t('plan.today')}</Text>
+              <View style={styles.directionBadge}>
+                <Text style={styles.directionText}>
+                  {t(`directions.${todayWorkout.direction}`)}
+                </Text>
+              </View>
+            </View>
+            <Text style={styles.todayWorkoutName}>{todayWorkout.name}</Text>
+            <Text style={styles.todayExerciseCount}>
+              {t('plan.exerciseCount', { count: todayWorkout.exercises.length })}
+            </Text>
+            <TouchableOpacity
+              style={styles.startButton}
+              onPress={handleStartTodayWorkout}
+            >
+              <Text style={styles.startButtonText}>{t('plan.startWorkout')}</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        ) : activePlan ? (
+          <Card style={styles.restDayCard}>
+            <Text style={styles.restDayIcon}>😴</Text>
+            <Text style={[styles.restDayTitle, { color: colors.text }]}>{t('plan.restDay')}</Text>
+            <Text style={[styles.restDaySubtitle, { color: colors.textSecondary }]}>
+              {t('workout.restDayDesc')}
+            </Text>
+            <TouchableOpacity
+              style={[styles.emptyWorkoutButton, { backgroundColor: colors.primary }]}
+              onPress={handleStartEmptyWorkout}
+            >
+              <Text style={styles.emptyWorkoutButtonText}>{t('workout.startAnyway')}</Text>
+            </TouchableOpacity>
+          </Card>
+        ) : (
           <TouchableOpacity
-            style={[styles.quickStartButton, { backgroundColor: colors.surfaceElevated }]}
-            onPress={() => handleQuickStart('last')}
-          >
-            <Text style={styles.quickStartIcon}>📋</Text>
-            <Text style={[styles.quickStartText, { color: colors.text }]}>{t('workout.last')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.quickStartButton, { backgroundColor: colors.surfaceElevated }]}
-            onPress={() => handleQuickStart('plan')}
-          >
-            <Text style={styles.quickStartIcon}>📅</Text>
-            <Text style={[styles.quickStartText, { color: colors.text }]}>{t('nav.plan')}</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Programs */}
-        <SectionHeader
-          title={t('programs.featuredPrograms')}
-          action={{
-            label: t('common.viewAll'),
-            onPress: () => {},
-          }}
-          darkMode={isDark}
-        />
-
-        {PROGRAMS.map((program) => (
-          <TouchableOpacity
-            key={program.id}
-            style={styles.programCard}
-            onPress={() => handleStartProgram(program)}
+            style={[styles.quickStartCard, { backgroundColor: colors.primary }]}
+            onPress={handleStartEmptyWorkout}
             activeOpacity={0.9}
           >
-            <ImageBackground
-              source={{ uri: program.imageUrl }}
-              style={styles.programImage}
-              imageStyle={styles.programImageStyle}
-            >
-              <LinearGradient
-                colors={['transparent', 'rgba(0,0,0,0.8)']}
-                style={styles.programGradient}
-              >
-                <View style={styles.programContent}>
-                  <View
-                    style={[
-                      styles.categoryBadge,
-                      { backgroundColor: CATEGORY_COLORS[program.category] },
-                    ]}
-                  >
-                    <Text style={styles.categoryText}>
-                      {t(`programs.categories.${program.category}`)}
-                    </Text>
-                  </View>
-                  <Text style={styles.programName}>{program.name}</Text>
-                  <Text style={styles.programMeta}>
-                    {program.duration} • {program.sessionsCount} Sessions
-                  </Text>
-                </View>
-              </LinearGradient>
-            </ImageBackground>
+            <Text style={styles.quickStartIcon}>⚡</Text>
+            <Text style={styles.quickStartTitle}>{t('workout.quickStart')}</Text>
+            <Text style={styles.quickStartSubtitle}>{t('workout.quickStartDesc')}</Text>
           </TouchableOpacity>
-        ))}
+        )}
 
-        {/* Manage Workouts */}
+        {/* Weekly Schedule (if plan exists) */}
+        {activePlan && (
+          <>
+            <View style={styles.planHeaderRow}>
+              <SectionHeader title={activePlan.name} darkMode={isDark} />
+              <TouchableOpacity
+                style={[styles.editPlanButton, { backgroundColor: colors.surfaceElevated }]}
+                onPress={handleEditPlan}
+              >
+                <Text style={[styles.editPlanText, { color: colors.primary }]}>
+                  {t('common.edit')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.weekGrid}>
+              {DAYS.map((day) => {
+                const workout = activePlan.weeklySchedule[day];
+                const isToday = day === todayKey;
+                const hasWorkout = workout !== null;
+
+                return (
+                  <TouchableOpacity
+                    key={day}
+                    style={[
+                      styles.dayCard,
+                      { backgroundColor: colors.card },
+                      isToday && styles.dayCardToday,
+                    ]}
+                    onPress={() => hasWorkout && handleStartDayWorkout(day)}
+                    disabled={!hasWorkout}
+                  >
+                    <Text
+                      style={[
+                        styles.dayText,
+                        { color: colors.textSecondary },
+                        isToday && styles.dayTextToday,
+                      ]}
+                    >
+                      {t(`days.short.${day}`)}
+                    </Text>
+                    {hasWorkout ? (
+                      <View
+                        style={[
+                          styles.workoutIndicator,
+                          { backgroundColor: getDirectionColor(workout.direction) },
+                        ]}
+                      />
+                    ) : (
+                      <Text style={[styles.restIndicator, { color: colors.textTertiary }]}>–</Text>
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </>
+        )}
+
+        {/* Create/Manage Plan Section */}
         <SectionHeader title={t('workout.templates')} darkMode={isDark} />
+
+        {!activePlan && (
+          <TouchableOpacity
+            style={[styles.createPlanButton]}
+            onPress={() => navigation.navigate('SportSelection')}
+          >
+            <LinearGradient
+              colors={cardGradient}
+              style={styles.createPlanGradient}
+            >
+              <View style={styles.createPlanIconContainer}>
+                <Text style={styles.createPlanIcon}>📋</Text>
+              </View>
+              <View style={styles.createPlanContent}>
+                <Text style={[styles.createPlanTitle, { color: colors.text }]}>
+                  {t('plan.createPlan')}
+                </Text>
+                <Text style={[styles.createPlanDesc, { color: colors.textSecondary }]}>
+                  {t('plan.createPlanDesc')}
+                </Text>
+              </View>
+              <Text style={[styles.createPlanArrow, { color: colors.textTertiary }]}>›</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           style={[styles.manageButton, { backgroundColor: colors.surfaceElevated }]}
           onPress={() => navigation.navigate('WorkoutHistory')}
@@ -260,17 +295,19 @@ export const WorkoutScreen: React.FC = () => {
           <Text style={[styles.manageArrow, { color: colors.textTertiary }]}>›</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.manageButton, { backgroundColor: colors.surfaceElevated }]}
-          onPress={() => navigation.navigate('SportSelection')}
-        >
-          <Text style={styles.manageIcon}>📋</Text>
-          <View style={styles.manageContent}>
-            <Text style={[styles.manageTitle, { color: colors.text }]}>{t('plan.title')}</Text>
-            <Text style={[styles.manageSubtitle, { color: colors.textSecondary }]}>{t('plan.subtitle')}</Text>
-          </View>
-          <Text style={[styles.manageArrow, { color: colors.textTertiary }]}>›</Text>
-        </TouchableOpacity>
+        {activePlan && (
+          <TouchableOpacity
+            style={[styles.manageButton, { backgroundColor: colors.surfaceElevated }]}
+            onPress={() => navigation.navigate('SportSelection')}
+          >
+            <Text style={styles.manageIcon}>📋</Text>
+            <View style={styles.manageContent}>
+              <Text style={[styles.manageTitle, { color: colors.text }]}>{t('plan.managePlans', { count: plans.length })}</Text>
+              <Text style={[styles.manageSubtitle, { color: colors.textSecondary }]}>{t('plan.subtitle')}</Text>
+            </View>
+            <Text style={[styles.manageArrow, { color: colors.textTertiary }]}>›</Text>
+          </TouchableOpacity>
+        )}
 
         <View style={styles.bottomSpacing} />
       </ScrollView>
@@ -303,7 +340,7 @@ const styles = StyleSheet.create({
   },
   activeWorkoutCard: {
     marginHorizontal: SPACING.lg,
-    marginBottom: SPACING.xl,
+    marginBottom: SPACING.lg,
     borderRadius: BORDER_RADIUS.xl,
     padding: SPACING.lg,
   },
@@ -339,67 +376,189 @@ const styles = StyleSheet.create({
   continueButton: {
     marginTop: SPACING.lg,
   },
-  quickStartRow: {
-    flexDirection: 'row',
-    paddingHorizontal: SPACING.lg,
-    gap: SPACING.md,
+  todayCard: {
+    marginHorizontal: SPACING.lg,
+    borderRadius: BORDER_RADIUS['2xl'],
+    padding: SPACING.lg,
     marginBottom: SPACING.xl,
   },
-  quickStartButton: {
-    flex: 1,
-    borderRadius: BORDER_RADIUS.xl,
-    padding: SPACING.lg,
+  todayHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
+  },
+  todayLabel: {
+    fontSize: FONT_SIZES.sm,
+    color: 'rgba(255,255,255,0.7)',
+    fontWeight: '500',
+  },
+  directionBadge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: BORDER_RADIUS.sm,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  directionText: {
+    fontSize: FONT_SIZES.xs,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+  },
+  todayWorkoutName: {
+    fontSize: FONT_SIZES.xl,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  todayExerciseCount: {
+    fontSize: FONT_SIZES.sm,
+    color: 'rgba(255,255,255,0.7)',
+    marginBottom: SPACING.md,
+  },
+  startButton: {
+    backgroundColor: COLORS.white,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.lg,
     alignItems: 'center',
   },
-  quickStartIcon: {
-    fontSize: 28,
-    marginBottom: SPACING.sm,
+  startButtonText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    color: '#6366F1',
   },
-  quickStartText: {
-    fontSize: FONT_SIZES.sm,
+  restDayCard: {
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.xl,
+    alignItems: 'center',
+    paddingVertical: SPACING.xl,
+  },
+  restDayIcon: {
+    fontSize: 48,
+    marginBottom: SPACING.md,
+  },
+  restDayTitle: {
+    fontSize: FONT_SIZES.lg,
     fontWeight: '600',
   },
-  programCard: {
-    marginHorizontal: SPACING.lg,
-    marginBottom: SPACING.md,
-    borderRadius: BORDER_RADIUS.xl,
-    overflow: 'hidden',
-    height: 160,
+  restDaySubtitle: {
+    fontSize: FONT_SIZES.sm,
+    marginTop: SPACING.xs,
+    marginBottom: SPACING.lg,
   },
-  programImage: {
-    flex: 1,
+  emptyWorkoutButton: {
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.lg,
   },
-  programImageStyle: {
-    borderRadius: BORDER_RADIUS.xl,
-  },
-  programGradient: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  programContent: {
-    padding: SPACING.lg,
-  },
-  categoryBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: SPACING.xs,
-    borderRadius: BORDER_RADIUS.full,
-    marginBottom: SPACING.sm,
-  },
-  categoryText: {
-    fontSize: FONT_SIZES.xs,
+  emptyWorkoutButtonText: {
+    fontSize: FONT_SIZES.base,
     fontWeight: '600',
     color: COLORS.white,
   },
-  programName: {
+  quickStartCard: {
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.xl,
+    borderRadius: BORDER_RADIUS['2xl'],
+    padding: SPACING.xl,
+    alignItems: 'center',
+  },
+  quickStartIcon: {
+    fontSize: 48,
+    marginBottom: SPACING.md,
+  },
+  quickStartTitle: {
     fontSize: FONT_SIZES.xl,
     fontWeight: '700',
     color: COLORS.white,
   },
-  programMeta: {
+  quickStartSubtitle: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[300],
-    marginTop: 4,
+    color: 'rgba(255,255,255,0.8)',
+    marginTop: SPACING.xs,
+  },
+  planHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingRight: SPACING.lg,
+  },
+  editPlanButton: {
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: BORDER_RADIUS.full,
+  },
+  editPlanText: {
+    fontSize: FONT_SIZES.sm,
+    fontWeight: '600',
+  },
+  weekGrid: {
+    flexDirection: 'row',
+    paddingHorizontal: SPACING.lg,
+    gap: SPACING.xs,
+    marginBottom: SPACING.xl,
+  },
+  dayCard: {
+    flex: 1,
+    borderRadius: BORDER_RADIUS.lg,
+    paddingVertical: SPACING.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dayCardToday: {
+    backgroundColor: '#6366F1',
+  },
+  dayText: {
+    fontSize: FONT_SIZES.xs,
+    fontWeight: '600',
+    marginBottom: SPACING.xs,
+  },
+  dayTextToday: {
+    color: COLORS.white,
+  },
+  workoutIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  restIndicator: {
+    fontSize: FONT_SIZES.sm,
+  },
+  createPlanButton: {
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.sm,
+  },
+  createPlanGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: BORDER_RADIUS.xl,
+    padding: SPACING.lg,
+  },
+  createPlanIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: BORDER_RADIUS.lg,
+    backgroundColor: '#6366F1',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: SPACING.md,
+  },
+  createPlanIcon: {
+    fontSize: 24,
+  },
+  createPlanContent: {
+    flex: 1,
+  },
+  createPlanTitle: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  createPlanDesc: {
+    fontSize: FONT_SIZES.sm,
+  },
+  createPlanArrow: {
+    fontSize: 24,
   },
   manageButton: {
     flexDirection: 'row',

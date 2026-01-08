@@ -1,6 +1,7 @@
 export { HomeScreen } from './HomeScreen';
 export { WorkoutScreen } from './WorkoutScreen';
 export { PlanScreen } from './PlanScreen';
+export { GuideScreen } from './GuideScreen';
 export { ProgressScreen } from './ProgressScreen';
 export { ProgramsScreen } from './ProgramsScreen';
 export { YouScreen } from './YouScreen';

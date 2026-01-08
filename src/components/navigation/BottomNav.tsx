@@ -12,7 +12,7 @@ import { scale, scaleFont, MIN_TOUCH_TARGET } from '@/lib';
 const TAB_ICONS: Record<string, { active: string; inactive: string }> = {
   Home: { active: '🏠', inactive: '🏠' },
   Workout: { active: '💪', inactive: '💪' },
-  Plan: { active: '📋', inactive: '📋' },
+  Guide: { active: '📖', inactive: '📖' },
   You: { active: '👤', inactive: '👤' },
   More: { active: '⚙️', inactive: '⚙️' },
 };
