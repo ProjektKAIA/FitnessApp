@@ -17,6 +17,7 @@ import { Button, Card, Modal, LoadingScreen } from '@/components/common';
 import { useWorkoutStore, useUserStore, useTrainingPlanStore } from '@/stores';
 import { useTheme } from '@/contexts';
 import { RootStackParamList, IPlannedWorkout } from '@/types';
+import { getExerciseByName } from '@/data';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type WorkoutActiveRouteProp = RouteProp<RootStackParamList, 'WorkoutActive'>;
@@ -275,7 +276,12 @@ export const WorkoutActiveScreen: React.FC = () => {
               </View>
               <TouchableOpacity
                 style={[styles.infoButton, { backgroundColor: colors.border }]}
-                onPress={() => navigation.navigate('ExerciseDetail', { exerciseId: exercise.id })}
+                onPress={() => {
+                  const libraryExercise = getExerciseByName(exercise.name);
+                  if (libraryExercise) {
+                    navigation.navigate('ExerciseDetail', { exerciseId: libraryExercise.id });
+                  }
+                }}
               >
                 <Text style={[styles.infoButtonText, { color: colors.textSecondary }]}>?</Text>
               </TouchableOpacity>

@@ -1125,6 +1125,13 @@ export const getExerciseById = (id: string): ExerciseDetail | undefined => {
   return EXERCISE_LIBRARY.find((e) => e.id === id);
 };
 
+export const getExerciseByName = (name: string): ExerciseDetail | undefined => {
+  const lowerName = name.toLowerCase();
+  return EXERCISE_LIBRARY.find(
+    (e) => e.name.toLowerCase() === lowerName || e.nameEn.toLowerCase() === lowerName
+  );
+};
+
 export const getExercisesByMuscleGroup = (muscleGroup: TMuscleGroup): ExerciseDetail[] => {
   return EXERCISE_LIBRARY.filter((e) => e.muscleGroup === muscleGroup);
 };
