@@ -454,21 +454,16 @@ export const WorkoutActiveScreen: React.FC = () => {
         <Text style={styles.modalText}>{t('workoutActive.endWorkoutMessage')}</Text>
         <View style={styles.modalButtons}>
           <Button
-            title={t('common.cancel')}
-            variant="primary"
-            onPress={() => setShowEndModal(false)}
-            style={styles.modalButton}
-          />
-          <Button
-            title={t('workoutActive.discard')}
-            variant="secondary"
-            onPress={handleCancelWorkout}
-            style={styles.modalButton}
-          />
-          <Button
             title={t('common.save')}
+            variant="outline"
             onPress={handleEndWorkout}
-            style={styles.modalButton}
+            fullWidth
+          />
+          <Button
+            title={t('common.cancel')}
+            variant="outline"
+            onPress={() => setShowEndModal(false)}
+            fullWidth
           />
         </View>
       </Modal>
@@ -776,10 +771,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalButtons: {
-    flexDirection: 'row',
     gap: SPACING.sm,
-  },
-  modalButton: {
-    flex: 1,
   },
 });

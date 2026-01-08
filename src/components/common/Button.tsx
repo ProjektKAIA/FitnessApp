@@ -13,7 +13,7 @@ import {
 import { FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useTheme } from '@/contexts';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface Props {
@@ -54,6 +54,8 @@ export const Button: React.FC<Props> = ({
         return colors.buttonOutlineBackground;
       case 'ghost':
         return 'transparent';
+      case 'destructive':
+        return colors.error;
       default:
         return colors.buttonPrimaryBackground;
     }
@@ -74,6 +76,8 @@ export const Button: React.FC<Props> = ({
         return colors.buttonOutlineText;
       case 'ghost':
         return colors.primary;
+      case 'destructive':
+        return '#FFFFFF';
       default:
         return colors.buttonPrimaryText;
     }

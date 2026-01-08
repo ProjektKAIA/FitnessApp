@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     borderRadius: BORDER_RADIUS.xl,
     width: '100%',
     maxWidth: 400,
-    maxHeight: '80%',
+    overflow: 'hidden',
   },
   header: {
     flexDirection: 'row',
