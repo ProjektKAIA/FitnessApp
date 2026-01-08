@@ -294,7 +294,7 @@ export type RootStackParamList = {
   ChatDetail: { chatId: string };
   SportSelection: undefined;
   FitnessQuestionnaire: { sportType: TSportType };
-  TrainingPlanList: { sportType: TSportType; questionnaireAnswers?: Record<string, string | string[]> };
+  TrainingPlanList: { sportType?: TSportType; questionnaireAnswers?: Record<string, string | string[]> } | undefined;
   TrainingPlanEditor: { planId?: string; sportType: TSportType };
   WorkoutDayEditor: { planId: string; day: TTrainingDay };
   ExercisePicker: { planId: string; day: TTrainingDay; workoutId: string };

@@ -298,7 +298,7 @@ export const WorkoutScreen: React.FC = () => {
         {activePlan && (
           <TouchableOpacity
             style={[styles.manageButton, { backgroundColor: colors.surfaceElevated }]}
-            onPress={() => navigation.navigate('SportSelection')}
+            onPress={() => navigation.navigate('TrainingPlanList')}
           >
             <Text style={styles.manageIcon}>📋</Text>
             <View style={styles.manageContent}>

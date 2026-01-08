@@ -455,6 +455,7 @@ const de = {
 
   // Plan List Screen
   planList: {
+    title: 'Trainingspläne',
     emptyTitle: 'Keine Pläne',
     emptySubtitle: 'Erstelle deinen ersten Trainingsplan',
     createFirst: 'Plan erstellen',

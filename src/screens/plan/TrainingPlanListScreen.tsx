@@ -27,7 +27,7 @@ export const TrainingPlanListScreen: React.FC = () => {
   const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
-  const { sportType } = route.params;
+  const sportType = route.params?.sportType;
 
   const allPlans = useTrainingPlanStore((state) => state.plans);
   const activePlanId = useTrainingPlanStore((state) => state.activePlanId);
@@ -35,14 +35,22 @@ export const TrainingPlanListScreen: React.FC = () => {
   const deletePlan = useTrainingPlanStore((state) => state.deletePlan);
   const duplicatePlan = useTrainingPlanStore((state) => state.duplicatePlan);
 
-  const plans = useMemo(() => allPlans.filter((p) => p.sportType === sportType), [allPlans, sportType]);
+  // Show all plans when no sportType filter, otherwise filter by sportType
+  const plans = useMemo(
+    () => (sportType ? allPlans.filter((p) => p.sportType === sportType) : allPlans),
+    [allPlans, sportType]
+  );
 
   const handleCreatePlan = () => {
-    navigation.navigate('TrainingPlanEditor', { sportType });
+    if (sportType) {
+      navigation.navigate('TrainingPlanEditor', { sportType });
+    } else {
+      navigation.navigate('SportSelection');
+    }
   };
 
-  const handleEditPlan = (planId: string) => {
-    navigation.navigate('TrainingPlanEditor', { planId, sportType });
+  const handleEditPlan = (plan: ITrainingPlan) => {
+    navigation.navigate('TrainingPlanEditor', { planId: plan.id, sportType: plan.sportType });
   };
 
   const handleActivatePlan = (planId: string) => {
@@ -64,10 +72,10 @@ export const TrainingPlanListScreen: React.FC = () => {
     );
   };
 
-  const handleDuplicatePlan = (planId: string) => {
-    const newPlanId = duplicatePlan(planId);
+  const handleDuplicatePlan = (plan: ITrainingPlan) => {
+    const newPlanId = duplicatePlan(plan.id);
     if (newPlanId) {
-      navigation.navigate('TrainingPlanEditor', { planId: newPlanId, sportType });
+      navigation.navigate('TrainingPlanEditor', { planId: newPlanId, sportType: plan.sportType });
     }
   };
 
@@ -110,7 +118,9 @@ export const TrainingPlanListScreen: React.FC = () => {
         >
           <Text style={[styles.backIcon, { color: colors.text }]}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>{t(`sportTypes.${sportType}`)}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>
+          {sportType ? t(`sportTypes.${sportType}`) : t('planList.title')}
+        </Text>
         <TouchableOpacity
           style={styles.addButton}
           onPress={handleCreatePlan}
@@ -209,13 +219,13 @@ export const TrainingPlanListScreen: React.FC = () => {
                   )}
                   <TouchableOpacity
                     style={styles.actionButton}
-                    onPress={() => handleEditPlan(plan.id)}
+                    onPress={() => handleEditPlan(plan)}
                   >
                     <Text style={styles.actionButtonText}>{t('planList.edit')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.actionButton}
-                    onPress={() => handleDuplicatePlan(plan.id)}
+                    onPress={() => handleDuplicatePlan(plan)}
                   >
                     <Text style={styles.actionButtonText}>{t('planList.duplicate')}</Text>
                   </TouchableOpacity>
