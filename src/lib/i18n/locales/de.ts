@@ -174,8 +174,8 @@ const de = {
   // More Screen (Settings)
   more: {
     title: 'Mehr',
-    guestUser: 'Gastnutzer',
-    notLoggedIn: 'Nicht angemeldet',
+    guestUser: 'Dein Name',
+    notLoggedIn: 'Profil bearbeiten',
     edit: 'Bearbeiten',
 
     // Sections
