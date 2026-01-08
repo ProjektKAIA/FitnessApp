@@ -304,6 +304,7 @@ export type RootStackParamList = {
   Security: undefined;
   DataExport: undefined;
   DataImport: undefined;
+  DataBackup: undefined;
   DeleteAccount: undefined;
 };
 

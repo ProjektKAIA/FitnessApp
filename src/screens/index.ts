@@ -22,6 +22,7 @@ export { ContactScreen } from './settings/ContactScreen';
 export { SecurityScreen } from './settings/SecurityScreen';
 export { DataExportScreen } from './settings/DataExportScreen';
 export { DataImportScreen } from './settings/DataImportScreen';
+export { DataBackupScreen } from './settings/DataBackupScreen';
 export { DeleteAccountScreen } from './settings/DeleteAccountScreen';
 export { AICoachScreen, ChatGPTImportScreen, ChatDetailScreen } from './ai';
 export {

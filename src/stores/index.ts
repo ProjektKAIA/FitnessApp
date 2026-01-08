@@ -9,6 +9,11 @@ export { useTrainingPlanStore, GYM_EXERCISES } from './trainingPlanStore';
 export { useHealthStore } from './healthStore';
 export { useSecurityStore } from './securityStore';
 export { useUserGoalsStore } from './userGoalsStore';
+export {
+  useBackupStore,
+  type BackupStorageType,
+  type AutoBackupFrequency,
+} from './backupStore';
 export type {
   CalorieTarget,
   Gender,

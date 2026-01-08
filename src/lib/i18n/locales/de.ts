@@ -229,6 +229,8 @@ const de = {
     exportDataSubtitle: 'Lade deine Workouts herunter',
     importData: 'Daten importieren',
     importDataSubtitle: 'Aus anderen Apps importieren',
+    backupData: 'Datensicherung',
+    backupDataSubtitle: 'In iCloud oder Google Drive sichern',
     deleteAccount: 'Konto löschen',
     deleteAccountSubtitle: 'Permanent löschen',
 
@@ -1007,6 +1009,53 @@ const de = {
     disclaimer: 'Importiere nur Dateien, die du selbst exportiert hast.',
   },
 
+  // Data Backup Screen
+  backup: {
+    title: 'Datensicherung',
+    infoTitle: 'Deine Daten sichern',
+    infoText: 'Sichere deine Daten in der Cloud oder lokal. Du behältst die volle Kontrolle über deine Daten.',
+    currentDataSize: 'Aktuelle Datengröße:',
+    storageLocation: 'Speicherort',
+    storageDesc: {
+      local: 'Auf diesem Gerät speichern',
+      icloud: 'In deinem iCloud Drive speichern',
+      gdrive: 'In deinem Google Drive speichern',
+    },
+    autoBackup: 'Automatisches Backup',
+    frequency: {
+      after_workout: 'Nach jedem Workout',
+      daily: 'Täglich',
+      weekly: 'Wöchentlich',
+      manual: 'Nur manuell',
+    },
+    createBackup: 'Backup erstellen',
+    restoreBackup: 'Backup wiederherstellen',
+    lastBackup: 'Letztes Backup',
+    never: 'Noch nie',
+    size: 'Größe',
+    location: 'Speicherort',
+    history: 'Backup-Verlauf',
+    success: 'Erfolg',
+    error: 'Fehler',
+    backupCreated: 'Backup "{{fileName}}" wurde erstellt.',
+    backupSavedTo: 'Backup wurde in {{location}} gespeichert.',
+    backupFailed: 'Backup konnte nicht erstellt werden.',
+    restoreTitle: 'Backup wiederherstellen',
+    restoreWarning: 'Achtung: Das Wiederherstellen überschreibt möglicherweise deine aktuellen Daten. Möchtest du fortfahren?',
+    restore: 'Wiederherstellen',
+    restoreOptions: 'Wiederherstellung',
+    restoreOptionsDesc: 'Backup vom {{date}} (Version {{version}})',
+    replaceAll: 'Alles ersetzen',
+    mergeData: 'Mit aktuellen Daten zusammenführen',
+    restoreComplete: 'Daten wurden erfolgreich wiederhergestellt.',
+    restoreFailed: 'Wiederherstellung fehlgeschlagen.',
+    loadFailed: 'Datei konnte nicht geladen werden.',
+    invalidBackup: 'Die Datei ist kein gültiges ShapyFit-Backup.',
+    icloudOnlyIOS: 'iCloud ist nur auf iOS-Geräten verfügbar.',
+    gdriveOnlyAndroid: 'Google Drive ist nur auf Android-Geräten verfügbar.',
+    privacyNote: 'Deine Daten werden direkt in deinem persönlichen Cloud-Speicher gespeichert. Wir haben keinen Zugriff auf deine Backups.',
+  },
+
   // Delete Account Screen
   deleteAccount: {
     title: 'Konto löschen',
@@ -1113,12 +1162,6 @@ const de = {
     beginner: 'Anfänger',
     intermediate: 'Fortgeschritten',
     advanced: 'Profi',
-  },
-
-  // Exercise Categories
-  exerciseCategories: {
-    compound: 'Verbundübung',
-    isolation: 'Isolationsübung',
   },
 
   // Equipment

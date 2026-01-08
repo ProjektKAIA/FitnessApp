@@ -43,6 +43,7 @@ import {
   SecurityScreen,
   DataExportScreen,
   DataImportScreen,
+  DataBackupScreen,
   DeleteAccountScreen,
   WelcomeScreen,
   GenderScreen,
@@ -393,6 +394,14 @@ export default function App() {
                 <Stack.Screen
                   name="DataImport"
                   component={DataImportScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="DataBackup"
+                  component={DataBackupScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',

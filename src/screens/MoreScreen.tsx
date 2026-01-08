@@ -380,6 +380,13 @@ export const MoreScreen: React.FC = () => {
             {...menuItemProps}
           />
           <MenuItem
+            icon="💾"
+            title={t('more.backupData')}
+            subtitle={t('more.backupDataSubtitle')}
+            onPress={() => navigation.navigate('DataBackup')}
+            {...menuItemProps}
+          />
+          <MenuItem
             icon="🗑️"
             title={t('more.deleteAccount')}
             subtitle={t('more.deleteAccountSubtitle')}

@@ -229,6 +229,8 @@ const en = {
     exportDataSubtitle: 'Download your workouts',
     importData: 'Import Data',
     importDataSubtitle: 'Import from other apps',
+    backupData: 'Data Backup',
+    backupDataSubtitle: 'Back up to iCloud or Google Drive',
     deleteAccount: 'Delete Account',
     deleteAccountSubtitle: 'Permanently delete',
 
@@ -1007,6 +1009,53 @@ const en = {
     disclaimer: 'Only import files that you exported yourself.',
   },
 
+  // Data Backup Screen
+  backup: {
+    title: 'Data Backup',
+    infoTitle: 'Back up your data',
+    infoText: 'Back up your data to the cloud or locally. You keep full control over your data.',
+    currentDataSize: 'Current data size:',
+    storageLocation: 'Storage Location',
+    storageDesc: {
+      local: 'Save on this device',
+      icloud: 'Save to your iCloud Drive',
+      gdrive: 'Save to your Google Drive',
+    },
+    autoBackup: 'Automatic Backup',
+    frequency: {
+      after_workout: 'After every workout',
+      daily: 'Daily',
+      weekly: 'Weekly',
+      manual: 'Manual only',
+    },
+    createBackup: 'Create Backup',
+    restoreBackup: 'Restore Backup',
+    lastBackup: 'Last Backup',
+    never: 'Never',
+    size: 'Size',
+    location: 'Location',
+    history: 'Backup History',
+    success: 'Success',
+    error: 'Error',
+    backupCreated: 'Backup "{{fileName}}" has been created.',
+    backupSavedTo: 'Backup has been saved to {{location}}.',
+    backupFailed: 'Backup could not be created.',
+    restoreTitle: 'Restore Backup',
+    restoreWarning: 'Warning: Restoring may overwrite your current data. Do you want to continue?',
+    restore: 'Restore',
+    restoreOptions: 'Restore Options',
+    restoreOptionsDesc: 'Backup from {{date}} (Version {{version}})',
+    replaceAll: 'Replace All',
+    mergeData: 'Merge with current data',
+    restoreComplete: 'Data has been restored successfully.',
+    restoreFailed: 'Restore failed.',
+    loadFailed: 'File could not be loaded.',
+    invalidBackup: 'The file is not a valid ShapyFit backup.',
+    icloudOnlyIOS: 'iCloud is only available on iOS devices.',
+    gdriveOnlyAndroid: 'Google Drive is only available on Android devices.',
+    privacyNote: 'Your data is saved directly to your personal cloud storage. We have no access to your backups.',
+  },
+
   // Delete Account Screen
   deleteAccount: {
     title: 'Delete Account',
@@ -1113,12 +1162,6 @@ const en = {
     beginner: 'Beginner',
     intermediate: 'Intermediate',
     advanced: 'Advanced',
-  },
-
-  // Exercise Categories
-  exerciseCategories: {
-    compound: 'Compound',
-    isolation: 'Isolation',
   },
 
   // Equipment
