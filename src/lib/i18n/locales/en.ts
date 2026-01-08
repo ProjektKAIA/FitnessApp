@@ -110,6 +110,7 @@ const en = {
     lastTime: 'Last time',
     removeSet: 'Remove Set',
     deleteSelected: 'Delete ({{count}})',
+    noExerciseDetails: 'No details available for this exercise yet.',
   },
 
   // Plan Screen

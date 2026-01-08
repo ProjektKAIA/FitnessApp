@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -280,6 +281,11 @@ export const WorkoutActiveScreen: React.FC = () => {
                   const libraryExercise = getExerciseByName(exercise.name);
                   if (libraryExercise) {
                     navigation.navigate('ExerciseDetail', { exerciseId: libraryExercise.id });
+                  } else {
+                    Alert.alert(
+                      exercise.name,
+                      t('workoutActive.noExerciseDetails')
+                    );
                   }
                 }}
               >

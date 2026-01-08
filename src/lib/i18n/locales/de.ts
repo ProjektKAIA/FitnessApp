@@ -110,6 +110,7 @@ const de = {
     lastTime: 'Letztes Mal',
     removeSet: 'Satz entfernen',
     deleteSelected: 'Löschen ({{count}})',
+    noExerciseDetails: 'Für diese Übung sind noch keine Details verfügbar.',
   },
 
   // Plan Screen
