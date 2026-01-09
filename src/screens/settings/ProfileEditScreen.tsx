@@ -39,7 +39,8 @@ export const ProfileEditScreen: React.FC = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const isMetric = settings?.units === 'metric';
+  // Default to metric (Europe) if settings are undefined
+  const isMetric = settings?.units !== 'imperial'; // metric ist default
 
   const pickImage = useCallback(async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();

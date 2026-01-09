@@ -30,7 +30,12 @@ export const useUserStore = create<UserState>()(
 
       setUser: (user) =>
         set({
-          user,
+          user: user
+            ? {
+                ...user,
+                settings: { ...defaultSettings, ...user.settings },
+              }
+            : null,
           isAuthenticated: !!user,
         }),
 
@@ -39,7 +44,7 @@ export const useUserStore = create<UserState>()(
           user: state.user
             ? {
                 ...state.user,
-                settings: { ...state.user.settings, ...newSettings },
+                settings: { ...defaultSettings, ...state.user.settings, ...newSettings },
               }
             : null,
         })),
