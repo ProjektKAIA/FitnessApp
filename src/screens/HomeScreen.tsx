@@ -1,6 +1,6 @@
 // /workspaces/claude-workspace/fitnessapp/src/screens/HomeScreen.tsx
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { View, ScrollView, StyleSheet, Text, Alert, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -13,12 +13,10 @@ import {
   WorkoutTile,
   StatTile,
   DirectionTile,
-  StreakGoalTile,
   AdTile,
   HealthTile,
   getTileGap,
 } from '@/components/tiles';
-import { WeeklyGoalModal } from '@/components/common';
 import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { COLORS, FONT_SIZES, SPACING } from '@/constants';
 import { useTheme } from '@/contexts';
@@ -43,10 +41,8 @@ export const HomeScreen: React.FC = () => {
   const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const stats = useStatsStore((state) => state.stats);
-  const weeklyGoal = useStatsStore((state) => state.weeklyGoal);
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
   const getWorkoutHistory = useWorkoutStore((state) => state.getWorkoutHistory);
-  const [isWeeklyGoalModalVisible, setWeeklyGoalModalVisible] = useState(false);
 
   const healthSettings = useHealthStore((state) => state.settings);
   const todaySummary = useHealthStore((state) => state.todaySummary);
@@ -73,14 +69,6 @@ export const HomeScreen: React.FC = () => {
 
   const handleStartWorkout = () => {
     navigation.navigate('WorkoutActive', { workoutId: 'new' });
-  };
-
-  const handleNavigateToProgress = () => {
-    navigation.navigate('WorkoutHistory');
-  };
-
-  const handleStreakGoalPress = () => {
-    setWeeklyGoalModalVisible(true);
   };
 
   const handleWorkoutHistoryPress = () => {
@@ -183,18 +171,15 @@ export const HomeScreen: React.FC = () => {
           )}
 
           <View style={styles.row}>
-            <StreakGoalTile
-              size="1x1"
-              currentStreak={stats.currentStreak}
-              longestStreak={stats.longestStreak}
-              weeklyGoalCurrent={stats.thisWeekWorkouts}
-              weeklyGoalTarget={weeklyGoal}
-              onPress={handleStreakGoalPress}
-            />
             <DirectionTile
               direction="yoga"
               workoutsCount={directionCounts.yoga}
               onPress={() => handleDirectionPress('yoga')}
+            />
+            <AdTile
+              size="1x1"
+              title={t('guide.nutrition.supplements')}
+              onPress={() => navigation.navigate('Guide')}
             />
             <AdTile
               size="1x1"
@@ -251,11 +236,6 @@ export const HomeScreen: React.FC = () => {
           />
         </View>
       </ScrollView>
-
-      <WeeklyGoalModal
-        visible={isWeeklyGoalModalVisible}
-        onClose={() => setWeeklyGoalModalVisible(false)}
-      />
     </SafeAreaView>
   );
 };
