@@ -159,10 +159,10 @@ export const HomeScreen: React.FC = () => {
               weeklyGoalTarget={weeklyGoal}
               onPress={handleStreakGoalPress}
             />
-            <AdTile
-              size="1x1"
-              title="10% auf ESN"
-              onPress={() => handleAffiliateAdPress('https://www.esn.com', 'ESN')}
+            <DirectionTile
+              direction="running"
+              workoutsCount={directionCounts.running}
+              onPress={() => handleDirectionPress('running')}
             />
           </View>
 
@@ -196,10 +196,10 @@ export const HomeScreen: React.FC = () => {
               workoutsCount={directionCounts.yoga}
               onPress={() => handleDirectionPress('yoga')}
             />
-            <DirectionTile
-              direction="running"
-              workoutsCount={directionCounts.running}
-              onPress={() => handleDirectionPress('running')}
+            <AdTile
+              size="1x1"
+              title="10% auf ESN"
+              onPress={() => handleAffiliateAdPress('https://www.esn.com', 'ESN')}
             />
           </View>
 
