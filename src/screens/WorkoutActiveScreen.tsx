@@ -16,9 +16,11 @@ import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, REST_TIMER_DEFAULT } from '@/constants';
 import { Button, Card, Modal, LoadingScreen } from '@/components/common';
 import { useWorkoutStore, useUserStore, useTrainingPlanStore } from '@/stores';
+import { useUserGoalsStore } from '@/stores/userGoalsStore';
 import { useTheme } from '@/contexts';
 import { RootStackParamList, IPlannedWorkout } from '@/types';
 import { getExerciseByName } from '@/data';
+import { handleWorkoutCompletion } from '@/services/workoutCompletionService';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type WorkoutActiveRouteProp = RouteProp<RootStackParamList, 'WorkoutActive'>;
@@ -45,7 +47,9 @@ export const WorkoutActiveScreen: React.FC = () => {
   const startRestTimer = useWorkoutStore((state) => state.startRestTimer);
   const stopRestTimer = useWorkoutStore((state) => state.stopRestTimer);
   const updateRestTimer = useWorkoutStore((state) => state.updateRestTimer);
+  const getLastWorkoutDate = useWorkoutStore((state) => state.getLastWorkoutDate);
 
+  const tdeeData = useUserGoalsStore((state) => state.tdeeData);
   const activePlan = useTrainingPlanStore((state) => state.getActivePlan());
 
   const [showExerciseModal, setShowExerciseModal] = useState(false);
@@ -223,8 +227,16 @@ export const WorkoutActiveScreen: React.FC = () => {
     setSetsToDelete([]);
   };
 
-  const handleEndWorkout = () => {
-    endWorkout();
+  const handleEndWorkout = async () => {
+    const lastWorkoutDate = getLastWorkoutDate();
+    const finishedWorkout = endWorkout();
+
+    if (finishedWorkout) {
+      // Process workout completion (stats, calories, health export)
+      const userWeight = tdeeData?.weight || 70; // Default 70kg if not set
+      await handleWorkoutCompletion(finishedWorkout, userWeight, lastWorkoutDate);
+    }
+
     navigation.goBack();
   };
 

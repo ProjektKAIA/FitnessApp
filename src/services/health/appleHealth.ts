@@ -23,7 +23,10 @@ const PERMISSIONS: HealthKitPermissions = {
       AppleHealthKit.Constants.Permissions.RestingHeartRate,
       AppleHealthKit.Constants.Permissions.Workout,
     ],
-    write: [],
+    write: [
+      AppleHealthKit.Constants.Permissions.Workout,
+      AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
+    ],
   },
 };
 

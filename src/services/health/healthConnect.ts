@@ -2,6 +2,7 @@ import {
   initialize,
   requestPermission,
   readRecords,
+  insertRecords,
   getSdkStatus,
   SdkAvailabilityStatus,
 } from 'react-native-health-connect';
@@ -18,7 +19,7 @@ import {
 } from '@/types/health';
 import { transformHealthConnectData } from './dataTransformers';
 
-const PERMISSION_MAP: Record<THealthDataType, string> = {
+const READ_PERMISSION_MAP: Record<THealthDataType, string> = {
   steps: 'android.permission.health.READ_STEPS',
   distance: 'android.permission.health.READ_DISTANCE',
   calories: 'android.permission.health.READ_TOTAL_CALORIES_BURNED',
@@ -27,6 +28,11 @@ const PERMISSION_MAP: Record<THealthDataType, string> = {
   restingHeartRate: 'android.permission.health.READ_RESTING_HEART_RATE',
   workouts: 'android.permission.health.READ_EXERCISE',
 };
+
+const WRITE_PERMISSIONS = [
+  'android.permission.health.WRITE_EXERCISE',
+  'android.permission.health.WRITE_ACTIVE_CALORIES_BURNED',
+];
 
 export class HealthConnectService extends BaseHealthService {
   private permissionStatus: IHealthPermissionStatus = {
@@ -56,14 +62,22 @@ export class HealthConnectService extends BaseHealthService {
         return false;
       }
 
-      // Build permissions array
-      const permissions = dataTypes
-        .map((type) => PERMISSION_MAP[type])
+      // Build read permissions array
+      const readPermissions = dataTypes
+        .map((type) => READ_PERMISSION_MAP[type])
         .filter(Boolean)
         .map((permission) => ({ accessType: 'read', recordType: permission }));
 
+      // Add write permissions for workouts export
+      const writePermissions = WRITE_PERMISSIONS.map((permission) => ({
+        accessType: 'write',
+        recordType: permission,
+      }));
+
+      const allPermissions = [...readPermissions, ...writePermissions];
+
       // Request permissions
-      const granted = await requestPermission(permissions as any);
+      const granted = await requestPermission(allPermissions as any);
 
       // Update permission status based on granted permissions
       this.permissionStatus = {

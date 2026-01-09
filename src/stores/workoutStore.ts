@@ -12,8 +12,9 @@ interface WorkoutState {
 
   setWorkouts: (workouts: IWorkout[]) => void;
   startWorkout: (workout: Omit<IWorkout, 'id' | 'startedAt' | 'status'>) => void;
-  endWorkout: () => void;
+  endWorkout: () => IWorkout | null;
   cancelWorkout: () => void;
+  getLastWorkoutDate: () => Date | null;
 
   addExercise: (exercise: Omit<IExercise, 'id'>) => void;
   removeExercise: (exerciseId: string) => void;
@@ -62,7 +63,7 @@ export const useWorkoutStore = create<WorkoutState>()(
 
       endWorkout: () => {
         const { activeWorkout, workouts } = get();
-        if (!activeWorkout) return;
+        if (!activeWorkout) return null;
 
         const totalVolume = activeWorkout.exercises.reduce((total, exercise) => {
           return (
@@ -90,6 +91,8 @@ export const useWorkoutStore = create<WorkoutState>()(
           restTimerActive: false,
           restTimeRemaining: 0,
         });
+
+        return finishedWorkout;
       },
 
       cancelWorkout: () => {
@@ -241,6 +244,25 @@ export const useWorkoutStore = create<WorkoutState>()(
 
       getWorkoutById: (id) => {
         return get().workouts.find((w) => w.id === id);
+      },
+
+      getLastWorkoutDate: () => {
+        const completedWorkouts = get().workouts.filter((w) => w.status === 'completed');
+        if (completedWorkouts.length === 0) return null;
+
+        const sortedWorkouts = completedWorkouts.sort((a, b) => {
+          const dateA = a.finishedAt ? new Date(a.finishedAt).getTime() : 0;
+          const dateB = b.finishedAt ? new Date(b.finishedAt).getTime() : 0;
+          return dateB - dateA;
+        });
+
+        // Return the second-to-last workout date (the one before the current)
+        // because the current workout is already added when this is called
+        if (sortedWorkouts.length >= 2) {
+          return sortedWorkouts[1].finishedAt ? new Date(sortedWorkouts[1].finishedAt) : null;
+        }
+
+        return null;
       },
     }),
     {
