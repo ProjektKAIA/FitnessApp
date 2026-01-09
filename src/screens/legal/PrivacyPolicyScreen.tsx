@@ -1,5 +1,7 @@
+// /workspaces/claude-workspace/fitnessapp/src/screens/legal/PrivacyPolicyScreen.tsx
+
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT_SIZES, SPACING } from '@/constants';
@@ -8,6 +10,10 @@ import { useTheme } from '@/contexts';
 export const PrivacyPolicyScreen: React.FC = () => {
   const navigation = useNavigation();
   const { colors } = useTheme();
+
+  const handleEmailPress = () => {
+    Linking.openURL('mailto:info@kaiashapes.de');
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.surface }]} edges={['top']}>
@@ -31,7 +37,7 @@ export const PrivacyPolicyScreen: React.FC = () => {
         <Text style={[styles.subTitle, { color: colors.text }]}>Allgemeine Hinweise</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren
-          personenbezogenen Daten passiert, wenn Sie diese App nutzen. Personenbezogene
+          personenbezogenen Daten passiert, wenn Sie die FrameFit App nutzen. Personenbezogene
           Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.
         </Text>
 
@@ -48,46 +54,75 @@ export const PrivacyPolicyScreen: React.FC = () => {
           dieser Daten erfolgt automatisch, sobald Sie die App nutzen.
         </Text>
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>2. Allgemeine Hinweise und Pflichtinformationen</Text>
-
-        <Text style={[styles.subTitle, { color: colors.text }]}>Datenschutz</Text>
-        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Die Betreiber dieser App nehmen den Schutz Ihrer persönlichen Daten sehr ernst.
-          Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der
-          gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.
-        </Text>
-
-        <Text style={[styles.subTitle, { color: colors.text }]}>Hinweis zur verantwortlichen Stelle</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>2. Verantwortliche Stelle</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Die verantwortliche Stelle für die Datenverarbeitung ist:{'\n\n'}
-          FitnessApp GmbH{'\n'}
-          Musterstraße 123{'\n'}
-          12345 Musterstadt{'\n\n'}
-          Telefon: +49 (0) 123 456789{'\n'}
-          E-Mail: datenschutz@fitnessapp-example.de
+          KAIA by Kantarevic & Bastong GbR{'\n'}
+          Effertzfeld 10{'\n'}
+          41564 Kaarst{'\n'}
+          Deutschland{'\n\n'}
+          Telefon: +49 176 66816778{'\n'}
         </Text>
+        <TouchableOpacity onPress={handleEmailPress}>
+          <Text style={[styles.link, { color: colors.primary }]}>
+            E-Mail: info@kaiashapes.de
+          </Text>
+        </TouchableOpacity>
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>3. Datenerfassung in dieser App</Text>
 
         <Text style={[styles.subTitle, { color: colors.text }]}>Welche Daten werden erfasst?</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          • Kontodaten (E-Mail-Adresse, Name){'\n'}
-          • Trainingsdaten (Übungen, Gewichte, Wiederholungen){'\n'}
-          • Körperdaten (Gewicht, sofern eingegeben){'\n'}
-          • Geräteinformationen (Gerätetyp, Betriebssystem){'\n'}
-          • Nutzungsstatistiken (anonymisiert)
+          • <Text style={styles.bold}>Kontodaten:</Text> E-Mail-Adresse, Name, Profilbild (optional){'\n'}
+          • <Text style={styles.bold}>Profildaten:</Text> Geburtsdatum, Gewicht, Größe (optional){'\n'}
+          • <Text style={styles.bold}>Trainingsdaten:</Text> Workouts, Übungen, Gewichte, Wiederholungen, Sätze{'\n'}
+          • <Text style={styles.bold}>Gesundheitsdaten:</Text> Daten aus Apple Health / Health Connect (nur mit Ihrer Zustimmung){'\n'}
+          • <Text style={styles.bold}>Geräteinformationen:</Text> Gerätetyp, Betriebssystem, App-Version{'\n'}
+          • <Text style={styles.bold}>Nutzungsstatistiken:</Text> App-Nutzung (anonymisiert)
         </Text>
 
         <Text style={[styles.subTitle, { color: colors.text }]}>Wofür nutzen wir Ihre Daten?</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          • Bereitstellung der App-Funktionen{'\n'}
-          • Synchronisierung Ihrer Trainingsdaten{'\n'}
+          • Bereitstellung der App-Funktionen (Workout-Tracking, Fortschrittsverfolgung){'\n'}
+          • Synchronisierung Ihrer Trainingsdaten über Cloud-Backup (iCloud/Google Drive){'\n'}
+          • Personalisierte Trainingsempfehlungen durch KI-Coach (optional){'\n'}
+          • Integration mit Yoga-, Lauf- und Calisthenics-Funktionen{'\n'}
           • Verbesserung unserer Services{'\n'}
-          • Personalisierte Trainingsempfehlungen (optional){'\n'}
-          • Anzeige von Werbung (kann deaktiviert werden)
+          • Anzeige von Werbung (kann in den Geräteeinstellungen eingeschränkt werden)
         </Text>
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>4. Ihre Rechte</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>4. Gesundheitsdaten</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
+          Die App kann mit Apple Health (iOS) bzw. Health Connect (Android) verbunden werden.
+          Dies geschieht nur mit Ihrer ausdrücklichen Zustimmung.{'\n\n'}
+          <Text style={styles.bold}>Welche Gesundheitsdaten werden verarbeitet?</Text>{'\n'}
+          • Schritte und zurückgelegte Distanz{'\n'}
+          • Verbrannte Kalorien{'\n'}
+          • Herzfrequenz und Ruheherzfrequenz{'\n'}
+          • Workout-Daten{'\n\n'}
+          Diese Daten werden lokal auf Ihrem Gerät gespeichert und nur bei aktiviertem
+          Cloud-Backup synchronisiert. Sie können die Verbindung jederzeit in den
+          App-Einstellungen trennen.
+        </Text>
+
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>5. Cloud-Synchronisation</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
+          Die App bietet die Möglichkeit, Ihre Daten in der Cloud zu sichern:{'\n\n'}
+          • <Text style={styles.bold}>iOS:</Text> iCloud Drive{'\n'}
+          • <Text style={styles.bold}>Android:</Text> Google Drive{'\n\n'}
+          Die Cloud-Synchronisation ist optional und kann jederzeit in den Einstellungen
+          aktiviert oder deaktiviert werden. Ihre Daten werden verschlüsselt übertragen.
+        </Text>
+
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>6. KI-Funktionen</Text>
+        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
+          Die App bietet optionale KI-gestützte Funktionen (z.B. KI-Coach, Trainingsplan-Import).
+          Bei Nutzung dieser Funktionen werden relevante Daten an den Dienst OpenAI übermittelt.{'\n\n'}
+          Die Nutzung der KI-Funktionen ist freiwillig. Sie können einen eigenen OpenAI API-Key
+          in den Einstellungen hinterlegen.
+        </Text>
+
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>7. Ihre Rechte</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Sie haben jederzeit das Recht:{'\n\n'}
           • <Text style={styles.bold}>Auskunft</Text> über Ihre gespeicherten Daten zu erhalten{'\n'}
@@ -95,42 +130,53 @@ export const PrivacyPolicyScreen: React.FC = () => {
           • <Text style={styles.bold}>Löschung</Text> Ihrer Daten zu verlangen{'\n'}
           • <Text style={styles.bold}>Einschränkung</Text> der Verarbeitung zu verlangen{'\n'}
           • <Text style={styles.bold}>Widerspruch</Text> gegen die Verarbeitung einzulegen{'\n'}
-          • <Text style={styles.bold}>Datenübertragbarkeit</Text> zu verlangen
+          • <Text style={styles.bold}>Datenübertragbarkeit</Text> zu verlangen{'\n\n'}
+          Sie können Ihr Konto und alle zugehörigen Daten jederzeit in den App-Einstellungen
+          unter "Konto löschen" vollständig entfernen.
         </Text>
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>5. Werbung und Tracking</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>8. Werbung und Tracking</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Diese App zeigt Werbung an, um kostenlos zu bleiben. Für personalisierte Werbung
-          werden anonymisierte Nutzungsdaten verwendet.{'\n\n'}
-          Sie können die Verwendung Ihrer Daten für personalisierte Werbung jederzeit in
-          den App-Einstellungen oder in den Systemeinstellungen Ihres Geräts deaktivieren.
+          Diese App zeigt Werbung an, um kostenlos zu bleiben. Wir nutzen das App Tracking
+          Transparency Framework von Apple, um Ihre Zustimmung für personalisierte Werbung
+          einzuholen.{'\n\n'}
+          Sie können die Verwendung Ihrer Daten für personalisierte Werbung jederzeit
+          ablehnen oder in den Systemeinstellungen Ihres Geräts ändern.{'\n\n'}
+          <Text style={styles.bold}>Affiliate-Links:</Text> Die App enthält Affiliate-Links zu
+          Partnern. Bei Klick auf diese Links werden Sie auf externe Websites weitergeleitet.
+          Sie werden vor der Weiterleitung informiert.
         </Text>
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>6. Datensicherheit</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>9. Datensicherheit</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Wir nutzen innerhalb der App SSL- bzw. TLS-Verschlüsselung. Ihre Daten werden
           verschlüsselt übertragen und auf sicheren Servern gespeichert.{'\n\n'}
-          Trotz regelmäßiger Kontrollen ist ein vollständiger Schutz vor allen Gefahren
-          nicht möglich.
+          Lokale Daten werden auf Ihrem Gerät in verschlüsseltem Speicher (AsyncStorage)
+          abgelegt. Bei aktiviertem Cloud-Backup werden die Daten zusätzlich in Ihrem
+          persönlichen Cloud-Speicher gesichert.
         </Text>
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>7. Drittanbieter</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>10. Drittanbieter</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Wir nutzen folgende Drittanbieter-Dienste:{'\n\n'}
           • <Text style={styles.bold}>Firebase (Google)</Text> - Authentifizierung und Datenspeicherung{'\n'}
-          • <Text style={styles.bold}>OpenAI</Text> - KI-Funktionen (nur wenn aktiviert){'\n'}
-          • <Text style={styles.bold}>Werbepartner</Text> - Anzeige von Werbung
+          • <Text style={styles.bold}>Apple Health / Health Connect</Text> - Gesundheitsdaten (optional){'\n'}
+          • <Text style={styles.bold}>iCloud / Google Drive</Text> - Cloud-Backup (optional){'\n'}
+          • <Text style={styles.bold}>OpenAI</Text> - KI-Funktionen (optional){'\n'}
+          • <Text style={styles.bold}>YouTube</Text> - Eingebettete Trainingsvideos (Yoga, Calisthenics){'\n'}
+          • <Text style={styles.bold}>ESN und weitere Partner</Text> - Affiliate-Werbung
         </Text>
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>8. Änderungen</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>11. Änderungen</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen.
+          Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen, um sie
+          an geänderte rechtliche Rahmenbedingungen oder Änderungen der App anzupassen.
           Die aktuelle Version finden Sie stets in der App.
         </Text>
 
         <View style={[styles.footer, { borderTopColor: colors.border }]}>
           <Text style={[styles.footerText, { color: colors.textSecondary }]}>
-            Stand: Januar 2025
+            Stand: 09. Januar 2026
           </Text>
         </View>
       </ScrollView>
@@ -199,6 +245,10 @@ const styles = StyleSheet.create({
   bold: {
     fontWeight: '600',
     color: COLORS.gray[900],
+  },
+  link: {
+    fontSize: FONT_SIZES.base,
+    lineHeight: 22,
   },
   footer: {
     marginTop: SPACING['3xl'],

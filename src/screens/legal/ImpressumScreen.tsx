@@ -1,5 +1,7 @@
+// /workspaces/claude-workspace/fitnessapp/src/screens/legal/ImpressumScreen.tsx
+
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT_SIZES, SPACING } from '@/constants';
@@ -8,6 +10,22 @@ import { useTheme } from '@/contexts';
 export const ImpressumScreen: React.FC = () => {
   const navigation = useNavigation();
   const { colors } = useTheme();
+
+  const handleEmailPress = () => {
+    Linking.openURL('mailto:info@kaiashapes.de');
+  };
+
+  const handlePhonePress = () => {
+    Linking.openURL('tel:+4917666816778');
+  };
+
+  const handleWebsitePress = () => {
+    Linking.openURL('https://kaiashapes.de');
+  };
+
+  const handleOSPlatformPress = () => {
+    Linking.openURL('https://ec.europa.eu/consumers/odr/');
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.surface }]} edges={['top']}>
@@ -26,48 +44,64 @@ export const ImpressumScreen: React.FC = () => {
       >
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Angaben gemäß § 5 TMG</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          FitnessApp GmbH{'\n'}
-          Musterstraße 123{'\n'}
-          12345 Musterstadt{'\n'}
+          KAIA by Kantarevic & Bastong GbR{'\n'}
+          Effertzfeld 10{'\n'}
+          41564 Kaarst{'\n'}
           Deutschland
         </Text>
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Vertreten durch</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Geschäftsführer: Max Mustermann
+          Amel Kantarevic{'\n'}
+          Marie Julie Bastong
         </Text>
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Kontakt</Text>
-        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Telefon: +49 (0) 123 456789{'\n'}
-          E-Mail: info@fitnessapp-example.de{'\n'}
-          Website: www.fitnessapp-example.de
-        </Text>
+        <View style={styles.contactContainer}>
+          <TouchableOpacity onPress={handlePhonePress}>
+            <Text style={[styles.link, { color: colors.primary }]}>
+              Telefon: +49 176 66816778
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleEmailPress}>
+            <Text style={[styles.link, { color: colors.primary }]}>
+              E-Mail: info@kaiashapes.de
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleWebsitePress}>
+            <Text style={[styles.link, { color: colors.primary }]}>
+              Website: www.kaiashapes.de
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Registereintrag</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Eintragung im Handelsregister{'\n'}
-          Registergericht: Amtsgericht Musterstadt{'\n'}
-          Registernummer: HRB 12345
+          Zuständiges Registergericht: Amtsgericht Neuss
         </Text>
 
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Umsatzsteuer-ID</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Umsatzsteuer</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:{'\n'}
-          DE123456789
+          Umsatzsteuerbefreit nach § 19 UStG (Kleinunternehmerregelung)
         </Text>
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Max Mustermann{'\n'}
-          Musterstraße 123{'\n'}
-          12345 Musterstadt
+          Amel Kantarevic{'\n'}
+          Effertzfeld 10{'\n'}
+          41564 Kaarst
         </Text>
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Streitschlichtung</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS)
-          bereit: https://ec.europa.eu/consumers/odr/{'\n\n'}
+          Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
+        </Text>
+        <TouchableOpacity onPress={handleOSPlatformPress}>
+          <Text style={[styles.link, { color: colors.primary }]}>
+            https://ec.europa.eu/consumers/odr/
+          </Text>
+        </TouchableOpacity>
+        <Text style={[styles.paragraph, { color: colors.textSecondary, marginTop: SPACING.sm }]}>
           Unsere E-Mail-Adresse finden Sie oben im Impressum.{'\n\n'}
           Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
           Verbraucherschlichtungsstelle teilzunehmen.
@@ -117,7 +151,7 @@ export const ImpressumScreen: React.FC = () => {
 
         <View style={[styles.footer, { borderTopColor: colors.border }]}>
           <Text style={[styles.footerText, { color: colors.textSecondary }]}>
-            Stand: Januar 2025
+            Stand: Januar 2026
           </Text>
         </View>
       </ScrollView>
@@ -168,6 +202,13 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: FONT_SIZES.base,
     color: COLORS.gray[700],
+    lineHeight: 22,
+  },
+  contactContainer: {
+    gap: SPACING.xs,
+  },
+  link: {
+    fontSize: FONT_SIZES.base,
     lineHeight: 22,
   },
   footer: {
