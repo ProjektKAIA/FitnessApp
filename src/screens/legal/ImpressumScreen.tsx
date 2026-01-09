@@ -82,7 +82,8 @@ export const ImpressumScreen: React.FC = () => {
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Umsatzsteuer</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Umsatzsteuerbefreit nach § 19 UStG (Kleinunternehmerregelung)
+          Umsatzsteuer-Identifikationsnummer gemäß § 27 a UStG:{'\n'}
+          wird nach Erteilung ergänzt
         </Text>
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</Text>
