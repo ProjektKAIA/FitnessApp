@@ -251,6 +251,8 @@ const de = {
     importDataSubtitle: 'Aus anderen Apps importieren',
     backupData: 'Datensicherung',
     backupDataSubtitle: 'In iCloud oder Google Drive sichern',
+    cloudSync: 'Cloud-Sync',
+    cloudSyncDisabled: 'Deaktiviert',
     deleteAccount: 'Konto löschen',
     deleteAccountSubtitle: 'Permanent löschen',
 

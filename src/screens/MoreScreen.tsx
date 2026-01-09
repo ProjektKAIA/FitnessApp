@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { FONT_SIZES, SPACING, BORDER_RADIUS, APP_VERSION } from '@/constants';
 import { Card } from '@/components/common';
 import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
-import { useUserStore, useLanguageStore, SUPPORTED_LANGUAGES } from '@/stores';
+import { useUserStore, useLanguageStore, SUPPORTED_LANGUAGES, useBackupStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
 import { useTheme } from '@/contexts';
 import { RootStackParamList, IUserSettings } from '@/types';
@@ -165,6 +165,31 @@ export const MoreScreen: React.FC = () => {
 
   const healthEnabled = useHealthStore((state) => state.settings.enabled);
 
+  // Backup Store
+  const isCloudConnected = useBackupStore((state) => state.isCloudConnected);
+  const setCloudConnected = useBackupStore((state) => state.setCloudConnected);
+  const setStorageType = useBackupStore((state) => state.setStorageType);
+
+  const handleToggleCloudSync = () => {
+    const newValue = !isCloudConnected;
+    setCloudConnected(newValue);
+
+    if (newValue) {
+      // Set storage type based on platform
+      const cloudType = Platform.OS === 'ios' ? 'icloud' : 'gdrive';
+      setStorageType(cloudType);
+    } else {
+      setStorageType('local');
+    }
+  };
+
+  const getCloudSyncSubtitle = (): string => {
+    if (!isCloudConnected) {
+      return t('more.cloudSyncDisabled');
+    }
+    return Platform.OS === 'ios' ? 'iCloud' : 'Google Drive';
+  };
+
   const getThemeLabel = (): string => {
     switch (themeSetting) {
       case 'light':
@@ -263,14 +288,6 @@ export const MoreScreen: React.FC = () => {
               {user?.email || t('more.notLoggedIn')}
             </Text>
           </View>
-          <TouchableOpacity
-            style={[styles.editButton, { backgroundColor: colors.surfaceElevated }]}
-            onPress={() => navigation.navigate('ProfileEdit')}
-          >
-            <Text style={[styles.editButtonText, { color: colors.primary }]}>
-              {t('more.edit')}
-            </Text>
-          </TouchableOpacity>
         </Card>
 
         <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
@@ -365,6 +382,21 @@ export const MoreScreen: React.FC = () => {
           {t('more.data')}
         </Text>
         <Card style={[styles.menuCard, { backgroundColor: colors.card }]}>
+          <MenuItem
+            icon="☁️"
+            title={t('more.cloudSync')}
+            subtitle={getCloudSyncSubtitle()}
+            showArrow={false}
+            rightElement={
+              <Switch
+                value={isCloudConnected}
+                onValueChange={handleToggleCloudSync}
+                trackColor={{ false: colors.border, true: colors.primary }}
+                thumbColor={colors.surface}
+              />
+            }
+            {...menuItemProps}
+          />
           <MenuItem
             icon="📤"
             title={t('more.exportData')}
@@ -510,15 +542,6 @@ const styles = StyleSheet.create({
   profileEmail: {
     fontSize: FONT_SIZES.sm,
     marginTop: 2,
-  },
-  editButton: {
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    borderRadius: BORDER_RADIUS.md,
-  },
-  editButtonText: {
-    fontSize: FONT_SIZES.sm,
-    fontWeight: '500',
   },
   sectionTitle: {
     fontSize: FONT_SIZES.sm,
