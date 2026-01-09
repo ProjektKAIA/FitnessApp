@@ -151,13 +151,10 @@ export const HomeScreen: React.FC = () => {
               isActive={!!activeWorkout}
               onPress={handleStartWorkout}
             />
-            <StreakGoalTile
-              size="1x1"
-              currentStreak={stats.currentStreak}
-              longestStreak={stats.longestStreak}
-              weeklyGoalCurrent={stats.thisWeekWorkouts}
-              weeklyGoalTarget={weeklyGoal}
-              onPress={handleStreakGoalPress}
+            <DirectionTile
+              direction="gym"
+              workoutsCount={directionCounts.gym}
+              onPress={() => handleDirectionPress('gym')}
             />
             <DirectionTile
               direction="running"
@@ -186,10 +183,13 @@ export const HomeScreen: React.FC = () => {
           )}
 
           <View style={styles.row}>
-            <DirectionTile
-              direction="gym"
-              workoutsCount={directionCounts.gym}
-              onPress={() => handleDirectionPress('gym')}
+            <StreakGoalTile
+              size="1x1"
+              currentStreak={stats.currentStreak}
+              longestStreak={stats.longestStreak}
+              weeklyGoalCurrent={stats.thisWeekWorkouts}
+              weeklyGoalTarget={weeklyGoal}
+              onPress={handleStreakGoalPress}
             />
             <DirectionTile
               direction="yoga"
