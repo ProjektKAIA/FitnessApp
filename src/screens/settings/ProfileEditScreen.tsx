@@ -133,6 +133,7 @@ export const ProfileEditScreen: React.FC = () => {
       const weightValue = weight ? parseFloat(weight) : undefined;
       const heightValue = height ? parseFloat(height) : undefined;
 
+      // Update profile data
       updateProfile({
         name: name.trim(),
         avatarUrl: avatarUrl || undefined,
@@ -141,15 +142,20 @@ export const ProfileEditScreen: React.FC = () => {
         height: heightValue,
       });
 
+      // Update weekly goal
       setWeeklyGoal(selectedGoal);
+
+      // Give AsyncStorage time to persist (100ms should be enough)
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       navigation.goBack();
     } catch (error) {
+      console.error('[ProfileEditScreen] Save error:', error);
       Alert.alert(t('common.error'), t('profile.saveError'));
     } finally {
       setIsSaving(false);
     }
-  }, [name, avatarUrl, birthday, weight, height, updateProfile, navigation, t]);
+  }, [name, avatarUrl, birthday, weight, height, selectedGoal, updateProfile, setWeeklyGoal, navigation, t]);
 
   const calculateAge = (birthDate: Date): number => {
     const today = new Date();
