@@ -11,6 +11,7 @@ interface Props {
   ctaText?: string;
   onPress?: () => void;
   onClose?: () => void;
+  transparent?: boolean;
 }
 
 const AD_IMAGES: Record<string, string> = {
@@ -34,6 +35,7 @@ export const AdTile: React.FC<Props> = ({
   ctaText = 'Mehr',
   onPress,
   onClose,
+  transparent = false,
 }) => {
   const isCompact = size === '1x1';
   const isMedium = size === '2x1';
@@ -51,12 +53,16 @@ export const AdTile: React.FC<Props> = ({
     return AD_IMAGES.default;
   };
 
+  const gradientColors = transparent
+    ? ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.7)'] as [string, string]
+    : GRADIENT_COLORS[size] || GRADIENT_COLORS['3x1'];
+
   return (
     <BaseTile
       size={size}
       onPress={onPress}
       backgroundImage={getImageUrl()}
-      gradientColors={GRADIENT_COLORS[size] || GRADIENT_COLORS['3x1']}
+      gradientColors={gradientColors}
     >
       <View style={[styles.container, isCompact && styles.containerCompact]}>
         {onClose && !isCompact && (

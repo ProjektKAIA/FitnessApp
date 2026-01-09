@@ -180,11 +180,13 @@ export const HomeScreen: React.FC = () => {
               size="1x1"
               title={t('guide.nutrition.supplements')}
               onPress={() => navigation.navigate('Guide')}
+              transparent
             />
             <AdTile
               size="1x1"
               title="10% auf ESN"
               onPress={() => handleAffiliateAdPress('https://www.esn.com', 'ESN')}
+              transparent
             />
           </View>
 
@@ -203,6 +205,7 @@ export const HomeScreen: React.FC = () => {
               size="1x1"
               title={t('home.ads.plans.title')}
               onPress={() => navigation.navigate('TrainingPlanList')}
+              transparent
             />
           </View>
 
@@ -211,6 +214,7 @@ export const HomeScreen: React.FC = () => {
               size="1x1"
               title={t('home.ads.import.title')}
               onPress={() => navigation.navigate('ChatGPTImport')}
+              transparent
             />
             <DirectionTile
               direction="custom"
@@ -223,6 +227,7 @@ export const HomeScreen: React.FC = () => {
               size="1x1"
               title={t('home.ads.health.title')}
               onPress={() => navigation.navigate('HealthSettings')}
+              transparent
             />
           </View>
 
