@@ -63,6 +63,8 @@ import {
   YogaPoseDetailScreen,
   // Calisthenics Screens
   CalisthenicsHomeScreen,
+  // Homeworkout Screens
+  HomeworkoutHomeScreen,
 } from '@/screens';
 import { BottomNav } from '@/components/navigation';
 import { ErrorBoundary, LoadingScreen } from '@/components/common';
@@ -534,6 +536,16 @@ export default function App() {
                 <Stack.Screen
                   name="CalisthenicsHome"
                   component={CalisthenicsHomeScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+
+                {/* Homeworkout Screens */}
+                <Stack.Screen
+                  name="HomeworkoutHome"
+                  component={HomeworkoutHomeScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',

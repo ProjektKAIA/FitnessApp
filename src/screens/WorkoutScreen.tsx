@@ -70,6 +70,24 @@ export const WorkoutScreen: React.FC = () => {
       color: COLORS.purple,
       available: true,
     },
+    {
+      type: 'calisthenics',
+      title: t('sportTypes.calisthenics'),
+      subtitle: t('workout.sportCards.calisthenicsDesc'),
+      icon: '🤸',
+      image: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=800',
+      color: COLORS.warning,
+      available: true,
+    },
+    {
+      type: 'homeworkout',
+      title: t('homeworkout.title'),
+      subtitle: t('homeworkout.subtitle'),
+      icon: '🏠',
+      image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800',
+      color: COLORS.success,
+      available: true,
+    },
   ];
 
   const handleSportPress = (sport: SportCardData) => {
@@ -84,6 +102,12 @@ export const WorkoutScreen: React.FC = () => {
         break;
       case 'yoga':
         navigation.navigate('YogaHome');
+        break;
+      case 'calisthenics':
+        navigation.navigate('CalisthenicsHome');
+        break;
+      case 'homeworkout':
+        navigation.navigate('HomeworkoutHome');
         break;
       default:
         navigation.navigate('SportSelection');

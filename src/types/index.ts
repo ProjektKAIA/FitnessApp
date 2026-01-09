@@ -189,6 +189,8 @@ export type TSportType =
   | 'martial_arts'
   | 'swimming'
   | 'yoga'
+  | 'calisthenics'
+  | 'homeworkout'
   | 'custom';
 
 export type TTrainingDay = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
@@ -466,6 +468,8 @@ export type RootStackParamList = {
   YogaProgramDetail: { programId: string };
   // Calisthenics Screens
   CalisthenicsHome: undefined;
+  // Homeworkout Screens
+  HomeworkoutHome: undefined;
 };
 
 export type OnboardingStackParamList = {

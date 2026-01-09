@@ -10,6 +10,8 @@ interface Props {
   isSelected?: boolean;
   workoutsCount?: number;
   onPress?: () => void;
+  customTitle?: string;
+  customImage?: string;
 }
 
 const DIRECTION_CONFIG: Record<TDirection, { icon: string; label: string; image: string }> = {
@@ -56,14 +58,18 @@ export const DirectionTile: React.FC<Props> = ({
   isSelected = false,
   workoutsCount,
   onPress,
+  customTitle,
+  customImage,
 }) => {
   const config = DIRECTION_CONFIG[direction];
+  const displayTitle = customTitle || config.label;
+  const displayImage = customImage || config.image;
 
   return (
     <BaseTile
       size={size}
       onPress={onPress}
-      backgroundImage={config.image}
+      backgroundImage={displayImage}
       gradientColors={
         isSelected
           ? ['rgba(33,150,243,0.5)', 'rgba(33,150,243,0.85)']
@@ -71,8 +77,8 @@ export const DirectionTile: React.FC<Props> = ({
       }
     >
       <View style={styles.container}>
-        <Text style={styles.label}>{config.label}</Text>
-        {workoutsCount !== undefined && (
+        <Text style={styles.label}>{displayTitle}</Text>
+        {workoutsCount !== undefined && workoutsCount > 0 && (
           <Text style={styles.count}>{workoutsCount}</Text>
         )}
       </View>

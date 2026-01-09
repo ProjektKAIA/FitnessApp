@@ -227,12 +227,12 @@ export const HomeScreen: React.FC = () => {
               title={t('home.ads.import.title')}
               onPress={() => navigation.navigate('ChatGPTImport')}
             />
-            <StatTile
-              label={t('home.totalVolume')}
-              value={Math.round(stats.totalVolume / 1000)}
-              unit="k"
-              icon="🏋️"
-              onPress={handleNavigateToProgress}
+            <DirectionTile
+              direction="custom"
+              workoutsCount={0}
+              onPress={() => navigation.navigate('HomeworkoutHome')}
+              customTitle={t('homeworkout.title')}
+              customImage="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800"
             />
             <AdTile
               size="1x1"

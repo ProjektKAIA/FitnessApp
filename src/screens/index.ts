@@ -57,3 +57,4 @@ export {
   YogaPoseDetailScreen,
 } from './yoga';
 export { CalisthenicsHomeScreen } from './calisthenics';
+export { HomeworkoutHomeScreen } from './homeworkout';

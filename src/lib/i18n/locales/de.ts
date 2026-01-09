@@ -103,6 +103,7 @@ const de = {
       fitnessDesc: 'Krafttraining & Muskelaufbau',
       runningDesc: 'Lauftraining & Ausdauer',
       yogaDesc: 'Flexibilität & Entspannung',
+      calisthenicsDesc: 'Bodyweight & Körperkontrolle',
     },
   },
 
@@ -1297,6 +1298,21 @@ const de = {
     videoError: 'Video nicht verfügbar',
     videoErrorDesc: 'Das Video konnte nicht geöffnet werden.',
     videoDisclaimer: 'Diese Videos sind keine Kooperationen, sondern aus persönlichem Empfinden für gut befunden.',
+  },
+
+  // Homeworkout
+  homeworkout: {
+    title: 'Home Workout',
+    subtitle: 'Trainiere überall ohne Equipment',
+    noEquipment: 'Kein Equipment nötig',
+    noEquipmentDesc: 'Alle Workouts funktionieren nur mit deinem Körpergewicht',
+    categories: 'Kategorien',
+    workouts: 'Workouts',
+    videoError: 'Video nicht verfügbar',
+    videoErrorMessage: 'Das Video konnte nicht geöffnet werden.',
+    disclaimerButton: 'Hinweise zu den Videos',
+    disclaimerTitle: 'Hinweis',
+    disclaimerText: 'Die Videos stammen von unabhängigen YouTube-Creatorn. Wir übernehmen keine Verantwortung für die Inhalte. Trainiere immer verantwortungsvoll und höre auf deinen Körper.',
   },
 
   // Guide Screen
