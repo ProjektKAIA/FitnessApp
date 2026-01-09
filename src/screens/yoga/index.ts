@@ -4,3 +4,4 @@ export { YogaHomeScreen } from './YogaHomeScreen';
 export { YogaSessionListScreen } from './YogaSessionListScreen';
 export { YogaSessionDetailScreen } from './YogaSessionDetailScreen';
 export { YogaPoseDetailScreen } from './YogaPoseDetailScreen';
+export { YogaActiveScreen } from './YogaActiveScreen';

@@ -95,7 +95,7 @@ export const WorkoutScreen: React.FC = () => {
 
     switch (sport.type) {
       case 'fitness':
-        navigation.navigate('SportSelection');
+        navigation.navigate('TrainingPlanList');
         break;
       case 'running':
         navigation.navigate('RunningHome');

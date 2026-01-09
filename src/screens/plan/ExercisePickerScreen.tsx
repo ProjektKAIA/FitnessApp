@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react';
+// /workspaces/claude-workspace/fitnessapp/src/screens/plan/ExercisePickerScreen.tsx
+
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,6 +9,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
+import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -22,6 +25,20 @@ import { useTrainingPlanStore, GYM_EXERCISES } from '@/stores';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type RouteProps = RouteProp<RootStackParamList, 'ExercisePicker'>;
+
+// Item types for FlashList
+type ListItemType = 'header' | 'exercise';
+interface HeaderItem {
+  type: 'header';
+  muscleGroup: string;
+  count: number;
+  color: string;
+}
+interface ExerciseItem {
+  type: 'exercise';
+  exercise: IExerciseTemplate;
+}
+type ListItem = HeaderItem | ExerciseItem;
 
 const MUSCLE_GROUPS: { value: TMuscleGroup | 'all'; labelKey: string; color: string }[] = [
   { value: 'all', labelKey: 'muscleGroups.all', color: COLORS.gray[700] },
@@ -64,7 +81,17 @@ export const ExercisePickerScreen: React.FC = () => {
     });
   }, [allExercises, searchQuery, selectedMuscleGroup]);
 
-  const groupedExercises = useMemo(() => {
+  // Flatten data for FlashList with section headers
+  const listData = useMemo((): ListItem[] => {
+    if (selectedMuscleGroup !== 'all') {
+      // No headers needed when filtering by muscle group
+      return filteredExercises.map((exercise) => ({
+        type: 'exercise' as const,
+        exercise,
+      }));
+    }
+
+    // Group exercises by muscle group and create flattened list with headers
     const grouped: Record<string, IExerciseTemplate[]> = {};
     filteredExercises.forEach((exercise) => {
       const group = exercise.muscleGroup;
@@ -73,10 +100,25 @@ export const ExercisePickerScreen: React.FC = () => {
       }
       grouped[group].push(exercise);
     });
-    return grouped;
-  }, [filteredExercises]);
 
-  const handleSelectExercise = (exercise: IExerciseTemplate) => {
+    const items: ListItem[] = [];
+    Object.entries(grouped).forEach(([muscleGroup, exercises]) => {
+      const groupInfo = MUSCLE_GROUPS.find((g) => g.value === muscleGroup);
+      items.push({
+        type: 'header',
+        muscleGroup,
+        count: exercises.length,
+        color: groupInfo?.color || COLORS.gray[500],
+      });
+      exercises.forEach((exercise) => {
+        items.push({ type: 'exercise', exercise });
+      });
+    });
+
+    return items;
+  }, [filteredExercises, selectedMuscleGroup]);
+
+  const handleSelectExercise = useCallback((exercise: IExerciseTemplate) => {
     addExerciseToWorkout(planId, day, {
       exerciseId: exercise.id,
       name: exercise.name,
@@ -86,24 +128,79 @@ export const ExercisePickerScreen: React.FC = () => {
       restTime: 90,
     });
     navigation.goBack();
-  };
+  }, [addExerciseToWorkout, planId, day, navigation]);
 
-  const handleShowDetails = (exerciseId: string) => {
+  const handleShowDetails = useCallback((exerciseId: string) => {
     navigation.navigate('ExerciseDetail', { exerciseId });
-  };
+  }, [navigation]);
 
-  const getMuscleGroupColor = (muscleGroup: string): string => {
-    const group = MUSCLE_GROUPS.find((g) => g.value === muscleGroup);
-    return group?.color || COLORS.gray[500];
-  };
+  const renderItem: ListRenderItem<ListItem> = useCallback(({ item }) => {
+    if (item.type === 'header') {
+      return (
+        <View style={styles.sectionHeader}>
+          <View style={[styles.sectionIndicator, { backgroundColor: item.color }]} />
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            {t(`muscleGroups.${item.muscleGroup}`)}
+          </Text>
+          <Text style={[styles.sectionCount, { color: colors.textTertiary }]}>{item.count}</Text>
+        </View>
+      );
+    }
+
+    const { exercise } = item;
+    return (
+      <View style={[styles.exerciseItem, { backgroundColor: colors.surface }]}>
+        <TouchableOpacity
+          style={styles.exerciseInfo}
+          onPress={() => handleShowDetails(exercise.id)}
+        >
+          <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
+          {exercise.category && (
+            <Text style={[styles.exerciseCategory, { color: colors.textSecondary }]}>
+              {t(`exerciseCategories.${exercise.category}`)}
+            </Text>
+          )}
+        </TouchableOpacity>
+        <View style={styles.exerciseActions}>
+          <TouchableOpacity
+            style={[styles.infoIcon, { backgroundColor: colors.border }]}
+            onPress={() => handleShowDetails(exercise.id)}
+          >
+            <Text style={[styles.infoIconText, { color: colors.textSecondary }]}>?</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.addIcon}
+            onPress={() => handleSelectExercise(exercise)}
+          >
+            <Text style={styles.addIconText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }, [colors, t, handleShowDetails, handleSelectExercise]);
+
+  const getItemType = useCallback((item: ListItem) => item.type, []);
+
+  const keyExtractor = useCallback((item: ListItem, index: number) => {
+    if (item.type === 'header') {
+      return `header-${item.muscleGroup}`;
+    }
+    return item.exercise.id;
+  }, []);
+
+  const renderEmptyState = () => (
+    <View style={styles.emptyState}>
+      <Text style={styles.emptyIcon}>🔍</Text>
+      <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
+        {t('exercisePicker.noResults')}
+      </Text>
+    </View>
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { paddingTop: insets.top + SPACING.md, backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={[styles.backIcon, { color: colors.text }]}>{'<'}</Text>
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.text }]}>{t('exercisePicker.title')}</Text>
@@ -150,102 +247,18 @@ export const ExercisePickerScreen: React.FC = () => {
         ))}
       </ScrollView>
 
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
-        {filteredExercises.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyIcon}>🔍</Text>
-            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('exercisePicker.noResults')}</Text>
-          </View>
-        ) : selectedMuscleGroup === 'all' ? (
-          Object.entries(groupedExercises).map(([muscleGroup, exercises]) => (
-            <View key={muscleGroup} style={styles.section}>
-              <View style={styles.sectionHeader}>
-                <View
-                  style={[
-                    styles.sectionIndicator,
-                    { backgroundColor: getMuscleGroupColor(muscleGroup) },
-                  ]}
-                />
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                  {t(`muscleGroups.${muscleGroup}`)}
-                </Text>
-                <Text style={[styles.sectionCount, { color: colors.textTertiary }]}>{exercises.length}</Text>
-              </View>
-              {exercises.map((exercise) => (
-                <View
-                  key={exercise.id}
-                  style={[styles.exerciseItem, { backgroundColor: colors.surface }]}
-                >
-                  <TouchableOpacity
-                    style={styles.exerciseInfo}
-                    onPress={() => handleShowDetails(exercise.id)}
-                  >
-                    <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
-                    {exercise.category && (
-                      <Text style={[styles.exerciseCategory, { color: colors.textSecondary }]}>
-                        {t(`exerciseCategories.${exercise.category}`)}
-                      </Text>
-                    )}
-                  </TouchableOpacity>
-                  <View style={styles.exerciseActions}>
-                    <TouchableOpacity
-                      style={[styles.infoIcon, { backgroundColor: colors.border }]}
-                      onPress={() => handleShowDetails(exercise.id)}
-                    >
-                      <Text style={[styles.infoIconText, { color: colors.textSecondary }]}>?</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.addIcon}
-                      onPress={() => handleSelectExercise(exercise)}
-                    >
-                      <Text style={styles.addIconText}>+</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ))}
-            </View>
-          ))
-        ) : (
-          <View style={styles.section}>
-            {filteredExercises.map((exercise) => (
-              <View
-                key={exercise.id}
-                style={[styles.exerciseItem, { backgroundColor: colors.surface }]}
-              >
-                <TouchableOpacity
-                  style={styles.exerciseInfo}
-                  onPress={() => handleShowDetails(exercise.id)}
-                >
-                  <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
-                  {exercise.category && (
-                    <Text style={[styles.exerciseCategory, { color: colors.textSecondary }]}>
-                      {t(`exerciseCategories.${exercise.category}`)}
-                    </Text>
-                  )}
-                </TouchableOpacity>
-                <View style={styles.exerciseActions}>
-                  <TouchableOpacity
-                    style={[styles.infoIcon, { backgroundColor: colors.border }]}
-                    onPress={() => handleShowDetails(exercise.id)}
-                  >
-                    <Text style={[styles.infoIconText, { color: colors.textSecondary }]}>?</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.addIcon}
-                    onPress={() => handleSelectExercise(exercise)}
-                  >
-                    <Text style={styles.addIconText}>+</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
-          </View>
-        )}
-      </ScrollView>
+      {listData.length === 0 ? (
+        renderEmptyState()
+      ) : (
+        <View style={styles.flashListContainer}>
+          <FlashList
+            data={listData}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            getItemType={getItemType}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -324,14 +337,15 @@ const styles = StyleSheet.create({
   filterTextActive: {
     color: COLORS.white,
   },
-  scrollView: {
+  flashListContainer: {
     flex: 1,
-  },
-  content: {
-    padding: SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.lg,
   },
   emptyState: {
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: SPACING['4xl'],
   },
   emptyIcon: {
@@ -342,13 +356,11 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.base,
     color: COLORS.gray[500],
   },
-  section: {
-    marginBottom: SPACING.lg,
-  },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: SPACING.sm,
+    marginTop: SPACING.md,
   },
   sectionIndicator: {
     width: 4,

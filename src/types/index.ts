@@ -468,6 +468,8 @@ export type RootStackParamList = {
   YogaProgramDetail: { programId: string };
   // Calisthenics Screens
   CalisthenicsHome: undefined;
+  CalisthenicsWorkoutList: undefined;
+  CalisthenicsWorkoutDetail: { workoutId: string };
   // Homeworkout Screens
   HomeworkoutHome: undefined;
 };

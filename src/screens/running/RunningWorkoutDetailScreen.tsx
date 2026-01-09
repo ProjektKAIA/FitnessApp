@@ -197,7 +197,10 @@ export const RunningWorkoutDetailScreen: React.FC = () => {
         )}
 
         {/* Start Button */}
-        <TouchableOpacity style={[styles.startButton, { backgroundColor: COLORS.accent }]}>
+        <TouchableOpacity
+          style={[styles.startButton, { backgroundColor: COLORS.accent }]}
+          onPress={() => navigation.navigate('RunningWorkoutActive', { workoutId: workout.id })}
+        >
           <Text style={styles.startButtonText}>{t('running.startWorkout')}</Text>
         </TouchableOpacity>
       </ScrollView>

@@ -58,7 +58,7 @@ interface UserGoalsState {
   // Actions - Kalorien
   setDailyCalorieGoal: (goal: number) => void;
   setCalorieTarget: (target: CalorieTarget, amount: number) => void;
-  addCalorieEntry: (entry: Omit<DailyCalorieEntry, 'date'> & { date?: string }) => void;
+  addCalorieEntry: (entry: Partial<DailyCalorieEntry> & { date?: string }) => void;
   updateTodayCalories: (consumed: number) => void;
   updateTodayWorkoutCalories: (burned: number) => void;
 
@@ -122,7 +122,7 @@ export const useUserGoalsStore = create<UserGoalsState>()(
           return {
             calorieEntries: [
               ...state.calorieEntries,
-              { consumed: 0, workoutBurned: 0, ...entry, date },
+              { date, consumed: 0, workoutBurned: 0, ...entry },
             ],
           };
         }),

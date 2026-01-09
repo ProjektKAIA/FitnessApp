@@ -1,3 +1,5 @@
+// /workspaces/claude-workspace/fitnessapp/src/services/health/healthConnect.ts
+
 import {
   initialize,
   requestPermission,
@@ -18,6 +20,9 @@ import {
   THealthDataType,
 } from '@/types/health';
 import { transformHealthConnectData } from './dataTransformers';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('HealthConnect');
 
 const READ_PERMISSION_MAP: Record<THealthDataType, string> = {
   steps: 'android.permission.health.READ_STEPS',
@@ -48,7 +53,7 @@ export class HealthConnectService extends BaseHealthService {
       const status = await getSdkStatus();
       return status === SdkAvailabilityStatus.SDK_AVAILABLE;
     } catch (error) {
-      console.error('Error checking Health Connect availability:', error);
+      log.error('Error checking Health Connect availability', error);
       return false;
     }
   }
@@ -58,7 +63,7 @@ export class HealthConnectService extends BaseHealthService {
       // Initialize Health Connect
       const initialized = await initialize();
       if (!initialized) {
-        console.error('Failed to initialize Health Connect');
+        log.error('Failed to initialize Health Connect');
         return false;
       }
 
@@ -91,7 +96,7 @@ export class HealthConnectService extends BaseHealthService {
       this.initialized = true;
       return granted.length > 0;
     } catch (error) {
-      console.error('Error requesting Health Connect permissions:', error);
+      log.error('Error requesting Health Connect permissions', error);
       return false;
     }
   }
@@ -112,7 +117,7 @@ export class HealthConnectService extends BaseHealthService {
 
       return transformHealthConnectData.steps(result.records || []);
     } catch (error) {
-      console.error('Error getting steps from Health Connect:', error);
+      log.error('Error getting steps from Health Connect', error);
       return [];
     }
   }
@@ -129,7 +134,7 @@ export class HealthConnectService extends BaseHealthService {
 
       return transformHealthConnectData.distance(result.records || []);
     } catch (error) {
-      console.error('Error getting distance from Health Connect:', error);
+      log.error('Error getting distance from Health Connect', error);
       return [];
     }
   }
@@ -158,7 +163,7 @@ export class HealthConnectService extends BaseHealthService {
         activeResult.records || []
       );
     } catch (error) {
-      console.error('Error getting calories from Health Connect:', error);
+      log.error('Error getting calories from Health Connect', error);
       return [];
     }
   }
@@ -175,7 +180,7 @@ export class HealthConnectService extends BaseHealthService {
 
       return transformHealthConnectData.heartRate(result.records || []);
     } catch (error) {
-      console.error('Error getting heart rate from Health Connect:', error);
+      log.error('Error getting heart rate from Health Connect', error);
       return [];
     }
   }
@@ -192,7 +197,7 @@ export class HealthConnectService extends BaseHealthService {
 
       return transformHealthConnectData.restingHeartRate(result.records || []);
     } catch (error) {
-      console.error('Error getting resting heart rate from Health Connect:', error);
+      log.error('Error getting resting heart rate from Health Connect', error);
       return [];
     }
   }
@@ -209,7 +214,7 @@ export class HealthConnectService extends BaseHealthService {
 
       return transformHealthConnectData.workouts(result.records || []);
     } catch (error) {
-      console.error('Error getting workouts from Health Connect:', error);
+      log.error('Error getting workouts from Health Connect', error);
       return [];
     }
   }

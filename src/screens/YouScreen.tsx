@@ -1,4 +1,5 @@
 // /workspaces/claude-workspace/fitnessapp/src/screens/YouScreen.tsx
+
 import React, { useMemo, useState, useCallback } from 'react';
 import {
   View,
@@ -8,7 +9,6 @@ import {
   TouchableOpacity,
   TextInput,
   Modal,
-  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -20,54 +20,20 @@ import { useTheme } from '@/contexts';
 import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { ActivityRings, MetricCard, SectionHeader } from '@/components/progress';
 import type { RingData } from '@/components/progress/ActivityRings';
+import {
+  HealthInputModal,
+  CalorieCard,
+  GoalCard,
+  RingEditorModal,
+  RING_PRESETS,
+  type RingType,
+  type RingConfig,
+} from '@/components/you';
 import { RootStackParamList } from '@/types';
 import { useStatsStore, useUserGoalsStore, useUserStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
-// Angenehmere, moderne Farbpalette
-const RING_PRESETS = {
-  steps: {
-    color: '#6366F1', // Indigo
-    gradientEnd: '#A5B4FC',
-    icon: '👟',
-  },
-  calories: {
-    color: '#F59E0B', // Amber
-    gradientEnd: '#FCD34D',
-    icon: '🔥',
-  },
-  activeMinutes: {
-    color: '#10B981', // Emerald
-    gradientEnd: '#6EE7B7',
-    icon: '⏱️',
-  },
-  heartRate: {
-    color: '#EC4899', // Pink
-    gradientEnd: '#F9A8D4',
-    icon: '❤️',
-  },
-  distance: {
-    color: '#06B6D4', // Cyan
-    gradientEnd: '#67E8F9',
-    icon: '📍',
-  },
-  water: {
-    color: '#3B82F6', // Blue
-    gradientEnd: '#93C5FD',
-    icon: '💧',
-  },
-};
-
-type RingType = keyof typeof RING_PRESETS;
-
-interface RingConfig {
-  id: RingType;
-  enabled: boolean;
-  goal: number;
-  manualValue?: number;
-}
 
 const DEFAULT_RING_CONFIGS: RingConfig[] = [
   { id: 'steps', enabled: true, goal: 10000 },
@@ -149,11 +115,11 @@ export const YouScreen: React.FC = () => {
             unit = 'min';
             break;
           case 'heartRate':
-            value = config.manualValue ?? todaySummary?.restingHeartRate ?? 0;
+            value = config.manualValue ?? (typeof todaySummary?.restingHeartRate === 'number' ? todaySummary.restingHeartRate : 0);
             unit = 'bpm';
             break;
           case 'distance':
-            value = config.manualValue ?? (todaySummary?.distance ?? 0) / 1000;
+            value = config.manualValue ?? (typeof todaySummary?.distance === 'number' ? todaySummary.distance : 0) / 1000;
             unit = 'km';
             break;
           case 'water':
@@ -245,10 +211,6 @@ export const YouScreen: React.FC = () => {
 
   const activeGoal = goals.find((g) => !g.completed);
 
-  const availableRings = Object.keys(RING_PRESETS).filter(
-    (key) => !ringConfigs.find((c) => c.id === key)
-  ) as RingType[];
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <ScrollView
@@ -282,12 +244,11 @@ export const YouScreen: React.FC = () => {
 
         {/* Activity Rings Card */}
         <View style={styles.ringsSection}>
-          <LinearGradient
-            colors={cardGradient}
-            style={styles.ringsCard}
-          >
+          <LinearGradient colors={cardGradient} style={styles.ringsCard}>
             <View style={styles.ringsHeader}>
-              <Text style={[styles.ringsTitle, { color: isDark ? COLORS.white : colors.text }]}>{t('you.todayActivity')}</Text>
+              <Text style={[styles.ringsTitle, { color: isDark ? COLORS.white : colors.text }]}>
+                {t('you.todayActivity')}
+              </Text>
               <TouchableOpacity
                 style={[styles.editRingsButton, { backgroundColor: isDark ? 'rgba(99, 102, 241, 0.2)' : 'rgba(99, 102, 241, 0.1)' }]}
                 onPress={() => setShowRingEditor(true)}
@@ -326,10 +287,7 @@ export const YouScreen: React.FC = () => {
         {/* Health Stats Grid */}
         <SectionHeader title={t('you.healthStats')} darkMode={isDark} />
         <View style={styles.statsGrid}>
-          <TouchableOpacity
-            style={styles.metricCardTouchable}
-            onPress={() => setShowHealthInput(true)}
-          >
+          <TouchableOpacity style={styles.metricCardTouchable} onPress={() => setShowHealthInput(true)}>
             <MetricCard
               icon="⚖️"
               title={t('you.weight')}
@@ -339,10 +297,7 @@ export const YouScreen: React.FC = () => {
               darkMode={isDark}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.metricCardTouchable}
-            onPress={() => setShowHealthInput(true)}
-          >
+          <TouchableOpacity style={styles.metricCardTouchable} onPress={() => setShowHealthInput(true)}>
             <MetricCard
               icon="💓"
               title={t('you.bloodPressure')}
@@ -382,156 +337,39 @@ export const YouScreen: React.FC = () => {
         {/* Calories Section */}
         <SectionHeader
           title={t('you.caloriesSection')}
-          action={{
-            label: t('you.addCalories'),
-            onPress: () => setShowCalorieInput(true),
-          }}
+          action={{ label: t('you.addCalories'), onPress: () => setShowCalorieInput(true) }}
           darkMode={isDark}
         />
-        <LinearGradient
-          colors={cardGradient}
-          style={styles.calorieCard}
-        >
-          <View style={styles.calorieRow}>
-            <Text style={[styles.calorieLabel, { color: colors.textSecondary }]}>{t('you.dailyNeed')}</Text>
-            <Text style={[styles.calorieValue, { color: isDark ? COLORS.white : colors.text }]}>{dailyCalorieGoal} kcal</Text>
-          </View>
-          <View style={styles.calorieRow}>
-            <Text style={[styles.calorieLabel, { color: colors.textSecondary }]}>{t('you.consumed')}</Text>
-            <Text style={[styles.calorieValue, { color: isDark ? COLORS.white : colors.text }]}>{todayCalories?.consumed ?? 0} kcal</Text>
-          </View>
-          <View style={styles.calorieRow}>
-            <Text style={[styles.calorieLabel, { color: colors.textSecondary }]}>{t('you.workoutBurned')}</Text>
-            <Text style={styles.calorieValueGreen}>
-              -{todayCalories?.workoutBurned ?? 0} kcal
-            </Text>
-          </View>
-          <View style={[styles.calorieDivider, { backgroundColor: colors.border }]} />
-          <View style={styles.calorieRow}>
-            <Text style={[styles.calorieLabel, { color: colors.textSecondary }]}>{t('you.target')}</Text>
-            <Text style={styles.calorieTargetLabel}>{getCalorieTargetLabel()}</Text>
-          </View>
-          <View style={styles.calorieRow}>
-            <Text style={[styles.calorieLabelBold, { color: isDark ? COLORS.white : colors.text }]}>{t('you.balance')}</Text>
-            <Text
-              style={[
-                styles.calorieBalanceValue,
-                calorieBalance >= 0 ? styles.caloriePositive : styles.calorieNegative,
-              ]}
-            >
-              {calorieBalance >= 0 ? '+' : ''}
-              {calorieBalance} kcal
-            </Text>
-          </View>
-        </LinearGradient>
+        <CalorieCard
+          dailyCalorieGoal={dailyCalorieGoal}
+          consumed={todayCalories?.consumed ?? 0}
+          workoutBurned={todayCalories?.workoutBurned ?? 0}
+          balance={calorieBalance}
+          targetLabel={getCalorieTargetLabel()}
+        />
 
         {/* Goals Section */}
         <SectionHeader
           title={t('you.myGoal')}
-          action={{
-            label: t('you.addGoal'),
-            onPress: () => setShowGoalInput(true),
-          }}
+          action={{ label: t('you.addGoal'), onPress: () => setShowGoalInput(true) }}
           darkMode={isDark}
         />
-        {activeGoal ? (
-          <LinearGradient colors={cardGradient} style={styles.goalCard}>
-            <Text style={styles.goalIcon}>🎯</Text>
-            <View style={styles.goalContent}>
-              <Text style={[styles.goalText, { color: isDark ? COLORS.white : colors.text }]}>{activeGoal.text}</Text>
-              {activeGoal.deadline && (
-                <Text style={[styles.goalDeadline, { color: colors.textSecondary }]}>
-                  {t('you.until')}: {new Date(activeGoal.deadline).toLocaleDateString()}
-                </Text>
-              )}
-            </View>
-            <TouchableOpacity
-              style={styles.goalCheckButton}
-              onPress={() => useUserGoalsStore.getState().toggleGoalCompleted(activeGoal.id)}
-            >
-              <Text style={styles.goalCheckIcon}>✓</Text>
-            </TouchableOpacity>
-          </LinearGradient>
-        ) : (
-          <TouchableOpacity
-            style={[styles.emptyGoalCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-            onPress={() => setShowGoalInput(true)}
-          >
-            <Text style={styles.emptyGoalIcon}>🎯</Text>
-            <Text style={[styles.emptyGoalText, { color: colors.textTertiary }]}>{t('you.setGoal')}</Text>
-          </TouchableOpacity>
-        )}
+        <GoalCard goal={activeGoal} onAddGoal={() => setShowGoalInput(true)} />
 
         <View style={styles.bottomSpacing} />
       </ScrollView>
 
       {/* Ring Editor Modal */}
-      <Modal
+      <RingEditorModal
         visible={showRingEditor}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowRingEditor(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={[styles.ringEditorContent, { backgroundColor: modalBgColor }]}>
-            <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.editRings')}</Text>
-              <TouchableOpacity onPress={() => setShowRingEditor(false)}>
-                <Text style={[styles.modalClose, { color: colors.textSecondary }]}>✕</Text>
-              </TouchableOpacity>
-            </View>
-
-            <Text style={[styles.ringEditorSubtitle, { color: colors.textSecondary }]}>{t('you.activeRings')}</Text>
-            {ringConfigs.map((config) => {
-              const preset = RING_PRESETS[config.id];
-              return (
-                <View key={config.id} style={[styles.ringToggleRow, { borderBottomColor: colors.border }]}>
-                  <View style={[styles.ringToggleDot, { backgroundColor: preset.color }]} />
-                  <Text style={styles.ringToggleIcon}>{preset.icon}</Text>
-                  <Text style={[styles.ringToggleLabel, { color: colors.text }]}>{t(`you.ring.${config.id}`)}</Text>
-                  <Switch
-                    value={config.enabled}
-                    onValueChange={(v) => handleToggleRing(config.id, v)}
-                    trackColor={{ false: COLORS.gray[600], true: preset.color }}
-                    thumbColor={COLORS.white}
-                  />
-                </View>
-              );
-            })}
-
-            {availableRings.length > 0 && (
-              <>
-                <Text style={[styles.ringEditorSubtitle, { marginTop: SPACING.lg, color: colors.textSecondary }]}>
-                  {t('you.addRing')}
-                </Text>
-                {availableRings.map((ringId) => {
-                  const preset = RING_PRESETS[ringId];
-                  return (
-                    <TouchableOpacity
-                      key={ringId}
-                      style={[styles.addRingRow, { borderBottomColor: colors.border }]}
-                      onPress={() => handleAddRing(ringId)}
-                    >
-                      <View style={[styles.ringToggleDot, { backgroundColor: preset.color }]} />
-                      <Text style={styles.ringToggleIcon}>{preset.icon}</Text>
-                      <Text style={[styles.ringToggleLabel, { color: colors.text }]}>{t(`you.ring.${ringId}`)}</Text>
-                      <Text style={styles.addRingPlus}>+</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </>
-            )}
-          </View>
-        </View>
-      </Modal>
+        onClose={() => setShowRingEditor(false)}
+        ringConfigs={ringConfigs}
+        onToggleRing={handleToggleRing}
+        onAddRing={handleAddRing}
+      />
 
       {/* Ring Edit Modal */}
-      <Modal
-        visible={!!editingRing}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setEditingRing(null)}
-      >
+      <Modal visible={!!editingRing} transparent animationType="fade" onRequestClose={() => setEditingRing(null)}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
             <Text style={[styles.modalTitle, { color: colors.text }]}>
@@ -574,12 +412,7 @@ export const YouScreen: React.FC = () => {
       </Modal>
 
       {/* Calorie Input Modal */}
-      <Modal
-        visible={showCalorieInput}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowCalorieInput(false)}
-      >
+      <Modal visible={showCalorieInput} transparent animationType="fade" onRequestClose={() => setShowCalorieInput(false)}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
             <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.addCalories')}</Text>
@@ -608,12 +441,7 @@ export const YouScreen: React.FC = () => {
       </Modal>
 
       {/* Goal Input Modal */}
-      <Modal
-        visible={showGoalInput}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowGoalInput(false)}
-      >
+      <Modal visible={showGoalInput} transparent animationType="fade" onRequestClose={() => setShowGoalInput(false)}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
             <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.addGoal')}</Text>
@@ -641,103 +469,8 @@ export const YouScreen: React.FC = () => {
       </Modal>
 
       {/* Health Input Modal */}
-      <HealthInputModal
-        visible={showHealthInput}
-        onClose={() => setShowHealthInput(false)}
-        isDark={isDark}
-        colors={colors}
-      />
+      <HealthInputModal visible={showHealthInput} onClose={() => setShowHealthInput(false)} />
     </SafeAreaView>
-  );
-};
-
-interface HealthInputModalProps {
-  visible: boolean;
-  onClose: () => void;
-  isDark: boolean;
-  colors: ReturnType<typeof useTheme>['colors'];
-}
-
-const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onClose, isDark, colors }) => {
-  const { t } = useTranslation();
-  const { addHealthEntry } = useUserGoalsStore();
-  const [weight, setWeight] = useState('');
-  const [systolic, setSystolic] = useState('');
-  const [diastolic, setDiastolic] = useState('');
-
-  const modalBgColor = isDark ? '#1E1E2E' : COLORS.white;
-  const inputBgColor = isDark ? COLORS.gray[800] : COLORS.gray[100];
-
-  const handleSave = () => {
-    const entry: { weight?: number; bloodPressureSystolic?: number; bloodPressureDiastolic?: number } = {};
-
-    if (weight) entry.weight = parseFloat(weight);
-    if (systolic && diastolic) {
-      entry.bloodPressureSystolic = parseInt(systolic, 10);
-      entry.bloodPressureDiastolic = parseInt(diastolic, 10);
-    }
-
-    if (Object.keys(entry).length > 0) {
-      addHealthEntry(entry);
-    }
-
-    setWeight('');
-    setSystolic('');
-    setDiastolic('');
-    onClose();
-  };
-
-  return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <View style={styles.modalOverlay}>
-        <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
-          <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.addHealthData')}</Text>
-
-          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('you.weight')} (kg)</Text>
-          <TextInput
-            style={[styles.modalInput, { backgroundColor: inputBgColor, color: colors.text }]}
-            placeholder="75"
-            placeholderTextColor={colors.textTertiary}
-            keyboardType="decimal-pad"
-            value={weight}
-            onChangeText={setWeight}
-          />
-
-          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('you.bloodPressure')}</Text>
-          <View style={styles.bloodPressureInputs}>
-            <TextInput
-              style={[styles.modalInput, styles.bpInput, { backgroundColor: inputBgColor, color: colors.text }]}
-              placeholder="120"
-              placeholderTextColor={colors.textTertiary}
-              keyboardType="numeric"
-              value={systolic}
-              onChangeText={setSystolic}
-            />
-            <Text style={[styles.bpSeparator, { color: colors.textSecondary }]}>/</Text>
-            <TextInput
-              style={[styles.modalInput, styles.bpInput, { backgroundColor: inputBgColor, color: colors.text }]}
-              placeholder="80"
-              placeholderTextColor={colors.textTertiary}
-              keyboardType="numeric"
-              value={diastolic}
-              onChangeText={setDiastolic}
-            />
-          </View>
-
-          <View style={styles.modalButtons}>
-            <TouchableOpacity
-              style={[styles.modalButtonCancel, { backgroundColor: isDark ? COLORS.gray[700] : COLORS.gray[200] }]}
-              onPress={onClose}
-            >
-              <Text style={[styles.modalButtonCancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalButtonConfirm} onPress={handleSave}>
-              <Text style={styles.modalButtonConfirmText}>{t('common.save')}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
   );
 };
 
@@ -849,103 +582,6 @@ const styles = StyleSheet.create({
   metricCardTouchable: {
     flex: 1,
   },
-  calorieCard: {
-    borderRadius: BORDER_RADIUS['2xl'],
-    padding: SPACING.lg,
-    marginHorizontal: SPACING.lg,
-  },
-  calorieRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: SPACING.xs,
-  },
-  calorieLabel: {
-    fontSize: FONT_SIZES.sm,
-  },
-  calorieLabelBold: {
-    fontSize: FONT_SIZES.md,
-    fontWeight: '600',
-  },
-  calorieValue: {
-    fontSize: FONT_SIZES.sm,
-    fontWeight: '500',
-  },
-  calorieValueGreen: {
-    fontSize: FONT_SIZES.sm,
-    color: '#10B981',
-    fontWeight: '500',
-  },
-  calorieTargetLabel: {
-    fontSize: FONT_SIZES.sm,
-    color: '#6366F1',
-    fontWeight: '500',
-  },
-  calorieBalanceValue: {
-    fontSize: FONT_SIZES.lg,
-    fontWeight: '700',
-  },
-  caloriePositive: {
-    color: '#10B981',
-  },
-  calorieNegative: {
-    color: '#EF4444',
-  },
-  calorieDivider: {
-    height: 1,
-    marginVertical: SPACING.sm,
-  },
-  goalCard: {
-    borderRadius: BORDER_RADIUS['2xl'],
-    padding: SPACING.lg,
-    marginHorizontal: SPACING.lg,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  goalIcon: {
-    fontSize: 32,
-    marginRight: SPACING.md,
-  },
-  goalContent: {
-    flex: 1,
-  },
-  goalText: {
-    fontSize: FONT_SIZES.md,
-    fontWeight: '600',
-  },
-  goalDeadline: {
-    fontSize: FONT_SIZES.sm,
-    marginTop: 4,
-  },
-  goalCheckButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#10B981',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  goalCheckIcon: {
-    fontSize: 20,
-    color: COLORS.white,
-    fontWeight: '700',
-  },
-  emptyGoalCard: {
-    borderRadius: BORDER_RADIUS['2xl'],
-    padding: SPACING.xl,
-    marginHorizontal: SPACING.lg,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderStyle: 'dashed',
-  },
-  emptyGoalIcon: {
-    fontSize: 40,
-    marginBottom: SPACING.sm,
-    opacity: 0.5,
-  },
-  emptyGoalText: {
-    fontSize: FONT_SIZES.sm,
-  },
   bottomSpacing: {
     height: SPACING['3xl'],
   },
@@ -960,63 +596,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: BORDER_RADIUS['2xl'],
     padding: SPACING.xl,
   },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: SPACING.lg,
-  },
   modalTitle: {
     fontSize: FONT_SIZES.lg,
     fontWeight: '700',
     marginBottom: SPACING.lg,
     textAlign: 'center',
-  },
-  modalClose: {
-    fontSize: 24,
-  },
-  ringEditorContent: {
-    borderTopLeftRadius: BORDER_RADIUS['2xl'],
-    borderTopRightRadius: BORDER_RADIUS['2xl'],
-    padding: SPACING.xl,
-    maxHeight: '80%',
-  },
-  ringEditorSubtitle: {
-    fontSize: FONT_SIZES.sm,
-    marginBottom: SPACING.md,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  ringToggleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: SPACING.md,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  ringToggleDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginRight: SPACING.sm,
-  },
-  ringToggleIcon: {
-    fontSize: 20,
-    marginRight: SPACING.sm,
-  },
-  ringToggleLabel: {
-    flex: 1,
-    fontSize: FONT_SIZES.md,
-  },
-  addRingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: SPACING.md,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  addRingPlus: {
-    fontSize: 24,
-    color: '#6366F1',
-    fontWeight: '600',
   },
   inputLabel: {
     fontSize: FONT_SIZES.sm,
@@ -1026,18 +610,7 @@ const styles = StyleSheet.create({
   modalInput: {
     borderRadius: BORDER_RADIUS.lg,
     padding: SPACING.md,
-    fontSize: FONT_SIZES.md,
-  },
-  bloodPressureInputs: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  bpInput: {
-    flex: 1,
-  },
-  bpSeparator: {
-    fontSize: FONT_SIZES.xl,
-    marginHorizontal: SPACING.sm,
+    fontSize: FONT_SIZES.base,
   },
   modalButtons: {
     flexDirection: 'row',

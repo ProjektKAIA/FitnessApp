@@ -1,6 +1,11 @@
+// /workspaces/claude-workspace/fitnessapp/src/services/ai/chatgptExport.ts
+
 import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
 import JSZip from 'jszip';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('ChatGPTExport');
 
 // ChatGPT Export Format Types
 export interface ChatGPTMessage {
@@ -195,7 +200,7 @@ const readZipFile = async (uri: string): Promise<ChatGPTExportData | null> => {
     const content = await conversationsFile.async('string');
     return JSON.parse(content) as ChatGPTExportData;
   } catch (error) {
-    console.error('Error reading ZIP file:', error);
+    log.error('Error reading ZIP file', error);
     return null;
   }
 };
@@ -212,7 +217,7 @@ const readJsonFile = async (uri: string): Promise<ChatGPTExportData | null> => {
 
     return data as ChatGPTExportData;
   } catch (error) {
-    console.error('Error reading JSON file:', error);
+    log.error('Error reading JSON file', error);
     return null;
   }
 };

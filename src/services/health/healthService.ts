@@ -1,3 +1,5 @@
+// /workspaces/claude-workspace/fitnessapp/src/services/health/healthService.ts
+
 import { Platform } from 'react-native';
 import {
   IHealthService,
@@ -12,6 +14,9 @@ import {
   THealthDataType,
   THealthPlatform,
 } from '@/types/health';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('HealthService');
 
 // Singleton instance
 let healthServiceInstance: IHealthService | null = null;
@@ -32,13 +37,13 @@ export async function createHealthService(): Promise<IHealthService | null> {
       const { HealthConnectService } = await import('./healthConnect');
       healthServiceInstance = new HealthConnectService();
     } else {
-      console.warn('Health services not available on this platform');
+      log.warn('Health services not available on this platform');
       return null;
     }
 
     return healthServiceInstance;
   } catch (error) {
-    console.error('Failed to create health service:', error);
+    log.error('Failed to create health service', error);
     return null;
   }
 }
@@ -175,7 +180,7 @@ export abstract class BaseHealthService implements IHealthService {
         workouts,
       };
     } catch (error) {
-      console.error('Error getting daily summary:', error);
+      log.error('Error getting daily summary', error);
       return {
         date: dateString,
         steps: null,

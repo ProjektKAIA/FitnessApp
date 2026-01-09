@@ -15,6 +15,20 @@ export {
   type BackupStorageType,
   type AutoBackupFrequency,
 } from './backupStore';
+export {
+  useRunningStore,
+  type IRunningSession,
+  type IFlatSegment,
+} from './runningStore';
+export {
+  useYogaStore,
+  type IYogaSessionRecord,
+  type IYogaActivePose,
+} from './yogaStore';
+export {
+  useHomeworkoutStore,
+  type IHomeworkoutCompletion,
+} from './homeworkoutStore';
 export type {
   CalorieTarget,
   Gender,

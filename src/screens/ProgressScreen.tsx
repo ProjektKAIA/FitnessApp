@@ -64,6 +64,7 @@ export const ProgressScreen: React.FC = () => {
 
     return [
       {
+        id: 'steps',
         value: steps,
         goal: healthSettings.stepsGoal,
         color: RING_COLORS.move,
@@ -72,6 +73,7 @@ export const ProgressScreen: React.FC = () => {
         unit: t('health.summary.steps'),
       },
       {
+        id: 'calories',
         value: calories,
         goal: 500,
         color: RING_COLORS.exercise,
@@ -80,6 +82,7 @@ export const ProgressScreen: React.FC = () => {
         unit: 'kcal',
       },
       {
+        id: 'activeMinutes',
         value: activeMinutes,
         goal: 30,
         color: RING_COLORS.stand,

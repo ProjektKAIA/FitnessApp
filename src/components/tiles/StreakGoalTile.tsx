@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     lineHeight: FONT_SIZES.xl * 1.2,
   },
   goalValue: {
-    fontSize: FONT_SIZES.md,
+    fontSize: FONT_SIZES.base,
     fontWeight: '600',
     color: COLORS.white,
   },

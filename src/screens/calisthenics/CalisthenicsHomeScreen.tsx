@@ -21,7 +21,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
 import { useTheme } from '@/contexts';
 import { RootStackParamList } from '@/types';
-import { CALISTHENICS_VIDEOS } from '@/data/calisthenicsLibrary';
+import {
+  CALISTHENICS_VIDEOS,
+  CALISTHENICS_WORKOUTS,
+  CALISTHENICS_LEVEL_LABELS,
+} from '@/data/calisthenicsLibrary';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -75,6 +79,42 @@ export const CalisthenicsHomeScreen: React.FC = () => {
           <Text style={styles.heroIcon}>{'🤸'}</Text>
           <Text style={styles.heroTitle}>{t('calisthenics.heroTitle')}</Text>
           <Text style={styles.heroSubtitle}>{t('calisthenics.heroSubtitle')}</Text>
+        </View>
+
+        {/* Start Workout Section */}
+        <View style={styles.workoutSection}>
+          <View style={styles.workoutSectionHeader}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              {t('calisthenics.startWorkout')}
+            </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('CalisthenicsWorkoutList')}>
+              <Text style={[styles.seeAllText, { color: COLORS.accent }]}>
+                {t('common.seeAll')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.workoutScroll}>
+            {CALISTHENICS_WORKOUTS.slice(0, 4).map((workout) => (
+              <TouchableOpacity
+                key={workout.id}
+                style={[styles.workoutCard, { backgroundColor: colors.surface }]}
+                onPress={() => navigation.navigate('CalisthenicsWorkoutDetail', { workoutId: workout.id })}
+              >
+                <Text style={styles.workoutCardIcon}>{'💪'}</Text>
+                <Text style={[styles.workoutCardName, { color: colors.text }]} numberOfLines={2}>
+                  {workout.name}
+                </Text>
+                <Text style={[styles.workoutCardInfo, { color: colors.textSecondary }]}>
+                  {workout.duration} min • {workout.exercises.length} {t('calisthenics.exercises')}
+                </Text>
+                <View style={[styles.workoutLevelBadge, { backgroundColor: COLORS.accent + '20' }]}>
+                  <Text style={[styles.workoutLevelText, { color: COLORS.accent }]}>
+                    {CALISTHENICS_LEVEL_LABELS[workout.level].de}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
 
         {/* Quick Videos */}
@@ -430,6 +470,54 @@ const styles = StyleSheet.create({
   disclaimerButtonText: {
     color: COLORS.white,
     fontSize: FONT_SIZES.sm,
+    fontWeight: '600',
+  },
+
+  // Workout Section
+  workoutSection: {
+    marginBottom: SPACING.xl,
+  },
+  workoutSectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  seeAllText: {
+    fontSize: FONT_SIZES.sm,
+    fontWeight: '600',
+  },
+  workoutScroll: {
+    gap: SPACING.md,
+  },
+  workoutCard: {
+    width: 160,
+    padding: SPACING.md,
+    borderRadius: BORDER_RADIUS.lg,
+    ...SHADOWS.sm,
+  },
+  workoutCardIcon: {
+    fontSize: 32,
+    marginBottom: SPACING.sm,
+  },
+  workoutCardName: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    marginBottom: SPACING.xs,
+    minHeight: 40,
+  },
+  workoutCardInfo: {
+    fontSize: FONT_SIZES.xs,
+    marginBottom: SPACING.sm,
+  },
+  workoutLevelBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: BORDER_RADIUS.sm,
+  },
+  workoutLevelText: {
+    fontSize: FONT_SIZES.xs,
     fontWeight: '600',
   },
 });

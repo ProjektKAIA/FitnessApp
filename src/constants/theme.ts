@@ -7,6 +7,11 @@ export const COLORS = {
   warning: '#FF9800',
   white: '#FFFFFF',
   black: '#000000',
+  // Sport-specific colors
+  orange: '#FF9800',
+  yoga: '#9C27B0',
+  calisthenics: '#FF6B35',
+  running: '#4CAF50',
   gray: {
     50: '#FAFAFA',
     100: '#F5F5F5',

@@ -20,7 +20,6 @@ import {
   WorkoutHistoryScreen,
   WorkoutDetailScreen,
   StreakDetailScreen,
-  LoginScreen,
   ConsentScreen,
   ImpressumScreen,
   PrivacyPolicyScreen,
@@ -56,20 +55,24 @@ import {
   RunningPlanListScreen,
   RunningPlanDetailScreen,
   RunningWorkoutDetailScreen,
+  RunningActiveScreen,
   // Yoga Screens
   YogaHomeScreen,
   YogaSessionListScreen,
   YogaSessionDetailScreen,
   YogaPoseDetailScreen,
+  YogaActiveScreen,
   // Calisthenics Screens
   CalisthenicsHomeScreen,
+  CalisthenicsWorkoutListScreen,
+  CalisthenicsWorkoutDetailScreen,
   // Homeworkout Screens
   HomeworkoutHomeScreen,
 } from '@/screens';
 import { BottomNav } from '@/components/navigation';
 import { ErrorBoundary, LoadingScreen } from '@/components/common';
 import { ThemeProvider } from '@/contexts';
-import { useAuthStore, useConsentStore, useLanguageStore, useTrackingStore } from '@/stores';
+import { useConsentStore, useLanguageStore, useTrackingStore } from '@/stores';
 import { RootStackParamList, MainTabParamList, OnboardingStackParamList } from '@/types';
 import { initI18n } from '@/lib/i18n';
 import { requestAppTracking } from '@/utils/tracking';
@@ -138,9 +141,6 @@ const MainTabs: React.FC = () => {
 
 export default function App() {
   const { t } = useTranslation();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const isLoading = useAuthStore((state) => state.isLoading);
-  const initializeAuthListener = useAuthStore((state) => state.initializeAuthListener);
   const hasAcceptedPrivacyPolicy = useConsentStore((state) => state.hasAcceptedPrivacyPolicy);
   const hasAcceptedTerms = useConsentStore((state) => state.hasAcceptedTerms);
   const hasRespondedToTracking = useConsentStore((state) => state.hasRespondedToTracking);
@@ -159,12 +159,6 @@ export default function App() {
     initializeLanguage();
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = initializeAuthListener();
-    return () => unsubscribe();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // Request App Tracking Transparency after onboarding
   useEffect(() => {
     const requestTracking = async () => {
@@ -181,20 +175,6 @@ export default function App() {
     requestTracking();
   }, [hasCompletedOnboarding, hasCompletedConsent, hasAskedForTracking, setTrackingPermissionStatus, setHasAskedForTracking]);
 
-  if (isLoading) {
-    return (
-      <GestureHandlerRootView style={styles.container}>
-        <I18nextProvider i18n={i18n}>
-          <SafeAreaProvider>
-            <ThemeProvider>
-              <LoadingScreen message={t('common.loading')} />
-            </ThemeProvider>
-          </SafeAreaProvider>
-        </I18nextProvider>
-      </GestureHandlerRootView>
-    );
-  }
-
   return (
     <GestureHandlerRootView style={styles.container}>
       <I18nextProvider i18n={i18n}>
@@ -207,15 +187,7 @@ export default function App() {
                   headerShown: false,
                 }}
               >
-            {!isAuthenticated ? (
-              <Stack.Screen
-                name="Auth"
-                component={LoginScreen}
-                options={{
-                  animationTypeForReplace: 'pop',
-                }}
-              />
-            ) : !hasCompletedConsent ? (
+            {!hasCompletedConsent ? (
               <Stack.Screen
                 name="Consent"
                 component={ConsentScreen}
@@ -483,6 +455,15 @@ export default function App() {
                     animation: 'slide_from_right',
                   }}
                 />
+                <Stack.Screen
+                  name="RunningWorkoutActive"
+                  component={RunningActiveScreen}
+                  options={{
+                    presentation: 'fullScreenModal',
+                    animation: 'slide_from_bottom',
+                    gestureEnabled: false,
+                  }}
+                />
                 {/* Yoga Screens */}
                 <Stack.Screen
                   name="YogaHome"
@@ -532,10 +513,35 @@ export default function App() {
                     animation: 'slide_from_right',
                   }}
                 />
+                <Stack.Screen
+                  name="YogaSessionActive"
+                  component={YogaActiveScreen}
+                  options={{
+                    presentation: 'fullScreenModal',
+                    animation: 'slide_from_bottom',
+                    gestureEnabled: false,
+                  }}
+                />
                 {/* Calisthenics Screens */}
                 <Stack.Screen
                   name="CalisthenicsHome"
                   component={CalisthenicsHomeScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="CalisthenicsWorkoutList"
+                  component={CalisthenicsWorkoutListScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="CalisthenicsWorkoutDetail"
+                  component={CalisthenicsWorkoutDetailScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',

@@ -49,12 +49,18 @@ export {
   RunningPlanListScreen,
   RunningPlanDetailScreen,
   RunningWorkoutDetailScreen,
+  RunningActiveScreen,
 } from './running';
 export {
   YogaHomeScreen,
   YogaSessionListScreen,
   YogaSessionDetailScreen,
   YogaPoseDetailScreen,
+  YogaActiveScreen,
 } from './yoga';
-export { CalisthenicsHomeScreen } from './calisthenics';
+export {
+  CalisthenicsHomeScreen,
+  CalisthenicsWorkoutListScreen,
+  CalisthenicsWorkoutDetailScreen,
+} from './calisthenics';
 export { HomeworkoutHomeScreen } from './homeworkout';

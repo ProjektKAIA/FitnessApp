@@ -36,11 +36,13 @@
       "infoPlist": {
         "NSHealthShareUsageDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Fitness-Fortschritte zu verfolgen und personalisierte Empfehlungen zu geben.",
         "NSHealthUpdateUsageDescription": "Diese App möchte Ihre Trainings- und Aktivitätsdaten in Apple Health speichern.",
-        "NSUserTrackingUsageDescription": "Wir verwenden Tracking-Daten, um dir personalisierte Inhalte und Werbung anzuzeigen und unsere App zu verbessern."
+        "NSUserTrackingUsageDescription": "Wir verwenden Tracking-Daten, um dir personalisierte Inhalte und Werbung anzuzeigen und unsere App zu verbessern.",
+        "ITSAppUsesNonExemptEncryption": false
       },
       "entitlements": {
         "com.apple.developer.healthkit": true,
         "com.apple.developer.healthkit.access": [
+          "health-records",
           "health-records"
         ],
         "com.apple.developer.healthkit.background-delivery": true
@@ -67,6 +69,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a2d20230-1d6a-4a43-ad5b-38cc38dba18a"
+      }
     }
   }
 }

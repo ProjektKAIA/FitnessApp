@@ -12,6 +12,9 @@ import {
   useLanguageStore,
 } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('BackupService');
 
 export interface BackupData {
   version: string;
@@ -142,7 +145,7 @@ export const readBackupFile = async (filePath: string): Promise<BackupData | nul
     const fileExists = await file.exists;
 
     if (!fileExists) {
-      console.error('[BackupService] File does not exist:', filePath);
+      log.error('File does not exist', undefined, { filePath });
       return null;
     }
 
@@ -151,13 +154,13 @@ export const readBackupFile = async (filePath: string): Promise<BackupData | nul
 
     // Validate backup structure
     if (!backupData.version || !backupData.data) {
-      console.error('[BackupService] Invalid backup structure');
+      log.error('Invalid backup structure');
       return null;
     }
 
     return backupData;
   } catch (error) {
-    console.error('[BackupService] Error reading backup:', error);
+    log.error('Error reading backup', error);
     return null;
   }
 };
@@ -276,7 +279,7 @@ export const restoreBackup = async (
 
     return { success: true };
   } catch (error) {
-    console.error('[BackupService] Restore error:', error);
+    log.error('Restore error', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

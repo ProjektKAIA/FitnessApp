@@ -1,3 +1,5 @@
+// /workspaces/claude-workspace/fitnessapp/src/services/health/appleHealth.ts
+
 import AppleHealthKit, { HealthKitPermissions, HealthInputOptions } from 'react-native-health';
 import { BaseHealthService } from './healthService';
 import {
@@ -11,6 +13,9 @@ import {
   THealthDataType,
 } from '@/types/health';
 import { transformAppleHealthData } from './dataTransformers';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('AppleHealth');
 
 const PERMISSIONS: HealthKitPermissions = {
   permissions: {
@@ -43,7 +48,7 @@ export class AppleHealthService extends BaseHealthService {
     return new Promise((resolve) => {
       AppleHealthKit.isAvailable((error, available) => {
         if (error) {
-          console.error('Error checking HealthKit availability:', error);
+          log.error('Error checking HealthKit availability', error);
           resolve(false);
           return;
         }
@@ -56,7 +61,7 @@ export class AppleHealthService extends BaseHealthService {
     return new Promise((resolve) => {
       AppleHealthKit.initHealthKit(PERMISSIONS, (error) => {
         if (error) {
-          console.error('Error initializing HealthKit:', error);
+          log.error('Error initializing HealthKit', error);
           resolve(false);
           return;
         }
@@ -89,7 +94,7 @@ export class AppleHealthService extends BaseHealthService {
     return new Promise((resolve) => {
       AppleHealthKit.getDailyStepCountSamples(options, (error, results) => {
         if (error) {
-          console.error('Error getting steps:', error);
+          log.error('Error getting steps', error);
           resolve([]);
           return;
         }
@@ -109,7 +114,7 @@ export class AppleHealthService extends BaseHealthService {
     return new Promise((resolve) => {
       AppleHealthKit.getDailyDistanceWalkingRunningSamples(options, (error, results) => {
         if (error) {
-          console.error('Error getting distance:', error);
+          log.error('Error getting distance', error);
           resolve([]);
           return;
         }
@@ -130,7 +135,7 @@ export class AppleHealthService extends BaseHealthService {
       // Get active calories
       AppleHealthKit.getActiveEnergyBurned(options, (error, activeResults) => {
         if (error) {
-          console.error('Error getting active calories:', error);
+          log.error('Error getting active calories', error);
           resolve([]);
           return;
         }
@@ -138,7 +143,7 @@ export class AppleHealthService extends BaseHealthService {
         // Get basal calories
         AppleHealthKit.getBasalEnergyBurned(options, (error2, basalResults) => {
           if (error2) {
-            console.error('Error getting basal calories:', error2);
+            log.error('Error getting basal calories', error2);
             resolve([]);
             return;
           }
@@ -162,7 +167,7 @@ export class AppleHealthService extends BaseHealthService {
     return new Promise((resolve) => {
       AppleHealthKit.getHeartRateSamples(options, (error, results) => {
         if (error) {
-          console.error('Error getting heart rate:', error);
+          log.error('Error getting heart rate', error);
           resolve([]);
           return;
         }
@@ -182,7 +187,7 @@ export class AppleHealthService extends BaseHealthService {
     return new Promise((resolve) => {
       AppleHealthKit.getRestingHeartRate(options, (error, results: any) => {
         if (error) {
-          console.error('Error getting resting heart rate:', error);
+          log.error('Error getting resting heart rate', error);
           resolve([]);
           return;
         }
@@ -204,7 +209,7 @@ export class AppleHealthService extends BaseHealthService {
     return new Promise((resolve) => {
       (AppleHealthKit as any).getSamples(options, (error: any, results: any) => {
         if (error) {
-          console.error('Error getting workouts:', error);
+          log.error('Error getting workouts', error);
           resolve([]);
           return;
         }

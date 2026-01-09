@@ -5,6 +5,9 @@ import * as DocumentPicker from 'expo-document-picker';
 import { Paths, File } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { BackupStorageType } from '@/stores/backupStore';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('CloudStorage');
 
 export interface CloudStorageResult {
   success: boolean;
@@ -64,7 +67,7 @@ export const saveToCloud = async (
       fileName,
     };
   } catch (error) {
-    console.error('[CloudStorage] Save error:', error);
+    log.error('Save error', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -100,7 +103,7 @@ export const saveToCloudDirect = async (
     // Mobile: Share Sheet
     return saveToCloud(tempFile.uri, fileName);
   } catch (error) {
-    console.error('[CloudStorage] Save direct error:', error);
+    log.error('Save direct error', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -157,7 +160,7 @@ export const loadFromCloud = async (): Promise<CloudStorageResult & { content?: 
       content,
     };
   } catch (error) {
-    console.error('[CloudStorage] Load error:', error);
+    log.error('Load error', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
