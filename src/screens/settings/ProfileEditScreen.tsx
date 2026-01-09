@@ -18,7 +18,7 @@ import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
-import { useUserStore } from '@/stores';
+import { useUserStore, useStatsStore } from '@/stores';
 import { useTheme } from '@/contexts';
 
 export const ProfileEditScreen: React.FC = () => {
@@ -38,6 +38,10 @@ export const ProfileEditScreen: React.FC = () => {
   const [height, setHeight] = useState(user?.height?.toString() || '');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  const weeklyGoal = useStatsStore((state) => state.weeklyGoal);
+  const setWeeklyGoal = useStatsStore((state) => state.setWeeklyGoal);
+  const [selectedGoal, setSelectedGoal] = useState(weeklyGoal || 5);
 
   // Default to metric (Europe) if settings are undefined
   const isMetric = settings?.units !== 'imperial'; // metric ist default
@@ -136,6 +140,8 @@ export const ProfileEditScreen: React.FC = () => {
         weight: weightValue,
         height: heightValue,
       });
+
+      setWeeklyGoal(selectedGoal);
 
       navigation.goBack();
     } catch (error) {
@@ -297,6 +303,38 @@ export const ProfileEditScreen: React.FC = () => {
                 </Text>
               </View>
             )}
+          </Card>
+
+          <Card style={styles.formCard}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('profile.trainingGoals')}</Text>
+
+            <View style={styles.inputGroup}>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>{t('profile.weeklyGoal')}</Text>
+              <View style={styles.goalSelector}>
+                {[1, 2, 3, 4, 5, 6, 7].map((goal) => (
+                  <TouchableOpacity
+                    key={goal}
+                    style={[
+                      styles.goalButton,
+                      { backgroundColor: colors.background, borderColor: colors.border },
+                      selectedGoal === goal && { backgroundColor: colors.primary, borderColor: colors.primary },
+                    ]}
+                    onPress={() => setSelectedGoal(goal)}
+                  >
+                    <Text
+                      style={[
+                        styles.goalButtonText,
+                        { color: colors.text },
+                        selectedGoal === goal && { color: COLORS.white },
+                      ]}
+                    >
+                      {goal}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <Text style={[styles.goalHint, { color: colors.textSecondary }]}>{t('profile.weeklyGoalHint')}</Text>
+            </View>
           </Card>
 
           <View style={styles.bottomPadding} />
@@ -507,5 +545,26 @@ const styles = StyleSheet.create({
   },
   bottomPadding: {
     height: SPACING['3xl'],
+  },
+  goalSelector: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    flexWrap: 'wrap',
+  },
+  goalButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+  },
+  goalButtonText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+  },
+  goalHint: {
+    fontSize: FONT_SIZES.xs,
+    marginTop: SPACING.xs,
   },
 });

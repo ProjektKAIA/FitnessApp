@@ -305,6 +305,9 @@ const de = {
     permissionMessage: 'Bitte erlaube den Zugriff auf deine Fotos in den Einstellungen.',
     cameraPermissionMessage: 'Bitte erlaube den Zugriff auf die Kamera in den Einstellungen.',
     saveError: 'Fehler beim Speichern. Bitte versuche es erneut.',
+    trainingGoals: 'Trainingsziele',
+    weeklyGoal: 'Wochenziel',
+    weeklyGoalHint: 'Wie oft möchtest du pro Woche trainieren?',
   },
 
   // Auth Screen
