@@ -31,7 +31,7 @@ const de = {
     guide: 'Guide',
     progress: 'Fortschritt',
     programs: 'Programme',
-    you: 'Du',
+    you: 'You',
     more: 'Mehr',
   },
 
