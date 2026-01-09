@@ -1,7 +1,7 @@
 // /workspaces/claude-workspace/fitnessapp/src/screens/HomeScreen.tsx
 
 import React, { useState, useMemo } from 'react';
-import { View, ScrollView, StyleSheet, Text } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Alert, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -13,8 +13,7 @@ import {
   WorkoutTile,
   StatTile,
   DirectionTile,
-  ProgressTile,
-  StreakTile,
+  StreakGoalTile,
   AdTile,
   HealthTile,
   getTileGap,
@@ -60,6 +59,7 @@ export const HomeScreen: React.FC = () => {
       calisthenics: 0,
       cardio: 0,
       yoga: 0,
+      running: 0,
       mobility: 0,
       custom: 0,
     };
@@ -76,27 +76,52 @@ export const HomeScreen: React.FC = () => {
   };
 
   const handleNavigateToProgress = () => {
-    navigation.navigate('Programs');
+    navigation.navigate('WorkoutHistory');
   };
 
-  const handleStreakPress = () => {
-    navigation.navigate('StreakDetail');
+  const handleStreakGoalPress = () => {
+    setWeeklyGoalModalVisible(true);
   };
 
   const handleWorkoutHistoryPress = () => {
     navigation.navigate('WorkoutHistory');
   };
 
-  const handleWeeklyGoalPress = () => {
-    setWeeklyGoalModalVisible(true);
-  };
-
   const handleDirectionPress = (direction: TDirection) => {
-    navigation.navigate('WorkoutHistory', { direction });
+    if (direction === 'yoga') {
+      navigation.navigate('YogaHome');
+    } else if (direction === 'running') {
+      navigation.navigate('RunningHome');
+    } else if (direction === 'calisthenics') {
+      navigation.navigate('CalisthenicsHome');
+    } else {
+      navigation.navigate('WorkoutHistory', { direction });
+    }
   };
 
   const handleHealthPress = () => {
-    navigation.navigate('Programs');
+    navigation.navigate('HealthDashboard');
+  };
+
+  const handleAffiliateAdPress = (url: string, advertiserName: string) => {
+    Alert.alert(
+      t('home.ads.affiliate.confirmTitle'),
+      t('home.ads.affiliate.confirmMessage', { advertiser: advertiserName }),
+      [
+        {
+          text: t('common.cancel'),
+          style: 'cancel',
+        },
+        {
+          text: t('common.yes'),
+          onPress: () => {
+            Linking.openURL(url).catch((err) =>
+              console.error('[HomeScreen] Failed to open URL:', err)
+            );
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -126,17 +151,18 @@ export const HomeScreen: React.FC = () => {
               isActive={!!activeWorkout}
               onPress={handleStartWorkout}
             />
-            <StreakTile
+            <StreakGoalTile
+              size="1x1"
               currentStreak={stats.currentStreak}
               longestStreak={stats.longestStreak}
-              onPress={handleStreakPress}
+              weeklyGoalCurrent={stats.thisWeekWorkouts}
+              weeklyGoalTarget={weeklyGoal}
+              onPress={handleStreakGoalPress}
             />
-            <ProgressTile
-              title={t('home.weeklyGoal')}
-              current={stats.thisWeekWorkouts}
-              target={weeklyGoal}
-              color={COLORS.success}
-              onPress={handleWeeklyGoalPress}
+            <AdTile
+              size="1x1"
+              title="10% auf ESN"
+              onPress={() => handleAffiliateAdPress('https://www.esn.com', 'ESN')}
             />
           </View>
 
@@ -151,13 +177,49 @@ export const HomeScreen: React.FC = () => {
                 onPress={handleHealthPress}
               />
               <StatTile
-                label={t('home.thisMonth')}
-                value={stats.thisMonthWorkouts}
-                icon="📊"
-                onPress={handleNavigateToProgress}
+                label={t('home.totalWorkouts')}
+                value={stats.totalWorkouts}
+                icon="💪"
+                onPress={handleWorkoutHistoryPress}
               />
             </View>
           )}
+
+          <View style={styles.row}>
+            <DirectionTile
+              direction="gym"
+              workoutsCount={directionCounts.gym}
+              onPress={() => handleDirectionPress('gym')}
+            />
+            <DirectionTile
+              direction="yoga"
+              workoutsCount={directionCounts.yoga}
+              onPress={() => handleDirectionPress('yoga')}
+            />
+            <DirectionTile
+              direction="running"
+              workoutsCount={directionCounts.running}
+              onPress={() => handleDirectionPress('running')}
+            />
+          </View>
+
+          <View style={styles.row}>
+            <DirectionTile
+              direction="calisthenics"
+              workoutsCount={directionCounts.calisthenics}
+              onPress={() => handleDirectionPress('calisthenics')}
+            />
+            <DirectionTile
+              direction="cardio"
+              workoutsCount={directionCounts.cardio}
+              onPress={() => handleDirectionPress('cardio')}
+            />
+            <AdTile
+              size="1x1"
+              title={t('home.ads.plans.title')}
+              onPress={() => navigation.navigate('TrainingPlanList')}
+            />
+          </View>
 
           <View style={styles.row}>
             <AdTile
@@ -172,43 +234,6 @@ export const HomeScreen: React.FC = () => {
               icon="🏋️"
               onPress={handleNavigateToProgress}
             />
-            <StatTile
-              label={t('home.totalWorkouts')}
-              value={stats.totalWorkouts}
-              icon="💪"
-              onPress={handleWorkoutHistoryPress}
-            />
-          </View>
-
-          <View style={styles.row}>
-            <DirectionTile
-              direction="gym"
-              workoutsCount={directionCounts.gym}
-              onPress={() => handleDirectionPress('gym')}
-            />
-            <AdTile
-              size="1x1"
-              title={t('home.ads.plans.title')}
-              onPress={() => navigation.navigate('TrainingPlanList')}
-            />
-            <DirectionTile
-              direction="calisthenics"
-              workoutsCount={directionCounts.calisthenics}
-              onPress={() => handleDirectionPress('calisthenics')}
-            />
-          </View>
-
-          <View style={styles.row}>
-            <DirectionTile
-              direction="cardio"
-              workoutsCount={directionCounts.cardio}
-              onPress={() => handleDirectionPress('cardio')}
-            />
-            <DirectionTile
-              direction="yoga"
-              workoutsCount={directionCounts.yoga}
-              onPress={() => handleDirectionPress('yoga')}
-            />
             <AdTile
               size="1x1"
               title={t('home.ads.health.title')}
@@ -216,32 +241,12 @@ export const HomeScreen: React.FC = () => {
             />
           </View>
 
-          <View style={styles.row}>
-            <DirectionTile
-              direction="mobility"
-              workoutsCount={directionCounts.mobility}
-              onPress={() => handleDirectionPress('mobility')}
-            />
-            <DirectionTile
-              direction="custom"
-              workoutsCount={directionCounts.custom}
-              onPress={() => handleDirectionPress('custom')}
-            />
-            <StatTile
-              label={t('home.thisMonth')}
-              value={stats.thisMonthWorkouts}
-              icon="📊"
-              onPress={handleNavigateToProgress}
-            />
-          </View>
-
-          {/* Ad: Premium (groß) */}
           <AdTile
             size="3x1"
             title={t('home.premium.title')}
             description={t('home.premium.description')}
             ctaText={t('home.premium.cta')}
-            onPress={() => {}}
+            onPress={() => handleAffiliateAdPress('https://www.example.com', 'Premium Supplements')}
             onClose={() => {}}
           />
         </View>

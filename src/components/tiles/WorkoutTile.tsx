@@ -35,13 +35,10 @@ export const WorkoutTile: React.FC<Props> = ({
       gradientColors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.7)']}
     >
       <View style={styles.container}>
-        <Text style={styles.icon}>{isActive ? '⏱️' : '💪'}</Text>
-        <View style={styles.textContainer}>
-          <Text style={styles.label} numberOfLines={1}>
-            {isActive ? 'AKTIV' : 'WORKOUT'}
-          </Text>
-          <Text style={styles.title} numberOfLines={1}>{workoutName}</Text>
-        </View>
+        <Text style={styles.label} numberOfLines={1}>
+          {isActive ? 'AKTIV' : 'WORKOUT'}
+        </Text>
+        <Text style={styles.title} numberOfLines={1}>{workoutName}</Text>
       </View>
     </BaseTile>
   );
@@ -50,14 +47,8 @@ export const WorkoutTile: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-  },
-  icon: {
-    fontSize: 20,
-  },
-  textContainer: {
-    flex: 1,
     justifyContent: 'flex-end',
+    gap: 2,
   },
   label: {
     fontSize: FONT_SIZES.xs,

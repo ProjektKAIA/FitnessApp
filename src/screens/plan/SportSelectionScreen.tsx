@@ -25,11 +25,11 @@ interface SportOption {
 
 const SPORT_OPTIONS: SportOption[] = [
   { type: 'fitness', icon: '🏋️', color: COLORS.primary, available: true },
-  { type: 'running', icon: '🏃', color: COLORS.accent, available: false },
+  { type: 'running', icon: '🏃', color: COLORS.accent, available: true },
+  { type: 'yoga', icon: '🧘', color: COLORS.purple, available: true },
   { type: 'cycling', icon: '🚴', color: COLORS.success, available: false },
   { type: 'martial_arts', icon: '🥊', color: COLORS.error, available: false },
   { type: 'swimming', icon: '🏊', color: '#00BCD4', available: false },
-  { type: 'yoga', icon: '🧘', color: COLORS.purple, available: false },
 ];
 
 export const SportSelectionScreen: React.FC = () => {
@@ -40,6 +40,10 @@ export const SportSelectionScreen: React.FC = () => {
   const handleSelectSport = (sportType: TSportType) => {
     if (sportType === 'fitness') {
       navigation.navigate('FitnessQuestionnaire', { sportType });
+    } else if (sportType === 'running') {
+      navigation.navigate('RunningHome');
+    } else if (sportType === 'yoga') {
+      navigation.navigate('YogaHome');
     } else {
       navigation.navigate('TrainingPlanList', { sportType });
     }

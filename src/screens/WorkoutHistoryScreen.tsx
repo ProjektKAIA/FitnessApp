@@ -26,9 +26,10 @@ const DIRECTION_COLORS: Record<TDirection, string> = {
   yoga: COLORS.success,
   mobility: COLORS.gray[500],
   custom: COLORS.gray[600],
+  running: COLORS.accent,
 };
 
-const ALL_DIRECTIONS: TDirection[] = ['gym', 'calisthenics', 'cardio', 'yoga', 'mobility', 'custom'];
+const ALL_DIRECTIONS: TDirection[] = ['gym', 'calisthenics', 'cardio', 'yoga', 'mobility', 'custom', 'running'];
 
 const formatDate = (date: Date): string => {
   const d = new Date(date);

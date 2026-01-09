@@ -35,7 +35,8 @@
       "bundleIdentifier": "de.shapyfit.app",
       "infoPlist": {
         "NSHealthShareUsageDescription": "Diese App benötigt Zugriff auf Ihre Gesundheitsdaten, um Ihre Fitness-Fortschritte zu verfolgen und personalisierte Empfehlungen zu geben.",
-        "NSHealthUpdateUsageDescription": "Diese App möchte Ihre Trainings- und Aktivitätsdaten in Apple Health speichern."
+        "NSHealthUpdateUsageDescription": "Diese App möchte Ihre Trainings- und Aktivitätsdaten in Apple Health speichern.",
+        "NSUserTrackingUsageDescription": "Wir verwenden Tracking-Daten, um dir personalisierte Inhalte und Werbung anzuzeigen und unsere App zu verbessern."
       },
       "entitlements": {
         "com.apple.developer.healthkit": true,

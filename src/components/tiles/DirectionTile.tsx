@@ -43,6 +43,11 @@ const DIRECTION_CONFIG: Record<TDirection, { icon: string; label: string; image:
     label: 'Custom',
     image: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=400&q=80',
   },
+  running: {
+    icon: '🏃',
+    label: 'Running',
+    image: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400&q=80',
+  },
 };
 
 export const DirectionTile: React.FC<Props> = ({
@@ -66,21 +71,10 @@ export const DirectionTile: React.FC<Props> = ({
       }
     >
       <View style={styles.container}>
-        <View style={styles.top}>
-          <Text style={styles.icon}>{config.icon}</Text>
-          {isSelected && (
-            <View style={styles.selectedBadge}>
-              <Text style={styles.checkmark}>✓</Text>
-            </View>
-          )}
-        </View>
-
-        <View style={styles.bottom}>
-          <Text style={styles.label}>{config.label}</Text>
-          {workoutsCount !== undefined && (
-            <Text style={styles.count}>{workoutsCount}</Text>
-          )}
-        </View>
+        <Text style={styles.label}>{config.label}</Text>
+        {workoutsCount !== undefined && (
+          <Text style={styles.count}>{workoutsCount}</Text>
+        )}
       </View>
     </BaseTile>
   );
@@ -89,30 +83,7 @@ export const DirectionTile: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-  },
-  top: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  icon: {
-    fontSize: 18,
-  },
-  selectedBadge: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: COLORS.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkmark: {
-    fontSize: 10,
-    color: COLORS.success,
-    fontWeight: '700',
-  },
-  bottom: {
+    justifyContent: 'flex-end',
     gap: 2,
   },
   label: {

@@ -55,14 +55,10 @@ export const StatTile: React.FC<Props> = ({
       gradientColors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.75)']}
     >
       <View style={styles.container}>
-        {icon && <Text style={styles.icon}>{icon}</Text>}
-
-        <View style={styles.bottom}>
-          <Text style={styles.label} numberOfLines={1}>{label}</Text>
-          <View style={styles.valueContainer}>
-            <Text style={styles.value}>{value}</Text>
-            {unit && <Text style={styles.unit}>{unit}</Text>}
-          </View>
+        <Text style={styles.label} numberOfLines={1}>{label}</Text>
+        <View style={styles.valueContainer}>
+          <Text style={styles.value}>{value}</Text>
+          {unit && <Text style={styles.unit}>{unit}</Text>}
         </View>
       </View>
     </BaseTile>
@@ -72,12 +68,7 @@ export const StatTile: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-  },
-  icon: {
-    fontSize: 16,
-  },
-  bottom: {
+    justifyContent: 'flex-end',
     gap: 2,
   },
   label: {

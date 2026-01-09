@@ -1,4 +1,147 @@
-export type TDirection = 'gym' | 'calisthenics' | 'cardio' | 'yoga' | 'mobility' | 'custom';
+export type TDirection = 'gym' | 'calisthenics' | 'cardio' | 'yoga' | 'mobility' | 'running' | 'custom';
+
+// ============================================
+// RUNNING TYPES
+// ============================================
+export type TRunningWorkoutType =
+  | 'easy_run'
+  | 'long_run'
+  | 'tempo_run'
+  | 'interval'
+  | 'fartlek'
+  | 'recovery'
+  | 'hill_training'
+  | 'race';
+
+export type TRunningLevel = 'beginner' | 'intermediate' | 'advanced';
+
+export type TRunningGoal = '5k' | '10k' | 'half_marathon' | 'marathon' | 'general_fitness' | 'speed_improvement';
+
+export interface IRunningPlan {
+  id: string;
+  name: string;
+  goal: TRunningGoal;
+  level: TRunningLevel;
+  durationWeeks: number;
+  description: string;
+  weeklySchedule: IRunningWeeklySchedule[];
+}
+
+export interface IRunningWeeklySchedule {
+  week: number;
+  days: IRunningDay[];
+  totalDistance: number;
+  focusNote?: string;
+}
+
+export interface IRunningDay {
+  day: TTrainingDay;
+  workout: IRunningWorkout | null;
+}
+
+export interface IRunningWorkout {
+  id: string;
+  name: string;
+  type: TRunningWorkoutType;
+  description: string;
+  targetDistance?: number;
+  targetDuration?: number;
+  targetPace?: string;
+  warmup?: IRunningSegment;
+  mainSet: IRunningSegment[];
+  cooldown?: IRunningSegment;
+  notes?: string;
+}
+
+export interface IRunningSegment {
+  type: 'run' | 'walk' | 'jog' | 'sprint' | 'rest';
+  duration?: number;
+  distance?: number;
+  pace?: string;
+  effort?: 'easy' | 'moderate' | 'hard' | 'max';
+  reps?: number;
+}
+
+// ============================================
+// YOGA TYPES
+// ============================================
+export type TYogaStyle =
+  | 'hatha'
+  | 'vinyasa'
+  | 'yin'
+  | 'power'
+  | 'restorative'
+  | 'ashtanga'
+  | 'kundalini';
+
+export type TYogaLevel = 'beginner' | 'intermediate' | 'advanced';
+
+export type TYogaFocus =
+  | 'flexibility'
+  | 'strength'
+  | 'balance'
+  | 'relaxation'
+  | 'energy'
+  | 'core'
+  | 'back_relief'
+  | 'hip_opener'
+  | 'full_body';
+
+export interface IYogaPose {
+  id: string;
+  name: string;
+  nameEn: string;
+  sanskritName?: string;
+  level: TYogaLevel;
+  focus: TYogaFocus[];
+  duration?: number;
+  holdTime?: string;
+  description: string;
+  instructions: string[];
+  benefits: string[];
+  contraindications?: string[];
+  modifications?: string[];
+  imageUrl?: string;
+}
+
+export interface IYogaSession {
+  id: string;
+  name: string;
+  style: TYogaStyle;
+  level: TYogaLevel;
+  duration: number;
+  focus: TYogaFocus[];
+  description: string;
+  poses: IYogaSessionPose[];
+}
+
+export interface IYogaSessionPose {
+  poseId: string;
+  duration: number;
+  side?: 'left' | 'right' | 'both';
+  notes?: string;
+}
+
+export interface IYogaProgram {
+  id: string;
+  name: string;
+  description: string;
+  level: TYogaLevel;
+  durationWeeks: number;
+  focus: TYogaFocus[];
+  weeklySchedule: IYogaWeeklySchedule[];
+}
+
+export interface IYogaWeeklySchedule {
+  week: number;
+  days: IYogaDay[];
+  focusNote?: string;
+}
+
+export interface IYogaDay {
+  day: TTrainingDay;
+  session: IYogaSession | null;
+}
 
 // Onboarding Types
 export type TGender = 'male' | 'female' | 'other';
@@ -306,6 +449,23 @@ export type RootStackParamList = {
   DataImport: undefined;
   DataBackup: undefined;
   DeleteAccount: undefined;
+  // Running Screens
+  RunningHome: undefined;
+  RunningPlanList: undefined;
+  RunningPlanDetail: { planId: string };
+  RunningWorkoutActive: { workoutId: string };
+  RunningWorkoutDetail: { workoutId: string };
+  RunningQuestionnaire: undefined;
+  // Yoga Screens
+  YogaHome: undefined;
+  YogaSessionList: undefined;
+  YogaSessionDetail: { sessionId: string };
+  YogaPoseDetail: { poseId: string };
+  YogaSessionActive: { sessionId: string };
+  YogaProgramList: undefined;
+  YogaProgramDetail: { programId: string };
+  // Calisthenics Screens
+  CalisthenicsHome: undefined;
 };
 
 export type OnboardingStackParamList = {

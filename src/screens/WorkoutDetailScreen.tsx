@@ -28,6 +28,7 @@ const DIRECTION_COLORS: Record<TDirection, string> = {
   yoga: COLORS.success,
   mobility: COLORS.gray[500],
   custom: COLORS.gray[600],
+  running: COLORS.accent,
 };
 
 const DIRECTION_IMAGES: Record<TDirection, string> = {
@@ -37,6 +38,7 @@ const DIRECTION_IMAGES: Record<TDirection, string> = {
   yoga: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800',
   mobility: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800',
   custom: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800',
+  running: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800',
 };
 
 const formatDateTime = (date: Date): string => {

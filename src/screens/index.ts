@@ -44,3 +44,16 @@ export {
   SportScreen,
   GoalScreen,
 } from './onboarding';
+export {
+  RunningHomeScreen,
+  RunningPlanListScreen,
+  RunningPlanDetailScreen,
+  RunningWorkoutDetailScreen,
+} from './running';
+export {
+  YogaHomeScreen,
+  YogaSessionListScreen,
+  YogaSessionDetailScreen,
+  YogaPoseDetailScreen,
+} from './yoga';
+export { CalisthenicsHomeScreen } from './calisthenics';

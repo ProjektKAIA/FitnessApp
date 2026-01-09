@@ -51,13 +51,26 @@ import {
   WeightScreen,
   SportScreen,
   GoalScreen,
+  // Running Screens
+  RunningHomeScreen,
+  RunningPlanListScreen,
+  RunningPlanDetailScreen,
+  RunningWorkoutDetailScreen,
+  // Yoga Screens
+  YogaHomeScreen,
+  YogaSessionListScreen,
+  YogaSessionDetailScreen,
+  YogaPoseDetailScreen,
+  // Calisthenics Screens
+  CalisthenicsHomeScreen,
 } from '@/screens';
 import { BottomNav } from '@/components/navigation';
 import { ErrorBoundary, LoadingScreen } from '@/components/common';
 import { ThemeProvider } from '@/contexts';
-import { useAuthStore, useConsentStore, useLanguageStore } from '@/stores';
+import { useAuthStore, useConsentStore, useLanguageStore, useTrackingStore } from '@/stores';
 import { RootStackParamList, MainTabParamList, OnboardingStackParamList } from '@/types';
 import { initI18n } from '@/lib/i18n';
+import { requestAppTracking } from '@/utils/tracking';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -132,6 +145,10 @@ export default function App() {
   const hasCompletedOnboarding = useConsentStore((state) => state.hasCompletedOnboarding);
   const initializeLanguage = useLanguageStore((state) => state.initialize);
 
+  const hasAskedForTracking = useTrackingStore((state) => state.hasAskedForTracking);
+  const setTrackingPermissionStatus = useTrackingStore((state) => state.setTrackingPermissionStatus);
+  const setHasAskedForTracking = useTrackingStore((state) => state.setHasAskedForTracking);
+
   const hasCompletedConsent = hasAcceptedPrivacyPolicy && hasAcceptedTerms && hasRespondedToTracking;
 
   useEffect(() => {
@@ -145,6 +162,22 @@ export default function App() {
     return () => unsubscribe();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Request App Tracking Transparency after onboarding
+  useEffect(() => {
+    const requestTracking = async () => {
+      if (hasCompletedOnboarding && hasCompletedConsent && !hasAskedForTracking) {
+        // Wait a bit after app launch for better UX
+        setTimeout(async () => {
+          const status = await requestAppTracking();
+          setTrackingPermissionStatus(status);
+          setHasAskedForTracking(true);
+        }, 1000);
+      }
+    };
+
+    requestTracking();
+  }, [hasCompletedOnboarding, hasCompletedConsent, hasAskedForTracking, setTrackingPermissionStatus, setHasAskedForTracking]);
 
   if (isLoading) {
     return (
@@ -410,6 +443,97 @@ export default function App() {
                 <Stack.Screen
                   name="DeleteAccount"
                   component={DeleteAccountScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                {/* Running Screens */}
+                <Stack.Screen
+                  name="RunningHome"
+                  component={RunningHomeScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="RunningPlanList"
+                  component={RunningPlanListScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="RunningPlanDetail"
+                  component={RunningPlanDetailScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="RunningWorkoutDetail"
+                  component={RunningWorkoutDetailScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                {/* Yoga Screens */}
+                <Stack.Screen
+                  name="YogaHome"
+                  component={YogaHomeScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="YogaSessionList"
+                  component={YogaSessionListScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="YogaSessionDetail"
+                  component={YogaSessionDetailScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="YogaPoseDetail"
+                  component={YogaPoseDetailScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="YogaProgramList"
+                  component={YogaSessionListScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="YogaProgramDetail"
+                  component={YogaSessionDetailScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                {/* Calisthenics Screens */}
+                <Stack.Screen
+                  name="CalisthenicsHome"
+                  component={CalisthenicsHomeScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',

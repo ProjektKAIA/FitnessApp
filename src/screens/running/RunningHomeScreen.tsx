@@ -1,0 +1,339 @@
+// /workspaces/claude-workspace/fitnessapp/src/screens/running/RunningHomeScreen.tsx
+
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useTranslation } from 'react-i18next';
+
+import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
+import { useTheme } from '@/contexts';
+import { RootStackParamList } from '@/types';
+import {
+  RUNNING_PLANS,
+  RUNNING_WORKOUTS,
+  RUNNING_WORKOUT_TYPE_LABELS,
+  RUNNING_GOAL_LABELS,
+  RUNNING_LEVEL_LABELS,
+} from '@/data/runningLibrary';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+export const RunningHomeScreen: React.FC = () => {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+  const navigation = useNavigation<NavigationProp>();
+
+  const quickWorkouts = RUNNING_WORKOUTS.slice(0, 4);
+
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={[styles.backIcon, { color: colors.text }]}>{'<'}</Text>
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('running.title')}</Text>
+        <View style={styles.placeholder} />
+      </View>
+
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Hero Section */}
+        <View style={[styles.heroCard, { backgroundColor: COLORS.accent }]}>
+          <Text style={styles.heroIcon}>{'🏃'}</Text>
+          <Text style={styles.heroTitle}>{t('running.heroTitle')}</Text>
+          <Text style={styles.heroSubtitle}>{t('running.heroSubtitle')}</Text>
+        </View>
+
+        {/* Quick Start */}
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('running.quickStart')}</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.quickWorkoutsContainer}
+        >
+          {quickWorkouts.map((workout) => (
+            <TouchableOpacity
+              key={workout.id}
+              style={[styles.quickWorkoutCard, { backgroundColor: colors.surface }]}
+              onPress={() => navigation.navigate('RunningWorkoutDetail', { workoutId: workout.id })}
+            >
+              <Text style={styles.quickWorkoutIcon}>
+                {RUNNING_WORKOUT_TYPE_LABELS[workout.type].icon}
+              </Text>
+              <Text style={[styles.quickWorkoutName, { color: colors.text }]} numberOfLines={1}>
+                {workout.name}
+              </Text>
+              <Text style={[styles.quickWorkoutDuration, { color: colors.textSecondary }]}>
+                {workout.targetDuration} {t('running.min')}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Training Plans */}
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('running.trainingPlans')}</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('RunningPlanList')}>
+            <Text style={[styles.seeAllText, { color: COLORS.accent }]}>{t('common.viewAll')}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {RUNNING_PLANS.slice(0, 3).map((plan) => (
+          <TouchableOpacity
+            key={plan.id}
+            style={[styles.planCard, { backgroundColor: colors.surface }]}
+            onPress={() => navigation.navigate('RunningPlanDetail', { planId: plan.id })}
+          >
+            <View style={styles.planContent}>
+              <View style={[styles.planBadge, { backgroundColor: COLORS.accent + '20' }]}>
+                <Text style={[styles.planBadgeText, { color: COLORS.accent }]}>
+                  {RUNNING_GOAL_LABELS[plan.goal].de}
+                </Text>
+              </View>
+              <Text style={[styles.planName, { color: colors.text }]}>{plan.name}</Text>
+              <Text style={[styles.planDescription, { color: colors.textSecondary }]} numberOfLines={2}>
+                {plan.description}
+              </Text>
+              <View style={styles.planMeta}>
+                <View style={styles.planMetaItem}>
+                  <Text style={[styles.planMetaIcon]}>{'📅'}</Text>
+                  <Text style={[styles.planMetaText, { color: colors.textSecondary }]}>
+                    {plan.durationWeeks} {t('running.weeks')}
+                  </Text>
+                </View>
+                <View style={styles.planMetaItem}>
+                  <Text style={[styles.planMetaIcon]}>{'📊'}</Text>
+                  <Text style={[styles.planMetaText, { color: colors.textSecondary }]}>
+                    {RUNNING_LEVEL_LABELS[plan.level].de}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <Text style={[styles.planArrow, { color: colors.textSecondary }]}>{'>'}</Text>
+          </TouchableOpacity>
+        ))}
+
+        {/* All Workouts Button */}
+        <TouchableOpacity
+          style={[styles.allWorkoutsButton, { backgroundColor: colors.surface, borderColor: COLORS.accent }]}
+          onPress={() => navigation.navigate('RunningPlanList')}
+        >
+          <Text style={[styles.allWorkoutsText, { color: COLORS.accent }]}>
+            {t('running.allWorkouts')}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Tips Section */}
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('running.tips')}</Text>
+        <View style={[styles.tipsCard, { backgroundColor: colors.surface }]}>
+          <Text style={styles.tipIcon}>{'💡'}</Text>
+          <View style={styles.tipContent}>
+            <Text style={[styles.tipTitle, { color: colors.text }]}>{t('running.tipTitle')}</Text>
+            <Text style={[styles.tipText, { color: colors.textSecondary }]}>
+              {t('running.tipText')}
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderBottomWidth: 1,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backIcon: {
+    fontSize: FONT_SIZES.xl,
+    fontWeight: '600',
+  },
+  headerTitle: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '600',
+  },
+  placeholder: {
+    width: 40,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  content: {
+    padding: SPACING.lg,
+    paddingBottom: SPACING['4xl'],
+  },
+  heroCard: {
+    borderRadius: BORDER_RADIUS.xl,
+    padding: SPACING.xl,
+    alignItems: 'center',
+    marginBottom: SPACING.xl,
+    ...SHADOWS.md,
+  },
+  heroIcon: {
+    fontSize: 48,
+    marginBottom: SPACING.sm,
+  },
+  heroTitle: {
+    fontSize: FONT_SIZES.xl,
+    fontWeight: '700',
+    color: COLORS.white,
+    marginBottom: SPACING.xs,
+  },
+  heroSubtitle: {
+    fontSize: FONT_SIZES.base,
+    color: COLORS.white,
+    opacity: 0.9,
+    textAlign: 'center',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  sectionTitle: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '600',
+    marginBottom: SPACING.md,
+  },
+  seeAllText: {
+    fontSize: FONT_SIZES.sm,
+    fontWeight: '500',
+  },
+  quickWorkoutsContainer: {
+    paddingBottom: SPACING.md,
+    marginBottom: SPACING.lg,
+  },
+  quickWorkoutCard: {
+    width: 130,
+    padding: SPACING.md,
+    borderRadius: BORDER_RADIUS.lg,
+    marginRight: SPACING.md,
+    alignItems: 'center',
+    ...SHADOWS.sm,
+  },
+  quickWorkoutIcon: {
+    fontSize: 32,
+    marginBottom: SPACING.sm,
+  },
+  quickWorkoutName: {
+    fontSize: FONT_SIZES.sm,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: SPACING.xs,
+  },
+  quickWorkoutDuration: {
+    fontSize: FONT_SIZES.xs,
+  },
+  planCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.xl,
+    marginBottom: SPACING.md,
+    ...SHADOWS.sm,
+  },
+  planContent: {
+    flex: 1,
+  },
+  planBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: BORDER_RADIUS.md,
+    marginBottom: SPACING.sm,
+  },
+  planBadgeText: {
+    fontSize: FONT_SIZES.xs,
+    fontWeight: '600',
+  },
+  planName: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    marginBottom: SPACING.xs,
+  },
+  planDescription: {
+    fontSize: FONT_SIZES.sm,
+    lineHeight: 18,
+    marginBottom: SPACING.sm,
+  },
+  planMeta: {
+    flexDirection: 'row',
+    gap: SPACING.md,
+  },
+  planMetaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+  },
+  planMetaIcon: {
+    fontSize: 14,
+  },
+  planMetaText: {
+    fontSize: FONT_SIZES.xs,
+  },
+  planArrow: {
+    fontSize: FONT_SIZES.xl,
+    marginLeft: SPACING.md,
+  },
+  allWorkoutsButton: {
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.xl,
+    borderWidth: 2,
+    alignItems: 'center',
+    marginBottom: SPACING.xl,
+  },
+  allWorkoutsText: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+  },
+  tipsCard: {
+    flexDirection: 'row',
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.xl,
+    ...SHADOWS.sm,
+  },
+  tipIcon: {
+    fontSize: 28,
+    marginRight: SPACING.md,
+  },
+  tipContent: {
+    flex: 1,
+  },
+  tipTitle: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    marginBottom: SPACING.xs,
+  },
+  tipText: {
+    fontSize: FONT_SIZES.sm,
+    lineHeight: 18,
+  },
+});
