@@ -20,6 +20,9 @@
             "compileSdkVersion": 34,
             "targetSdkVersion": 34,
             "minSdkVersion": 26
+          },
+          "ios": {
+            "deploymentTarget": "15.1"
           }
         }
       ],
@@ -28,7 +31,8 @@
         {
           "requestPermissionsOnLaunch": false
         }
-      ]
+      ],
+      "react-native-health"
     ],
     "ios": {
       "supportsTablet": true,

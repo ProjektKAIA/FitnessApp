@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { useTranslation, I18nextProvider } from 'react-i18next';
 
 import {
@@ -141,6 +141,7 @@ const MainTabs: React.FC = () => {
 
 export default function App() {
   const { t } = useTranslation();
+  const hasHydrated = useConsentStore((state) => state._hasHydrated);
   const hasAcceptedPrivacyPolicy = useConsentStore((state) => state.hasAcceptedPrivacyPolicy);
   const hasAcceptedTerms = useConsentStore((state) => state.hasAcceptedTerms);
   const hasRespondedToTracking = useConsentStore((state) => state.hasRespondedToTracking);
@@ -174,6 +175,15 @@ export default function App() {
 
     requestTracking();
   }, [hasCompletedOnboarding, hasCompletedConsent, hasAskedForTracking, setTrackingPermissionStatus, setHasAskedForTracking]);
+
+  // Warte auf Store-Hydration bevor die App gerendert wird
+  if (!hasHydrated) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#6366f1" />
+      </View>
+    );
+  }
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -572,5 +582,11 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0f172a',
   },
 });

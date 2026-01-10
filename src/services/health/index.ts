@@ -1,4 +1,6 @@
 // Health Services - Platform agnostic health data integration
+// IMPORTANT: AppleHealthService and HealthConnectService are NOT exported here
+// to prevent loading native modules at app startup. Use createHealthService() instead.
 export {
   createHealthService,
   getHealthService,
@@ -8,9 +10,7 @@ export {
   BaseHealthService,
 } from './healthService';
 
-export { AppleHealthService } from './appleHealth';
-export { HealthConnectService } from './healthConnect';
-
+// Data transformers don't import native modules, safe to export
 export { transformAppleHealthData, transformHealthConnectData } from './dataTransformers';
 
 export {
