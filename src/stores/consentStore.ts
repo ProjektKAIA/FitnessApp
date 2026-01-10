@@ -18,32 +18,6 @@ interface ConsentState {
   resetConsent: () => void;
 }
 
-// Separater Hydration-State außerhalb von persist
-interface HydrationState {
-  hasHydrated: boolean;
-  setHasHydrated: (value: boolean) => void;
-  waitForHydration: () => Promise<void>;
-}
-
-export const useHydrationStore = create<HydrationState>((set, get) => ({
-  hasHydrated: false,
-  setHasHydrated: (value) => set({ hasHydrated: value }),
-  waitForHydration: () => {
-    return new Promise<void>((resolve) => {
-      if (get().hasHydrated) {
-        resolve();
-        return;
-      }
-      const unsub = useHydrationStore.subscribe((state) => {
-        if (state.hasHydrated) {
-          unsub();
-          resolve();
-        }
-      });
-    });
-  },
-}));
-
 export const useConsentStore = create<ConsentState>()(
   persist(
     (set) => ({
@@ -96,13 +70,6 @@ export const useConsentStore = create<ConsentState>()(
     {
       name: 'consent-storage',
       storage: createJSONStorage(() => AsyncStorage),
-      onRehydrateStorage: () => (_state, error) => {
-        // Wird IMMER aufgerufen, auch bei Fehlern
-        if (error) {
-          console.error('[ConsentStore] Hydration error:', error);
-        }
-        useHydrationStore.getState().setHasHydrated(true);
-      },
     }
   )
 );
