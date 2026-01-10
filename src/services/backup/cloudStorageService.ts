@@ -1,8 +1,8 @@
 // /workspaces/claude-workspace/fitnessapp/src/services/backup/cloudStorageService.ts
 
-import { Platform, Share } from 'react-native';
+import { Platform } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
-import { Paths, File } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { BackupStorageType } from '@/stores/backupStore';
 import { logger } from '@/lib/logger';
@@ -84,8 +84,8 @@ export const saveToCloudDirect = async (
 ): Promise<CloudStorageResult> => {
   try {
     // Temporäre Datei erstellen
-    const tempFile = new File(Paths.cache, fileName);
-    await tempFile.write(content);
+    const tempFilePath = `${FileSystem.cacheDirectory}${fileName}`;
+    await FileSystem.writeAsStringAsync(tempFilePath, content);
 
     if (Platform.OS === 'web') {
       // Web: Direct download
@@ -101,7 +101,7 @@ export const saveToCloudDirect = async (
     }
 
     // Mobile: Share Sheet
-    return saveToCloud(tempFile.uri, fileName);
+    return saveToCloud(tempFilePath, fileName);
   } catch (error) {
     log.error('Save direct error', error);
     return {
@@ -140,8 +140,7 @@ export const loadFromCloud = async (): Promise<CloudStorageResult & { content?: 
     }
 
     // Datei lesen
-    const file = new File(asset.uri);
-    const content = await file.text();
+    const content = await FileSystem.readAsStringAsync(asset.uri);
 
     // Validieren dass es JSON ist
     try {

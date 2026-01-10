@@ -787,9 +787,11 @@ const en = {
   // Onboarding
   onboarding: {
     welcome: {
+      greeting: 'Welcome',
       title: 'Take your body to the peak',
       subtitle: 'Start your fitness journey now with personalized training plans',
       letsGo: "Let's Go",
+      getStarted: "Let's Go",
       skip: 'Skip',
     },
     gender: {
@@ -825,6 +827,20 @@ const en = {
         kickboxing: 'Kickboxing',
         karate: 'Karate',
       },
+      options: {
+        bodybuilding: 'Bodybuilding',
+        tennis: 'Tennis',
+        basketball: 'Basketball',
+        football: 'Football',
+        volleyball: 'Volleyball',
+        badminton: 'Badminton',
+        shooting: 'Shooting',
+        running: 'Running',
+        swimming: 'Swimming',
+        yoga: 'Yoga',
+        kickboxing: 'Kickboxing',
+        karate: 'Karate',
+      },
     },
     goal: {
       title: 'What is your main goal?',
@@ -836,7 +852,15 @@ const en = {
         increased_metabolism: 'Boost Metabolism',
         weight_gain: 'Weight Gain',
       },
+      options: {
+        fat_burning: 'Fat Burning',
+        fitness: 'General Fitness',
+        strengthen_muscles: 'Build Muscles',
+        increased_metabolism: 'Boost Metabolism',
+        weight_gain: 'Weight Gain',
+      },
     },
+    back: 'Back',
     continue: 'Continue',
     finish: 'Finish',
     step: 'Step {{current}} of {{total}}',

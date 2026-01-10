@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -17,23 +17,27 @@
         "expo-build-properties",
         {
           "android": {
-            "compileSdkVersion": 34,
-            "targetSdkVersion": 34,
-            "minSdkVersion": 26
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "minSdkVersion": 26,
+            "kotlinVersion": "2.0.21"
           },
           "ios": {
             "deploymentTarget": "15.1"
           }
         }
       ],
+      "@react-native-google-signin/google-signin",
+      "react-native-health",
+      "react-native-health-connect",
+      "@react-native-community/datetimepicker",
       [
-        "expo-health-connect",
+        "expo-tracking-transparency",
         {
-          "requestPermissionsOnLaunch": false
+          "userTrackingPermission": "Wir verwenden Tracking-Daten, um dir personalisierte Inhalte und Werbung anzuzeigen und unsere App zu verbessern."
         }
       ],
-      "react-native-health",
-      "@react-native-community/datetimepicker"
+      "expo-sqlite"
     ],
     "ios": {
       "supportsTablet": true,
@@ -47,19 +51,17 @@
       "entitlements": {
         "com.apple.developer.healthkit": true,
         "com.apple.developer.healthkit.access": [
-          "health-records",
           "health-records"
         ],
         "com.apple.developer.healthkit.background-delivery": true
-      }
+      },
+      "appleTeamId": "B66382YV72"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0f172a"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false,
       "package": "de.shapyfit.app",
       "permissions": [
         "android.permission.health.READ_STEPS",

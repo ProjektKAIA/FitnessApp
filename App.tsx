@@ -179,11 +179,19 @@ export default function App() {
 
     const requestTracking = async () => {
       if (hasCompletedOnboarding && hasCompletedConsent && !hasAskedForTracking) {
-        setTimeout(async () => {
-          const status = await requestAppTracking();
-          setTrackingPermissionStatus(status);
-          setHasAskedForTracking(true);
-        }, 1000);
+        // Delay tracking request to ensure UI is fully rendered
+        const timeoutId = setTimeout(async () => {
+          try {
+            const status = await requestAppTracking();
+            setTrackingPermissionStatus(status);
+          } catch (error) {
+            console.error('[App] Error requesting tracking permission:', error);
+          } finally {
+            setHasAskedForTracking(true);
+          }
+        }, 2000);
+
+        return () => clearTimeout(timeoutId);
       }
     };
 

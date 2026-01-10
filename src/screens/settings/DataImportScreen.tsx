@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import * as DocumentPicker from 'expo-document-picker';
-import { File } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
 import { useUserStore } from '@/stores';
@@ -68,8 +68,7 @@ export const DataImportScreen: React.FC = () => {
       const file = result.assets[0];
       setSelectedFile(file.name);
 
-      const importFile = new File(file.uri);
-      const content = await importFile.text();
+      const content = await FileSystem.readAsStringAsync(file.uri);
 
       const data = JSON.parse(content) as ImportData;
       setImportData(data);

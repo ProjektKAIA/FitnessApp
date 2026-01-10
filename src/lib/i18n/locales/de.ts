@@ -787,9 +787,11 @@ const de = {
   // Onboarding
   onboarding: {
     welcome: {
+      greeting: 'Willkommen',
       title: 'Bring deinen Körper auf das nächste Level',
       subtitle: 'Starte jetzt deine Fitness-Reise mit personalisierten Trainingsplänen',
       letsGo: 'Los geht\'s',
+      getStarted: 'Los geht\'s',
       skip: 'Überspringen',
     },
     gender: {
@@ -825,6 +827,20 @@ const de = {
         kickboxing: 'Kickboxen',
         karate: 'Karate',
       },
+      options: {
+        bodybuilding: 'Bodybuilding',
+        tennis: 'Tennis',
+        basketball: 'Basketball',
+        football: 'Fußball',
+        volleyball: 'Volleyball',
+        badminton: 'Badminton',
+        shooting: 'Schießen',
+        running: 'Laufen',
+        swimming: 'Schwimmen',
+        yoga: 'Yoga',
+        kickboxing: 'Kickboxen',
+        karate: 'Karate',
+      },
     },
     goal: {
       title: 'Was ist dein Hauptziel?',
@@ -836,7 +852,15 @@ const de = {
         increased_metabolism: 'Stoffwechsel steigern',
         weight_gain: 'Gewichtszunahme',
       },
+      options: {
+        fat_burning: 'Fettverbrennung',
+        fitness: 'Allgemeine Fitness',
+        strengthen_muscles: 'Muskelaufbau',
+        increased_metabolism: 'Stoffwechsel steigern',
+        weight_gain: 'Gewichtszunahme',
+      },
     },
+    back: 'Zurück',
     continue: 'Weiter',
     finish: 'Fertig',
     step: 'Schritt {{current}} von {{total}}',

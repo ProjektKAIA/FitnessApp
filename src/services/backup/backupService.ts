@@ -1,7 +1,7 @@
 // /workspaces/claude-workspace/fitnessapp/src/services/backup/backupService.ts
 
 import { Platform } from 'react-native';
-import { Paths, File } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system';
 import {
   useWorkoutStore,
   useTrainingPlanStore,
@@ -124,12 +124,12 @@ export const createBackupFile = async (): Promise<BackupMetadata> => {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
   const fileName = `shapyfit_backup_${timestamp}.json`;
 
-  const file = new File(Paths.cache, fileName);
-  await file.write(jsonString);
+  const filePath = `${FileSystem.cacheDirectory}${fileName}`;
+  await FileSystem.writeAsStringAsync(filePath, jsonString);
 
   return {
     fileName,
-    filePath: file.uri,
+    filePath,
     createdAt: new Date(),
     size: jsonString.length,
     version: BACKUP_VERSION,
@@ -141,15 +141,14 @@ export const createBackupFile = async (): Promise<BackupMetadata> => {
  */
 export const readBackupFile = async (filePath: string): Promise<BackupData | null> => {
   try {
-    const file = new File(filePath);
-    const fileExists = await file.exists;
+    const fileInfo = await FileSystem.getInfoAsync(filePath);
 
-    if (!fileExists) {
+    if (!fileInfo.exists) {
       log.error('File does not exist', undefined, { filePath });
       return null;
     }
 
-    const content = await file.text();
+    const content = await FileSystem.readAsStringAsync(filePath);
     const backupData = JSON.parse(content) as BackupData;
 
     // Validate backup structure

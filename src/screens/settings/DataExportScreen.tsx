@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { Paths, File } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
 import { useUserStore } from '@/stores';
@@ -142,11 +142,11 @@ export const DataExportScreen: React.FC = () => {
         URL.revokeObjectURL(url);
       } else {
         // Mobile: Save to file and share
-        const file = new File(Paths.cache, fileName);
-        await file.write(jsonString);
+        const filePath = `${FileSystem.cacheDirectory}${fileName}`;
+        await FileSystem.writeAsStringAsync(filePath, jsonString);
 
         await Share.share({
-          url: file.uri,
+          url: filePath,
           title: t('dataExport.shareTitle'),
         });
       }
