@@ -9,7 +9,6 @@ interface ConsentState {
   hasRespondedToTracking: boolean;
   trackingAllowed: boolean;
   consentDate: string | null;
-  _hasHydrated: boolean;
 
   setOnboardingComplete: () => void;
   acceptPrivacyPolicy: () => void;
@@ -17,8 +16,33 @@ interface ConsentState {
   setTrackingResponse: (allowed: boolean) => void;
   acceptAllLegal: () => void;
   resetConsent: () => void;
-  setHasHydrated: (state: boolean) => void;
 }
+
+// Separater Hydration-State außerhalb von persist
+interface HydrationState {
+  hasHydrated: boolean;
+  setHasHydrated: (value: boolean) => void;
+  waitForHydration: () => Promise<void>;
+}
+
+export const useHydrationStore = create<HydrationState>((set, get) => ({
+  hasHydrated: false,
+  setHasHydrated: (value) => set({ hasHydrated: value }),
+  waitForHydration: () => {
+    return new Promise<void>((resolve) => {
+      if (get().hasHydrated) {
+        resolve();
+        return;
+      }
+      const unsub = useHydrationStore.subscribe((state) => {
+        if (state.hasHydrated) {
+          unsub();
+          resolve();
+        }
+      });
+    });
+  },
+}));
 
 export const useConsentStore = create<ConsentState>()(
   persist(
@@ -29,9 +53,6 @@ export const useConsentStore = create<ConsentState>()(
       hasRespondedToTracking: false,
       trackingAllowed: false,
       consentDate: null,
-      _hasHydrated: false,
-
-      setHasHydrated: (state: boolean) => set({ _hasHydrated: state }),
 
       setOnboardingComplete: () =>
         set({ hasCompletedOnboarding: true }),
@@ -75,17 +96,13 @@ export const useConsentStore = create<ConsentState>()(
     {
       name: 'consent-storage',
       storage: createJSONStorage(() => AsyncStorage),
-      onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
+      onRehydrateStorage: () => (_state, error) => {
+        // Wird IMMER aufgerufen, auch bei Fehlern
+        if (error) {
+          console.error('[ConsentStore] Hydration error:', error);
+        }
+        useHydrationStore.getState().setHasHydrated(true);
       },
-      partialize: (state) => ({
-        hasCompletedOnboarding: state.hasCompletedOnboarding,
-        hasAcceptedPrivacyPolicy: state.hasAcceptedPrivacyPolicy,
-        hasAcceptedTerms: state.hasAcceptedTerms,
-        hasRespondedToTracking: state.hasRespondedToTracking,
-        trackingAllowed: state.trackingAllowed,
-        consentDate: state.consentDate,
-      }),
     }
   )
 );

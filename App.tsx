@@ -1,7 +1,10 @@
-// Initialize i18n FIRST before any other imports that might use translations
+// CRITICAL: Must be first import for React Navigation to work correctly
+import 'react-native-gesture-handler';
+
+// Initialize i18n before any other imports that might use translations
 import i18n from '@/lib/i18n';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -72,7 +75,7 @@ import {
 import { BottomNav } from '@/components/navigation';
 import { ErrorBoundary, LoadingScreen } from '@/components/common';
 import { ThemeProvider } from '@/contexts';
-import { useConsentStore, useLanguageStore, useTrackingStore } from '@/stores';
+import { useConsentStore, useHydrationStore, useLanguageStore, useTrackingStore } from '@/stores';
 import { RootStackParamList, MainTabParamList, OnboardingStackParamList } from '@/types';
 import { initI18n } from '@/lib/i18n';
 import { requestAppTracking } from '@/utils/tracking';
@@ -141,7 +144,13 @@ const MainTabs: React.FC = () => {
 
 export default function App() {
   const { t } = useTranslation();
-  const hasHydrated = useConsentStore((state) => state._hasHydrated);
+
+  // Hydration State - separater Store der nicht persistiert wird
+  const hasHydrated = useHydrationStore((state) => state.hasHydrated);
+
+  // App wird erst nach Hydration initialisiert - verhindert Flash/Crash
+  const [isReady, setIsReady] = useState(false);
+
   const hasAcceptedPrivacyPolicy = useConsentStore((state) => state.hasAcceptedPrivacyPolicy);
   const hasAcceptedTerms = useConsentStore((state) => state.hasAcceptedTerms);
   const hasRespondedToTracking = useConsentStore((state) => state.hasRespondedToTracking);
@@ -154,14 +163,20 @@ export default function App() {
 
   const hasCompletedConsent = hasAcceptedPrivacyPolicy && hasAcceptedTerms && hasRespondedToTracking;
 
+  // Warte auf Hydration und initialisiere App
   useEffect(() => {
-    // Load stored language preference (i18n is already initialized synchronously)
-    initI18n();
-    initializeLanguage();
-  }, []);
+    if (hasHydrated) {
+      // Stores sind geladen, App kann initialisiert werden
+      initI18n();
+      initializeLanguage();
+      setIsReady(true);
+    }
+  }, [hasHydrated, initializeLanguage]);
 
   // Request App Tracking Transparency after onboarding
   useEffect(() => {
+    if (!isReady) return;
+
     const requestTracking = async () => {
       if (hasCompletedOnboarding && hasCompletedConsent && !hasAskedForTracking) {
         // Wait a bit after app launch for better UX
@@ -174,10 +189,10 @@ export default function App() {
     };
 
     requestTracking();
-  }, [hasCompletedOnboarding, hasCompletedConsent, hasAskedForTracking, setTrackingPermissionStatus, setHasAskedForTracking]);
+  }, [isReady, hasCompletedOnboarding, hasCompletedConsent, hasAskedForTracking, setTrackingPermissionStatus, setHasAskedForTracking]);
 
   // Warte auf Store-Hydration bevor die App gerendert wird
-  if (!hasHydrated) {
+  if (!isReady) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#6366f1" />
