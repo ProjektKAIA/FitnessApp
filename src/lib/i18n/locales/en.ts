@@ -951,6 +951,7 @@ const en = {
     title: 'Contact',
     infoTitle: 'Get in touch!',
     infoText: 'Have questions, feedback or suggestions? We would love to hear from you.',
+    clickHere: 'Click here',
     formTitle: 'Contact Form',
     name: 'Name',
     namePlaceholder: 'Your name',

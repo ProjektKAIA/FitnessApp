@@ -26,6 +26,14 @@ interface Props {
 const TILE_GAP = TILE.gap;
 const PADDING = SPACING.lg;
 
+// Dynamische Tile-Höhe basierend auf Bildschirmhöhe
+const getResponsiveTileHeight = (screenHeight: number): number => {
+  const baseHeight = 120;
+  const referenceHeight = 667; // iPhone SE
+  const scale = screenHeight / referenceHeight;
+  return Math.min(180, Math.max(baseHeight, Math.round(baseHeight * scale)));
+};
+
 export const HealthTile: React.FC<Props> = ({
   size = '2x1',
   steps,
@@ -37,13 +45,16 @@ export const HealthTile: React.FC<Props> = ({
   onPress,
 }) => {
   const { t } = useTranslation();
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
-  const tileWidth = useMemo(() => {
+  const { tileWidth, tileHeight } = useMemo(() => {
     const totalGaps = TILE_GAP * (TILE.columns - 1);
     const singleWidth = (screenWidth - PADDING * 2 - totalGaps) / TILE.columns;
-    return size === '2x1' ? singleWidth * 2 + TILE_GAP : singleWidth;
-  }, [screenWidth, size]);
+    return {
+      tileWidth: size === '2x1' ? singleWidth * 2 + TILE_GAP : singleWidth,
+      tileHeight: getResponsiveTileHeight(screenHeight),
+    };
+  }, [screenWidth, screenHeight, size]);
 
   const stepsProgress = stepsGoal > 0 ? Math.min(steps / stepsGoal, 1) : 0;
   const caloriesProgress = caloriesGoal > 0 ? Math.min(calories / caloriesGoal, 1) : 0;
@@ -64,7 +75,7 @@ export const HealthTile: React.FC<Props> = ({
 
   return (
     <TouchableOpacity
-      style={[styles.tile, { width: tileWidth, height: TILE.height }]}
+      style={[styles.tile, { width: tileWidth, height: tileHeight }]}
       activeOpacity={onPress ? 0.7 : 1}
       onPress={onPress}
       disabled={!onPress}

@@ -28,20 +28,13 @@ import {
   GoalCard,
   RingEditorModal,
   RING_PRESETS,
-  type RingType,
-  type RingConfig,
 } from '@/components/you';
+import type { RingType, RingConfig } from '@/stores/userGoalsStore';
 import { RootStackParamList } from '@/types';
 import { useStatsStore, useUserGoalsStore, useUserStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
-const DEFAULT_RING_CONFIGS: RingConfig[] = [
-  { id: 'steps', enabled: true, goal: 10000 },
-  { id: 'calories', enabled: true, goal: 500 },
-  { id: 'activeMinutes', enabled: true, goal: 30 },
-];
 
 export const YouScreen: React.FC = () => {
   const { t } = useTranslation();
@@ -66,14 +59,17 @@ export const YouScreen: React.FC = () => {
     addGoal,
     updateTodayCalories,
     getLatestHealthEntry,
+    ringConfigs,
+    updateRingConfig,
+    toggleRing,
+    addRing,
   } = useUserGoalsStore();
 
   const todayCalories = getTodayCalories();
   const calorieBalance = getCalorieBalance();
   const latestHealth = getLatestHealthEntry();
 
-  // Ring configuration state
-  const [ringConfigs, setRingConfigs] = useState<RingConfig[]>(DEFAULT_RING_CONFIGS);
+  // Ring editor state
   const [showRingEditor, setShowRingEditor] = useState(false);
   const [editingRing, setEditingRing] = useState<RingData | null>(null);
   const [editValue, setEditValue] = useState('');
@@ -117,11 +113,11 @@ export const YouScreen: React.FC = () => {
             unit = 'min';
             break;
           case 'heartRate':
-            value = config.manualValue ?? (typeof todaySummary?.restingHeartRate === 'number' ? todaySummary.restingHeartRate : 0);
+            value = config.manualValue ?? (todaySummary?.restingHeartRate?.bpm ?? 0);
             unit = 'bpm';
             break;
           case 'distance':
-            value = config.manualValue ?? (typeof todaySummary?.distance === 'number' ? todaySummary.distance : 0) / 1000;
+            value = config.manualValue ?? (todaySummary?.distance?.meters ?? 0) / 1000;
             unit = 'km';
             break;
           case 'water':
@@ -153,39 +149,19 @@ export const YouScreen: React.FC = () => {
   const handleSaveRingEdit = () => {
     if (!editingRing) return;
 
-    setRingConfigs((prev) =>
-      prev.map((config) => {
-        if (config.id === editingRing.id) {
-          return {
-            ...config,
-            manualValue: editValue ? parseFloat(editValue) : undefined,
-            goal: editGoal ? parseFloat(editGoal) : config.goal,
-          };
-        }
-        return config;
-      })
-    );
+    updateRingConfig(editingRing.id as RingType, {
+      manualValue: editValue ? parseFloat(editValue) : undefined,
+      goal: editGoal ? parseFloat(editGoal) : undefined,
+    });
     setEditingRing(null);
   };
 
   const handleToggleRing = (ringId: RingType, enabled: boolean) => {
-    setRingConfigs((prev) =>
-      prev.map((config) => (config.id === ringId ? { ...config, enabled } : config))
-    );
+    toggleRing(ringId, enabled);
   };
 
   const handleAddRing = (ringId: RingType) => {
-    if (!ringConfigs.find((c) => c.id === ringId)) {
-      const defaultGoals: Record<RingType, number> = {
-        steps: 10000,
-        calories: 500,
-        activeMinutes: 30,
-        heartRate: 70,
-        distance: 5,
-        water: 2,
-      };
-      setRingConfigs((prev) => [...prev, { id: ringId, enabled: true, goal: defaultGoals[ringId] }]);
-    }
+    addRing(ringId);
   };
 
   const handleAddCalories = () => {

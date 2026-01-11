@@ -15,6 +15,8 @@ export const PrivacyPolicyScreen: React.FC = () => {
     Linking.openURL('mailto:info@kaiashapes.de');
   };
 
+  const boldStyle = { fontWeight: '600' as const, color: colors.text };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.surface }]} edges={['top']}>
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
@@ -43,10 +45,10 @@ export const PrivacyPolicyScreen: React.FC = () => {
 
         <Text style={[styles.subTitle, { color: colors.text }]}>Datenerfassung in dieser App</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          <Text style={styles.bold}>Wer ist verantwortlich für die Datenerfassung?</Text>{'\n'}
+          <Text style={boldStyle}>Wer ist verantwortlich für die Datenerfassung?</Text>{'\n'}
           Die Datenverarbeitung erfolgt durch den App-Betreiber. Dessen Kontaktdaten können
           Sie dem Impressum entnehmen.{'\n\n'}
-          <Text style={styles.bold}>Wie erfassen wir Ihre Daten?</Text>{'\n'}
+          <Text style={boldStyle}>Wie erfassen wir Ihre Daten?</Text>{'\n'}
           Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei
           kann es sich z.B. um Daten handeln, die Sie bei der Registrierung eingeben.{'\n\n'}
           Andere Daten werden automatisch beim Nutzen der App durch unsere IT-Systeme erfasst.
@@ -73,12 +75,12 @@ export const PrivacyPolicyScreen: React.FC = () => {
 
         <Text style={[styles.subTitle, { color: colors.text }]}>Welche Daten werden erfasst?</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          • <Text style={styles.bold}>Kontodaten:</Text> E-Mail-Adresse, Name, Profilbild (optional){'\n'}
-          • <Text style={styles.bold}>Profildaten:</Text> Geburtsdatum, Gewicht, Größe (optional){'\n'}
-          • <Text style={styles.bold}>Trainingsdaten:</Text> Workouts, Übungen, Gewichte, Wiederholungen, Sätze{'\n'}
-          • <Text style={styles.bold}>Gesundheitsdaten:</Text> Daten aus Apple Health / Health Connect (nur mit Ihrer Zustimmung){'\n'}
-          • <Text style={styles.bold}>Geräteinformationen:</Text> Gerätetyp, Betriebssystem, App-Version{'\n'}
-          • <Text style={styles.bold}>Nutzungsstatistiken:</Text> App-Nutzung (anonymisiert)
+          • <Text style={boldStyle}>Kontodaten:</Text> E-Mail-Adresse, Name, Profilbild (optional){'\n'}
+          • <Text style={boldStyle}>Profildaten:</Text> Geburtsdatum, Gewicht, Größe (optional){'\n'}
+          • <Text style={boldStyle}>Trainingsdaten:</Text> Workouts, Übungen, Gewichte, Wiederholungen, Sätze{'\n'}
+          • <Text style={boldStyle}>Gesundheitsdaten:</Text> Daten aus Apple Health / Health Connect (nur mit Ihrer Zustimmung){'\n'}
+          • <Text style={boldStyle}>Geräteinformationen:</Text> Gerätetyp, Betriebssystem, App-Version{'\n'}
+          • <Text style={boldStyle}>Nutzungsstatistiken:</Text> App-Nutzung (anonymisiert)
         </Text>
 
         <Text style={[styles.subTitle, { color: colors.text }]}>Wofür nutzen wir Ihre Daten?</Text>
@@ -95,7 +97,7 @@ export const PrivacyPolicyScreen: React.FC = () => {
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Die App kann mit Apple Health (iOS) bzw. Health Connect (Android) verbunden werden.
           Dies geschieht nur mit Ihrer ausdrücklichen Zustimmung.{'\n\n'}
-          <Text style={styles.bold}>Welche Gesundheitsdaten werden verarbeitet?</Text>{'\n'}
+          <Text style={boldStyle}>Welche Gesundheitsdaten werden verarbeitet?</Text>{'\n'}
           • Schritte und zurückgelegte Distanz{'\n'}
           • Verbrannte Kalorien{'\n'}
           • Herzfrequenz und Ruheherzfrequenz{'\n'}
@@ -108,8 +110,8 @@ export const PrivacyPolicyScreen: React.FC = () => {
         <Text style={[styles.sectionTitle, { color: colors.text }]}>5. Cloud-Synchronisation</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Die App bietet die Möglichkeit, Ihre Daten in der Cloud zu sichern:{'\n\n'}
-          • <Text style={styles.bold}>iOS:</Text> iCloud Drive{'\n'}
-          • <Text style={styles.bold}>Android:</Text> Google Drive{'\n\n'}
+          • <Text style={boldStyle}>iOS:</Text> iCloud Drive{'\n'}
+          • <Text style={boldStyle}>Android:</Text> Google Drive{'\n\n'}
           Die Cloud-Synchronisation ist optional und kann jederzeit in den Einstellungen
           aktiviert oder deaktiviert werden. Ihre Daten werden verschlüsselt übertragen.
         </Text>
@@ -125,12 +127,12 @@ export const PrivacyPolicyScreen: React.FC = () => {
         <Text style={[styles.sectionTitle, { color: colors.text }]}>7. Ihre Rechte</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Sie haben jederzeit das Recht:{'\n\n'}
-          • <Text style={styles.bold}>Auskunft</Text> über Ihre gespeicherten Daten zu erhalten{'\n'}
-          • <Text style={styles.bold}>Berichtigung</Text> unrichtiger Daten zu verlangen{'\n'}
-          • <Text style={styles.bold}>Löschung</Text> Ihrer Daten zu verlangen{'\n'}
-          • <Text style={styles.bold}>Einschränkung</Text> der Verarbeitung zu verlangen{'\n'}
-          • <Text style={styles.bold}>Widerspruch</Text> gegen die Verarbeitung einzulegen{'\n'}
-          • <Text style={styles.bold}>Datenübertragbarkeit</Text> zu verlangen{'\n\n'}
+          • <Text style={boldStyle}>Auskunft</Text> über Ihre gespeicherten Daten zu erhalten{'\n'}
+          • <Text style={boldStyle}>Berichtigung</Text> unrichtiger Daten zu verlangen{'\n'}
+          • <Text style={boldStyle}>Löschung</Text> Ihrer Daten zu verlangen{'\n'}
+          • <Text style={boldStyle}>Einschränkung</Text> der Verarbeitung zu verlangen{'\n'}
+          • <Text style={boldStyle}>Widerspruch</Text> gegen die Verarbeitung einzulegen{'\n'}
+          • <Text style={boldStyle}>Datenübertragbarkeit</Text> zu verlangen{'\n\n'}
           Sie können Ihr Konto und alle zugehörigen Daten jederzeit in den App-Einstellungen
           unter "Konto löschen" vollständig entfernen.
         </Text>
@@ -142,7 +144,7 @@ export const PrivacyPolicyScreen: React.FC = () => {
           einzuholen.{'\n\n'}
           Sie können die Verwendung Ihrer Daten für personalisierte Werbung jederzeit
           ablehnen oder in den Systemeinstellungen Ihres Geräts ändern.{'\n\n'}
-          <Text style={styles.bold}>Affiliate-Links:</Text> Die App enthält Affiliate-Links zu
+          <Text style={boldStyle}>Affiliate-Links:</Text> Die App enthält Affiliate-Links zu
           Partnern. Bei Klick auf diese Links werden Sie auf externe Websites weitergeleitet.
           Sie werden vor der Weiterleitung informiert.
         </Text>
@@ -159,12 +161,12 @@ export const PrivacyPolicyScreen: React.FC = () => {
         <Text style={[styles.sectionTitle, { color: colors.text }]}>10. Drittanbieter</Text>
         <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
           Wir nutzen folgende Drittanbieter-Dienste:{'\n\n'}
-          • <Text style={styles.bold}>Firebase (Google)</Text> - Authentifizierung und Datenspeicherung{'\n'}
-          • <Text style={styles.bold}>Apple Health / Health Connect</Text> - Gesundheitsdaten (optional){'\n'}
-          • <Text style={styles.bold}>iCloud / Google Drive</Text> - Cloud-Backup (optional){'\n'}
-          • <Text style={styles.bold}>OpenAI</Text> - KI-Funktionen (optional){'\n'}
-          • <Text style={styles.bold}>YouTube</Text> - Eingebettete Trainingsvideos (Yoga, Calisthenics){'\n'}
-          • <Text style={styles.bold}>ESN und weitere Partner</Text> - Affiliate-Werbung
+          • <Text style={boldStyle}>Firebase (Google)</Text> - Authentifizierung und Datenspeicherung{'\n'}
+          • <Text style={boldStyle}>Apple Health / Health Connect</Text> - Gesundheitsdaten (optional){'\n'}
+          • <Text style={boldStyle}>iCloud / Google Drive</Text> - Cloud-Backup (optional){'\n'}
+          • <Text style={boldStyle}>OpenAI</Text> - KI-Funktionen (optional){'\n'}
+          • <Text style={boldStyle}>YouTube</Text> - Eingebettete Trainingsvideos (Yoga, Calisthenics){'\n'}
+          • <Text style={boldStyle}>ESN und weitere Partner</Text> - Affiliate-Werbung
         </Text>
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>11. Änderungen</Text>
@@ -241,10 +243,6 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.base,
     color: COLORS.gray[700],
     lineHeight: 22,
-  },
-  bold: {
-    fontWeight: '600',
-    color: COLORS.gray[900],
   },
   link: {
     fontSize: FONT_SIZES.base,

@@ -3,4 +3,4 @@
 export { HealthInputModal } from './HealthInputModal';
 export { CalorieCard } from './CalorieCard';
 export { GoalCard } from './GoalCard';
-export { RingEditorModal, RING_PRESETS, type RingType, type RingConfig } from './RingEditorModal';
+export { RingEditorModal, RING_PRESETS } from './RingEditorModal';

@@ -46,7 +46,13 @@ export const useUserStore = create<UserState>()(
                 ...state.user,
                 settings: { ...defaultSettings, ...state.user.settings, ...newSettings },
               }
-            : null,
+            : {
+                id: 'guest',
+                email: '',
+                name: 'Guest',
+                settings: { ...defaultSettings, ...newSettings },
+                createdAt: new Date(),
+              },
         })),
 
       updateProfile: (profile) =>
@@ -61,6 +67,7 @@ export const useUserStore = create<UserState>()(
                 email: '',
                 name: profile.name || 'Guest',
                 settings: defaultSettings,
+                createdAt: new Date(),
                 ...profile,
               },
         })),

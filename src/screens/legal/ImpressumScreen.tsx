@@ -23,10 +23,6 @@ export const ImpressumScreen: React.FC = () => {
     Linking.openURL('https://kaiashapes.de');
   };
 
-  const handleOSPlatformPress = () => {
-    Linking.openURL('https://ec.europa.eu/consumers/odr/');
-  };
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.surface }]} edges={['top']}>
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
@@ -91,21 +87,6 @@ export const ImpressumScreen: React.FC = () => {
           Amel Kantarevic{'\n'}
           Effertzfeld 10{'\n'}
           41564 Kaarst
-        </Text>
-
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Streitschlichtung</Text>
-        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
-        </Text>
-        <TouchableOpacity onPress={handleOSPlatformPress}>
-          <Text style={[styles.link, { color: colors.primary }]}>
-            https://ec.europa.eu/consumers/odr/
-          </Text>
-        </TouchableOpacity>
-        <Text style={[styles.paragraph, { color: colors.textSecondary, marginTop: SPACING.sm }]}>
-          Unsere E-Mail-Adresse finden Sie oben im Impressum.{'\n\n'}
-          Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
-          Verbraucherschlichtungsstelle teilzunehmen.
         </Text>
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Haftung für Inhalte</Text>

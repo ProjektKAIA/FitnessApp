@@ -6,6 +6,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export type CalorieTarget = 'deficit' | 'surplus' | 'maintain';
 export type Gender = 'male' | 'female';
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
+export type RingType = 'steps' | 'calories' | 'activeMinutes' | 'heartRate' | 'distance' | 'water';
+
+export interface RingConfig {
+  id: RingType;
+  enabled: boolean;
+  goal: number;
+  manualValue?: number;
+}
 
 export interface TDEEData {
   gender: Gender;
@@ -39,6 +47,12 @@ export interface UserGoal {
   completed: boolean;
 }
 
+const DEFAULT_RING_CONFIGS: RingConfig[] = [
+  { id: 'steps', enabled: true, goal: 10000 },
+  { id: 'calories', enabled: true, goal: 500 },
+  { id: 'activeMinutes', enabled: true, goal: 30 },
+];
+
 interface UserGoalsState {
   // Kalorien
   dailyCalorieGoal: number;
@@ -54,6 +68,9 @@ interface UserGoalsState {
 
   // Manuelle Health-Einträge
   healthEntries: HealthEntry[];
+
+  // Ring-Konfigurationen
+  ringConfigs: RingConfig[];
 
   // Actions - Kalorien
   setDailyCalorieGoal: (goal: number) => void;
@@ -75,6 +92,12 @@ interface UserGoalsState {
   // Actions - Health Einträge
   addHealthEntry: (entry: Omit<HealthEntry, 'id' | 'date'> & { date?: string }) => void;
   getLatestHealthEntry: () => HealthEntry | null;
+
+  // Actions - Ring-Konfigurationen
+  setRingConfigs: (configs: RingConfig[]) => void;
+  updateRingConfig: (ringId: RingType, updates: Partial<Omit<RingConfig, 'id'>>) => void;
+  toggleRing: (ringId: RingType, enabled: boolean) => void;
+  addRing: (ringId: RingType) => void;
 
   // Computed
   getTodayCalories: () => DailyCalorieEntry | null;
@@ -102,6 +125,7 @@ export const useUserGoalsStore = create<UserGoalsState>()(
       tdeeData: null,
       goals: [],
       healthEntries: [],
+      ringConfigs: DEFAULT_RING_CONFIGS,
 
       setDailyCalorieGoal: (goal) => set({ dailyCalorieGoal: goal }),
 
@@ -239,6 +263,41 @@ export const useUserGoalsStore = create<UserGoalsState>()(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         )[0];
       },
+
+      // Ring-Konfigurationen
+      setRingConfigs: (configs) => set({ ringConfigs: configs }),
+
+      updateRingConfig: (ringId, updates) =>
+        set((state) => ({
+          ringConfigs: state.ringConfigs.map((config) =>
+            config.id === ringId ? { ...config, ...updates } : config
+          ),
+        })),
+
+      toggleRing: (ringId, enabled) =>
+        set((state) => ({
+          ringConfigs: state.ringConfigs.map((config) =>
+            config.id === ringId ? { ...config, enabled } : config
+          ),
+        })),
+
+      addRing: (ringId) =>
+        set((state) => {
+          if (state.ringConfigs.find((c) => c.id === ringId)) {
+            return state;
+          }
+          const defaultGoals: Record<RingType, number> = {
+            steps: 10000,
+            calories: 500,
+            activeMinutes: 30,
+            heartRate: 70,
+            distance: 5,
+            water: 2,
+          };
+          return {
+            ringConfigs: [...state.ringConfigs, { id: ringId, enabled: true, goal: defaultGoals[ringId] }],
+          };
+        }),
 
       getTodayCalories: () => {
         const today = getTodayDateString();

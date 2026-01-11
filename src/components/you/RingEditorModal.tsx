@@ -5,8 +5,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, Switch } from 'react-n
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useTheme } from '@/contexts';
+import type { RingType, RingConfig } from '@/stores/userGoalsStore';
 
-export const RING_PRESETS = {
+export const RING_PRESETS: Record<RingType, { color: string; gradientEnd: string; icon: string }> = {
   steps: {
     color: '#6366F1',
     gradientEnd: '#A5B4FC',
@@ -38,15 +39,6 @@ export const RING_PRESETS = {
     icon: '💧',
   },
 };
-
-export type RingType = keyof typeof RING_PRESETS;
-
-export interface RingConfig {
-  id: RingType;
-  enabled: boolean;
-  goal: number;
-  manualValue?: number;
-}
 
 interface RingEditorModalProps {
   visible: boolean;

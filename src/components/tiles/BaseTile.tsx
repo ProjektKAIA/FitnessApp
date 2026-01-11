@@ -16,6 +16,16 @@ import { scaleFont } from '@/lib';
 const TILE_GAP = TILE.gap;
 const PADDING = SPACING.lg;
 
+// Dynamische Tile-Höhe basierend auf Bildschirmhöhe
+// iPhone SE (667h): ~120px, iPhone 14 Pro Max (932h): ~166px
+const getResponsiveTileHeight = (screenHeight: number): number => {
+  const baseHeight = 120;
+  const referenceHeight = 667; // iPhone SE
+  const scale = screenHeight / referenceHeight;
+  // Begrenzung zwischen 120 und 180 px
+  return Math.min(180, Math.max(baseHeight, Math.round(baseHeight * scale)));
+};
+
 interface Props {
   size?: TTileSize;
   title?: string;
@@ -39,36 +49,39 @@ export const BaseTile: React.FC<Props> = ({
   children,
   style,
 }) => {
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
-  // Berechne Tile-Breite dynamisch basierend auf aktueller Bildschirmbreite (3 Spalten)
-  const tileWidth = useMemo(() => {
+  // Berechne Tile-Dimensionen dynamisch basierend auf aktueller Bildschirmgröße
+  const { tileWidth, tileHeight } = useMemo(() => {
     const totalGaps = TILE_GAP * (TILE.columns - 1);
-    return (screenWidth - PADDING * 2 - totalGaps) / TILE.columns;
-  }, [screenWidth]);
+    return {
+      tileWidth: (screenWidth - PADDING * 2 - totalGaps) / TILE.columns,
+      tileHeight: getResponsiveTileHeight(screenHeight),
+    };
+  }, [screenWidth, screenHeight]);
 
   const getTileStyle = (): ViewStyle => {
     switch (size) {
       case '3x1':
         return {
           width: tileWidth * 3 + TILE_GAP * 2,
-          height: TILE.height,
+          height: tileHeight,
         };
       case '2x1':
         return {
           width: tileWidth * 2 + TILE_GAP,
-          height: TILE.height,
+          height: tileHeight,
         };
       case '2x2':
         return {
           width: tileWidth * 2 + TILE_GAP,
-          height: TILE.height * 2 + TILE_GAP,
+          height: tileHeight * 2 + TILE_GAP,
         };
       case '1x1':
       default:
         return {
           width: tileWidth,
-          height: TILE.height,
+          height: tileHeight,
         };
     }
   };
@@ -177,15 +190,15 @@ export const getTileGap = () => TILE_GAP;
 
 // Hook für reaktive Tile-Dimensionen
 export const useTileDimensions = () => {
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   return useMemo(() => {
     const totalGaps = TILE_GAP * (TILE.columns - 1);
     return {
       tileWidth: (screenWidth - PADDING * 2 - totalGaps) / TILE.columns,
-      tileHeight: TILE.height,
+      tileHeight: getResponsiveTileHeight(screenHeight),
       tileGap: TILE_GAP,
       fullWidth: screenWidth - PADDING * 2,
     };
-  }, [screenWidth]);
+  }, [screenWidth, screenHeight]);
 };
