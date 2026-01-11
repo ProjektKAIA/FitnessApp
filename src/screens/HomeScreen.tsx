@@ -201,33 +201,12 @@ export const HomeScreen: React.FC = () => {
               workoutsCount={directionCounts.cardio}
               onPress={() => handleDirectionPress('cardio')}
             />
-            <AdTile
-              size="1x1"
-              title={t('home.ads.plans.title')}
-              onPress={() => navigation.navigate('TrainingPlanList')}
-              transparent
-            />
-          </View>
-
-          <View style={styles.row}>
-            <AdTile
-              size="1x1"
-              title={t('home.ads.import.title')}
-              onPress={() => navigation.navigate('ChatGPTImport')}
-              transparent
-            />
             <DirectionTile
               direction="custom"
               workoutsCount={0}
               onPress={() => navigation.navigate('HomeworkoutHome')}
               customTitle={t('homeworkout.title')}
               customImage="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800"
-            />
-            <AdTile
-              size="1x1"
-              title={t('home.ads.health.title')}
-              onPress={() => navigation.navigate('HealthSettings')}
-              transparent
             />
           </View>
 
