@@ -56,7 +56,13 @@ export const useUserStore = create<UserState>()(
                 ...state.user,
                 ...profile,
               }
-            : null,
+            : {
+                id: 'guest',
+                email: '',
+                name: profile.name || 'Guest',
+                settings: defaultSettings,
+                ...profile,
+              },
         })),
 
       logout: () =>

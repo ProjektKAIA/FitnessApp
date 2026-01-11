@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   TextInput,
   Modal,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -370,7 +372,7 @@ export const YouScreen: React.FC = () => {
 
       {/* Ring Edit Modal */}
       <Modal visible={!!editingRing} transparent animationType="fade" onRequestClose={() => setEditingRing(null)}>
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
             <Text style={[styles.modalTitle, { color: colors.text }]}>
               {editingRing?.icon} {editingRing?.label}
@@ -408,12 +410,12 @@ export const YouScreen: React.FC = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* Calorie Input Modal */}
       <Modal visible={showCalorieInput} transparent animationType="fade" onRequestClose={() => setShowCalorieInput(false)}>
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
             <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.addCalories')}</Text>
             <TextInput
@@ -437,12 +439,12 @@ export const YouScreen: React.FC = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* Goal Input Modal */}
       <Modal visible={showGoalInput} transparent animationType="fade" onRequestClose={() => setShowGoalInput(false)}>
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
             <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.addGoal')}</Text>
             <TextInput
@@ -465,7 +467,7 @@ export const YouScreen: React.FC = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* Health Input Modal */}

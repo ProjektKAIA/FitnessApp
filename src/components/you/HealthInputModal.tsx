@@ -1,7 +1,7 @@
 // /workspaces/claude-workspace/fitnessapp/src/components/you/HealthInputModal.tsx
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useTheme } from '@/contexts';
@@ -44,7 +44,7 @@ export const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onC
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <View style={styles.modalOverlay}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.modalOverlay}>
         <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
           <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.addHealthData')}</Text>
 
@@ -91,7 +91,7 @@ export const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onC
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
