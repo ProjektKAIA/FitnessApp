@@ -4,21 +4,25 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Home, Dumbbell, BookOpen, User, Settings, LucideIcon } from 'lucide-react-native';
 
 import { SPACING, BORDER_RADIUS } from '@/constants';
 import { useTheme } from '@/contexts';
 import { scale, scaleFont, MIN_TOUCH_TARGET } from '@/lib';
 
-const TAB_ICONS: Record<string, { active: string; inactive: string }> = {
-  Home: { active: '🏠', inactive: '🏠' },
-  Workout: { active: '💪', inactive: '💪' },
-  Guide: { active: '📖', inactive: '📖' },
-  You: { active: '👤', inactive: '👤' },
-  More: { active: '⚙️', inactive: '⚙️' },
+const TAB_ICONS: Record<string, LucideIcon> = {
+  Home: Home,
+  Workout: Dumbbell,
+  Guide: BookOpen,
+  You: User,
+  More: Settings,
 };
 
 const TAB_BAR_HEIGHT = scale(70);
 const TAB_BAR_MARGIN = SPACING.lg;
+const ICON_SIZE = scale(24);
+const ICON_CONTAINER_SIZE = scale(48);
+const LABEL_SIZE = scaleFont(10);
 
 export const BottomNav: React.FC<BottomTabBarProps> = ({
   state,
@@ -67,7 +71,8 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
           }
         };
 
-        const icons = TAB_ICONS[route.name] || { active: '•', inactive: '•' };
+        const IconComponent = TAB_ICONS[route.name] || Home;
+        const iconColor = isFocused ? colors.primary : colors.textSecondary;
 
         return (
           <TouchableOpacity
@@ -87,9 +92,11 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
                 },
               ]}
             >
-              <Text style={styles.icon}>
-                {isFocused ? icons.active : icons.inactive}
-              </Text>
+              <IconComponent
+                size={ICON_SIZE}
+                color={iconColor}
+                strokeWidth={isFocused ? 2.5 : 2}
+              />
             </View>
             <Text
               style={[
@@ -108,10 +115,6 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
     </View>
   );
 };
-
-const ICON_SIZE = scale(24);
-const ICON_CONTAINER_SIZE = scale(48);
-const LABEL_SIZE = scaleFont(10);
 
 // Export height for screens to use as bottom padding
 export const FLOATING_TAB_BAR_HEIGHT = TAB_BAR_HEIGHT + TAB_BAR_MARGIN * 2;
@@ -152,9 +155,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: scale(16),
-  },
-  icon: {
-    fontSize: ICON_SIZE,
   },
   label: {
     fontSize: LABEL_SIZE,
