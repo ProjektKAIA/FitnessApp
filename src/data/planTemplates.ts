@@ -1,5 +1,43 @@
 // /workspaces/claude-workspace/fitnessapp/src/data/planTemplates.ts
 // Vordefinierte Trainingsplan-Templates basierend auf bewährten Splits
+//
+// ============================================
+// WISSENSCHAFTLICHE GRUNDLAGEN
+// ============================================
+//
+// Diese Templates basieren auf aktuellen sportwissenschaftlichen Erkenntnissen:
+//
+// TRAININGSFREQUENZ:
+// - Schoenfeld et al. (2016): 2x pro Woche pro Muskelgruppe führt zu besseren
+//   Hypertrophie-Ergebnissen als 1x pro Woche bei gleichem Volumen
+// - Grgic et al. (2018): >3x pro Woche bringt keinen zusätzlichen Vorteil
+// - Quelle: Sports Med. 2016 Nov;46(11):1689-1697
+//
+// TRAININGSVOLUMEN:
+// - Schoenfeld et al. (2017): 10-20 Sätze/Muskelgruppe/Woche optimal
+// - Baz-Valle et al. (2022): 12-20 Sätze/Woche pro Muskelgruppe empfohlen
+// - Anfänger: 4-10 Sätze/Woche ausreichend
+// - Fortgeschrittene: 10-20 Sätze/Woche
+// - Maximum pro Trainingseinheit: 9-12 Sätze/Muskelgruppe (darüber = "Junk Volume")
+//
+// WIEDERHOLUNGSBEREICHE:
+// - ACSM Position Stand: 8-12 Wiederholungen für Hypertrophie
+// - Kraft: 1-6 Wiederholungen bei 80-100% 1RM
+// - Hypertrophie: 6-12 Wiederholungen bei 65-85% 1RM
+// - Ausdauer: 12-20+ Wiederholungen bei 50-65% 1RM
+//
+// QUELLEN:
+// - Schoenfeld BJ et al. "Effects of Resistance Training Frequency on Measures
+//   of Muscle Hypertrophy: A Systematic Review and Meta-Analysis" (2016)
+// - Schoenfeld BJ et al. "Dose-response relationship between weekly resistance
+//   training volume and increases in muscle mass" (2017)
+// - ACSM Position Stand: "Progression Models in Resistance Training for
+//   Healthy Adults" (2009)
+// - Grgic J et al. "Effect of Resistance Training Frequency on Gains in
+//   Muscular Strength: A Systematic Review and Meta-Analysis" (2018)
+// - NSCA "Essentials of Strength Training and Conditioning" (4th Edition)
+//
+// ============================================
 
 import { TTrainingDay, IPlannedWorkout, IPlannedExercise, TMuscleGroup } from '@/types';
 

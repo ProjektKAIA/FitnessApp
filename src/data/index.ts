@@ -5,3 +5,4 @@ export * from './exerciseLibrary';
 export * from './runningLibrary';
 export * from './yogaLibrary';
 export * from './calisthenicsLibrary';
+export * from './guideContent';

@@ -71,6 +71,8 @@ import {
   CalisthenicsWorkoutDetailScreen,
   // Homeworkout Screens
   HomeworkoutHomeScreen,
+  // Guide Screens
+  GuideArticleScreen,
 } from '@/screens';
 import { BottomNav } from '@/components/navigation';
 import { ErrorBoundary, LoadingScreen } from '@/components/common';
@@ -583,6 +585,16 @@ export default function App() {
                 <Stack.Screen
                   name="HomeworkoutHome"
                   component={HomeworkoutHomeScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+
+                {/* Guide Screens */}
+                <Stack.Screen
+                  name="GuideArticle"
+                  component={GuideArticleScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',

@@ -1346,6 +1346,149 @@ const de = {
     subtitle: 'Wissen für dein Training',
     comingSoon: 'Mehr Inhalte kommen',
     comingSoonDesc: 'Wir arbeiten an weiteren Guides für dich.',
+    articleNotFound: 'Artikel nicht gefunden',
+    sections: 'Abschnitte',
+    sources: 'Quellen',
+    sourcesDescription: 'Wissenschaftliche Referenzen und weiterführende Literatur',
+
+    // Guide Articles
+    articles: {
+      trainingBasics: {
+        title: 'Trainingsgrundlagen',
+        subtitle: 'Die wissenschaftlichen Prinzipien für effektives Training',
+        sections: {
+          intro: {
+            title: 'Einführung',
+          },
+          progressiveOverload: {
+            title: 'Progressive Überlastung',
+          },
+          frequency: {
+            title: 'Trainingsfrequenz',
+          },
+          volume: {
+            title: 'Trainingsvolumen',
+          },
+          intensity: {
+            title: 'Trainingsintensität',
+          },
+          exercises: {
+            title: 'Übungsauswahl',
+          },
+          rest: {
+            title: 'Pausenzeiten',
+          },
+          periodization: {
+            title: 'Periodisierung',
+          },
+          recovery: {
+            title: 'Regeneration',
+          },
+          summary: {
+            title: 'Zusammenfassung',
+          },
+        },
+      },
+      cardio: {
+        title: 'Ausdauertraining',
+        subtitle: 'Herzfrequenz-Zonen, HIIT vs. LISS und optimale Cardio-Strategien',
+        sections: {
+          intro: {
+            title: 'Einführung',
+          },
+          energySystems: {
+            title: 'Energiesysteme',
+          },
+          zones: {
+            title: 'Herzfrequenz-Zonen',
+          },
+          lissHiit: {
+            title: 'LISS vs. HIIT',
+          },
+          cardioMuscle: {
+            title: 'Cardio & Muskelaufbau',
+          },
+          vo2max: {
+            title: 'VO2max',
+          },
+          fatBurning: {
+            title: 'Fettverbrennung',
+          },
+          programming: {
+            title: 'Training planen',
+          },
+          summary: {
+            title: 'Zusammenfassung',
+          },
+        },
+      },
+      fatLoss: {
+        title: 'Fettverbrennung: Mythen & Fakten',
+        subtitle: 'Die größten Irrtümer und die Biochemie dahinter',
+        sections: {
+          intro: {
+            title: 'Einführung',
+          },
+          biochemistry: {
+            title: 'Biochemie der Fettverbrennung',
+          },
+          mythZone: {
+            title: 'Mythos: Fettverbrennungszone',
+          },
+          mythCarbs: {
+            title: 'Mythos: Kohlenhydrate machen dick',
+          },
+          mythEvening: {
+            title: 'Mythos: Abends essen macht dick',
+          },
+          mythMeals: {
+            title: 'Mythos: Viele kleine Mahlzeiten',
+          },
+          mythSpot: {
+            title: 'Mythos: Lokale Fettverbrennung',
+          },
+          mythFat: {
+            title: 'Mythos: Fett macht fett',
+          },
+          whatWorks: {
+            title: 'Was wirklich funktioniert',
+          },
+          summary: {
+            title: 'Zusammenfassung',
+          },
+        },
+      },
+      supplements: {
+        title: 'Supplement Guide',
+        subtitle: 'Wissenschaftlich fundierte Empfehlungen zu Nahrungsergänzungsmitteln im Sport',
+        sections: {
+          intro: {
+            title: 'Einführung',
+          },
+          creatine: {
+            title: 'Kreatin',
+          },
+          protein: {
+            title: 'Proteinpulver',
+          },
+          vitaminD: {
+            title: 'Vitamin D',
+          },
+          omega3: {
+            title: 'Omega-3-Fettsäuren',
+          },
+          caffeine: {
+            title: 'Koffein',
+          },
+          safety: {
+            title: 'Sicherheit & Qualität',
+          },
+          summary: {
+            title: 'Zusammenfassung',
+          },
+        },
+      },
+    },
 
     sport: {
       title: 'Sport & Training',

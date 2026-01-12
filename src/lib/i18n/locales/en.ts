@@ -1352,6 +1352,149 @@ const en = {
     subtitle: 'Knowledge for your training',
     comingSoon: 'More content coming',
     comingSoonDesc: 'We are working on more guides for you.',
+    articleNotFound: 'Article not found',
+    sections: 'Sections',
+    sources: 'Sources',
+    sourcesDescription: 'Scientific references and further reading',
+
+    // Guide Articles
+    articles: {
+      trainingBasics: {
+        title: 'Training Basics',
+        subtitle: 'Scientific principles for effective training',
+        sections: {
+          intro: {
+            title: 'Introduction',
+          },
+          progressiveOverload: {
+            title: 'Progressive Overload',
+          },
+          frequency: {
+            title: 'Training Frequency',
+          },
+          volume: {
+            title: 'Training Volume',
+          },
+          intensity: {
+            title: 'Training Intensity',
+          },
+          exercises: {
+            title: 'Exercise Selection',
+          },
+          rest: {
+            title: 'Rest Periods',
+          },
+          periodization: {
+            title: 'Periodization',
+          },
+          recovery: {
+            title: 'Recovery',
+          },
+          summary: {
+            title: 'Summary',
+          },
+        },
+      },
+      cardio: {
+        title: 'Endurance Training',
+        subtitle: 'Heart rate zones, HIIT vs. LISS and optimal cardio strategies',
+        sections: {
+          intro: {
+            title: 'Introduction',
+          },
+          energySystems: {
+            title: 'Energy Systems',
+          },
+          zones: {
+            title: 'Heart Rate Zones',
+          },
+          lissHiit: {
+            title: 'LISS vs. HIIT',
+          },
+          cardioMuscle: {
+            title: 'Cardio & Muscle Building',
+          },
+          vo2max: {
+            title: 'VO2max',
+          },
+          fatBurning: {
+            title: 'Fat Burning',
+          },
+          programming: {
+            title: 'Programming',
+          },
+          summary: {
+            title: 'Summary',
+          },
+        },
+      },
+      fatLoss: {
+        title: 'Fat Loss: Myths & Facts',
+        subtitle: 'The biggest misconceptions and the biochemistry behind them',
+        sections: {
+          intro: {
+            title: 'Introduction',
+          },
+          biochemistry: {
+            title: 'Biochemistry of Fat Burning',
+          },
+          mythZone: {
+            title: 'Myth: Fat Burning Zone',
+          },
+          mythCarbs: {
+            title: 'Myth: Carbs Make You Fat',
+          },
+          mythEvening: {
+            title: 'Myth: Eating at Night Makes You Fat',
+          },
+          mythMeals: {
+            title: 'Myth: Many Small Meals',
+          },
+          mythSpot: {
+            title: 'Myth: Spot Reduction',
+          },
+          mythFat: {
+            title: 'Myth: Fat Makes You Fat',
+          },
+          whatWorks: {
+            title: 'What Actually Works',
+          },
+          summary: {
+            title: 'Summary',
+          },
+        },
+      },
+      supplements: {
+        title: 'Supplement Guide',
+        subtitle: 'Evidence-based recommendations for sports supplements',
+        sections: {
+          intro: {
+            title: 'Introduction',
+          },
+          creatine: {
+            title: 'Creatine',
+          },
+          protein: {
+            title: 'Protein Powder',
+          },
+          vitaminD: {
+            title: 'Vitamin D',
+          },
+          omega3: {
+            title: 'Omega-3 Fatty Acids',
+          },
+          caffeine: {
+            title: 'Caffeine',
+          },
+          safety: {
+            title: 'Safety & Quality',
+          },
+          summary: {
+            title: 'Summary',
+          },
+        },
+      },
+    },
 
     sport: {
       title: 'Sport & Training',

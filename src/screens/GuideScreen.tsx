@@ -19,6 +19,7 @@ import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { Card } from '@/components/common';
 import { useTheme } from '@/contexts';
 import { RootStackParamList } from '@/types';
+import { GUIDE_ARTICLES } from '@/data/guideContent';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -81,17 +82,28 @@ const GUIDE_CATEGORIES: GuideCategory[] = [
   },
 ];
 
+// Check if an article is available (has content)
+const isArticleAvailable = (articleId: string): boolean => {
+  return articleId in GUIDE_ARTICLES;
+};
+
 export const GuideScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors, isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
 
   const handleCategoryPress = (category: GuideCategory) => {
-    // TODO: Navigate to category detail screen
+    // Navigate to first available item in category
+    const availableItem = category.items.find((item) => isArticleAvailable(item.id));
+    if (availableItem) {
+      handleItemPress(availableItem);
+    }
   };
 
   const handleItemPress = (item: GuideItem) => {
-    // TODO: Navigate to guide article screen
+    if (isArticleAvailable(item.id)) {
+      navigation.navigate('GuideArticle', { articleId: item.id });
+    }
   };
 
   return (
@@ -132,29 +144,51 @@ export const GuideScreen: React.FC = () => {
 
             {/* Category Items */}
             <View style={styles.itemsContainer}>
-              {category.items.map((item, index) => (
-                <TouchableOpacity
-                  key={item.id}
-                  style={[
-                    styles.itemCard,
-                    { backgroundColor: colors.card },
-                    index === category.items.length - 1 && styles.itemCardLast,
-                  ]}
-                  onPress={() => handleItemPress(item)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.itemIcon}>{item.icon}</Text>
-                  <View style={styles.itemContent}>
-                    <Text style={[styles.itemTitle, { color: colors.text }]}>
-                      {t(item.titleKey)}
+              {category.items.map((item, index) => {
+                const isAvailable = isArticleAvailable(item.id);
+                return (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={[
+                      styles.itemCard,
+                      { backgroundColor: colors.card },
+                      index === category.items.length - 1 && styles.itemCardLast,
+                      !isAvailable && styles.itemCardDisabled,
+                    ]}
+                    onPress={() => handleItemPress(item)}
+                    activeOpacity={isAvailable ? 0.7 : 1}
+                    disabled={!isAvailable}
+                  >
+                    <Text style={[styles.itemIcon, !isAvailable && styles.itemIconDisabled]}>
+                      {item.icon}
                     </Text>
-                    <Text style={[styles.itemDesc, { color: colors.textSecondary }]} numberOfLines={1}>
-                      {t(item.descKey)}
-                    </Text>
-                  </View>
-                  <Text style={[styles.itemArrow, { color: colors.textTertiary }]}>›</Text>
-                </TouchableOpacity>
-              ))}
+                    <View style={styles.itemContent}>
+                      <Text style={[
+                        styles.itemTitle,
+                        { color: isAvailable ? colors.text : colors.textTertiary },
+                      ]}>
+                        {t(item.titleKey)}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.itemDesc,
+                          { color: isAvailable ? colors.textSecondary : colors.textTertiary },
+                        ]}
+                        numberOfLines={1}
+                      >
+                        {isAvailable ? t(item.descKey) : t('guide.comingSoon')}
+                      </Text>
+                    </View>
+                    {isAvailable ? (
+                      <Text style={[styles.itemArrow, { color: colors.textTertiary }]}>›</Text>
+                    ) : (
+                      <View style={styles.comingSoonBadge}>
+                        <Text style={styles.comingSoonBadgeText}>Soon</Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </View>
         ))}
@@ -245,9 +279,15 @@ const styles = StyleSheet.create({
   itemCardLast: {
     marginBottom: 0,
   },
+  itemCardDisabled: {
+    opacity: 0.5,
+  },
   itemIcon: {
     fontSize: 24,
     marginRight: SPACING.md,
+  },
+  itemIconDisabled: {
+    opacity: 0.5,
   },
   itemContent: {
     flex: 1,
@@ -262,6 +302,17 @@ const styles = StyleSheet.create({
   },
   itemArrow: {
     fontSize: 20,
+  },
+  comingSoonBadge: {
+    backgroundColor: COLORS.gray[200],
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: BORDER_RADIUS.sm,
+  },
+  comingSoonBadgeText: {
+    fontSize: FONT_SIZES.xs,
+    color: COLORS.gray[500],
+    fontWeight: '500',
   },
   comingSoonCard: {
     marginHorizontal: SPACING.lg,

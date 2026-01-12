@@ -472,6 +472,8 @@ export type RootStackParamList = {
   CalisthenicsWorkoutDetail: { workoutId: string };
   // Homeworkout Screens
   HomeworkoutHome: undefined;
+  // Guide Screens
+  GuideArticle: { articleId: string };
 };
 
 export type OnboardingStackParamList = {

@@ -64,3 +64,4 @@ export {
   CalisthenicsWorkoutDetailScreen,
 } from './calisthenics';
 export { HomeworkoutHomeScreen } from './homeworkout';
+export { GuideArticleScreen } from './guide';
