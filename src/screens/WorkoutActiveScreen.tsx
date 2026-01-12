@@ -19,7 +19,7 @@ import { useWorkoutStore, useUserStore, useTrainingPlanStore } from '@/stores';
 import { useUserGoalsStore } from '@/stores/userGoalsStore';
 import { useTheme } from '@/contexts';
 import { RootStackParamList, IPlannedWorkout } from '@/types';
-import { getExerciseByName } from '@/data';
+import { getExerciseByName, getExerciseById } from '@/data';
 import { handleWorkoutCompletion } from '@/services/workoutCompletionService';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -57,6 +57,7 @@ export const WorkoutActiveScreen: React.FC = () => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [deleteMode, setDeleteMode] = useState<string | null>(null); // exerciseId wenn im Lösch-Modus
   const [setsToDelete, setSetsToDelete] = useState<string[]>([]);
+  const [isEnding, setIsEnding] = useState(false);
 
   // Letzte Performance für eine Übung finden
   const getLastPerformance = (exerciseName: string, setIndex: number): { weight: number; reps: number } | null => {
@@ -120,6 +121,7 @@ export const WorkoutActiveScreen: React.FC = () => {
           direction: plannedWorkout.direction,
           exercises: plannedWorkout.exercises.map((e) => ({
             id: e.id,
+            exerciseId: e.exerciseId,
             name: e.name,
             muscleGroup: e.muscleGroup,
             sets: Array.from({ length: e.targetSets }, (_, i) => ({
@@ -228,38 +230,46 @@ export const WorkoutActiveScreen: React.FC = () => {
   };
 
   const handleEndWorkout = async () => {
+    setIsEnding(true);
+    setShowEndModal(false);
+
     const lastWorkoutDate = getLastWorkoutDate();
     const finishedWorkout = endWorkout();
 
-    if (finishedWorkout) {
-      // Process workout completion (stats, calories, health export)
-      const userWeight = tdeeData?.weight || 70; // Default 70kg if not set
-      await handleWorkoutCompletion(finishedWorkout, userWeight, lastWorkoutDate);
-    }
-
+    // Navigate back immediately
     navigation.goBack();
+
+    if (finishedWorkout) {
+      // Process workout completion in background (stats, calories, health export)
+      const userWeight = tdeeData?.weight || 70; // Default 70kg if not set
+      handleWorkoutCompletion(finishedWorkout, userWeight, lastWorkoutDate);
+    }
   };
 
   const handleCancelWorkout = () => {
+    setIsEnding(true);
+    setShowEndModal(false);
     cancelWorkout();
     navigation.goBack();
   };
 
-  if (!activeWorkout) {
+  if (!activeWorkout && !isEnding) {
     return <LoadingScreen message={t('workoutActive.loadingWorkout')} />;
+  }
+
+  if (!activeWorkout) {
+    return null;
   }
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { paddingTop: insets.top + SPACING.md, backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => setShowEndModal(true)}>
-          <Text style={[styles.cancelText, { color: COLORS.error }]}>{t('workoutActive.cancel')}</Text>
-        </TouchableOpacity>
+        <View style={styles.headerPlaceholder} />
         <View style={styles.headerCenter}>
           <Text style={[styles.workoutName, { color: colors.text }]}>{activeWorkout.name}</Text>
           <Text style={[styles.timer, { color: colors.textSecondary }]}>{formatTime(elapsedTime)}</Text>
         </View>
-        <TouchableOpacity onPress={handleEndWorkout}>
+        <TouchableOpacity onPress={() => setShowEndModal(true)}>
           <Text style={[styles.finishText, { color: colors.primary }]}>{t('workoutActive.finish')}</Text>
         </TouchableOpacity>
       </View>
@@ -284,20 +294,30 @@ export const WorkoutActiveScreen: React.FC = () => {
           <Card key={exercise.id} style={styles.exerciseCard}>
             <View style={styles.exerciseHeader}>
               <View style={styles.exerciseHeaderLeft}>
-                <Text style={styles.exerciseName}>{exercise.name}</Text>
-                <Text style={styles.muscleGroup}>{t(`muscles.${exercise.muscleGroup}`)}</Text>
+                <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
+                <Text style={[styles.muscleGroup, { color: colors.textSecondary }]}>{t(`muscles.${exercise.muscleGroup}`)}</Text>
               </View>
               <TouchableOpacity
                 style={[styles.infoButton, { backgroundColor: colors.border }]}
                 onPress={() => {
-                  const libraryExercise = getExerciseByName(exercise.name);
+                  // Try to find by exerciseId first (from plan), then by name
+                  const libraryExercise = exercise.exerciseId
+                    ? getExerciseById(exercise.exerciseId)
+                    : getExerciseByName(exercise.name);
+
                   if (libraryExercise) {
                     navigation.navigate('ExerciseDetail', { exerciseId: libraryExercise.id });
                   } else {
-                    Alert.alert(
-                      exercise.name,
-                      t('workoutActive.noExerciseDetails')
-                    );
+                    // Also try by name if exerciseId lookup failed
+                    const byName = getExerciseByName(exercise.name);
+                    if (byName) {
+                      navigation.navigate('ExerciseDetail', { exerciseId: byName.id });
+                    } else {
+                      Alert.alert(
+                        exercise.name,
+                        t('workoutActive.noExerciseDetails')
+                      );
+                    }
                   }
                 }}
               >
@@ -305,10 +325,10 @@ export const WorkoutActiveScreen: React.FC = () => {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.setsHeader}>
-              <Text style={styles.setHeaderText}>{t('workoutActive.set')}</Text>
-              <Text style={styles.setHeaderText}>{t('workoutActive.kg')}</Text>
-              <Text style={styles.setHeaderText}>{t('workoutActive.reps')}</Text>
+            <View style={[styles.setsHeader, { borderBottomColor: colors.border }]}>
+              <Text style={[styles.setHeaderText, { color: colors.textSecondary }]}>{t('workoutActive.set')}</Text>
+              <Text style={[styles.setHeaderText, { color: colors.textSecondary }]}>{t('workoutActive.kg')}</Text>
+              <Text style={[styles.setHeaderText, { color: colors.textSecondary }]}>{t('workoutActive.reps')}</Text>
               <View style={{ width: 44 }} />
             </View>
 
@@ -334,7 +354,7 @@ export const WorkoutActiveScreen: React.FC = () => {
                         {isSelectedForDelete && <Text style={styles.deleteCheckboxIcon}>✓</Text>}
                       </TouchableOpacity>
                     ) : null}
-                    <Text style={[styles.setNumber, !isInDeleteMode && styles.setNumberNormal]}>
+                    <Text style={[styles.setNumber, !isInDeleteMode && styles.setNumberNormal, { color: colors.text }]}>
                       {setIndex + 1}
                     </Text>
                     <TextInput
@@ -467,14 +487,13 @@ export const WorkoutActiveScreen: React.FC = () => {
         <View style={styles.modalButtons}>
           <Button
             title={t('common.save')}
-            variant="outline"
             onPress={handleEndWorkout}
             fullWidth
           />
           <Button
-            title={t('common.cancel')}
+            title={t('workoutActive.discard')}
             variant="outline"
-            onPress={() => setShowEndModal(false)}
+            onPress={handleCancelWorkout}
             fullWidth
           />
         </View>
@@ -498,9 +517,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.gray[200],
   },
-  cancelText: {
-    fontSize: FONT_SIZES.base,
-    color: COLORS.error,
+  headerPlaceholder: {
+    width: 60,
   },
   headerCenter: {
     alignItems: 'center',

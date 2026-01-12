@@ -318,6 +318,7 @@ export interface ISet {
 
 export interface IExercise {
   id: string;
+  exerciseId?: string; // Reference to exercise library
   name: string;
   muscleGroup: TMuscleGroup;
   sets: ISet[];
