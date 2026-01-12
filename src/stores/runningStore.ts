@@ -23,6 +23,10 @@ export interface IRunningSession {
   segments: IFlatSegment[];
   completedSegments: number;
   notes?: string;
+  // Health-Tracking-Daten
+  steps?: number;
+  distance?: number; // in meters
+  averagePace?: number; // min/km
 }
 
 interface RunningState {
@@ -33,6 +37,10 @@ interface RunningState {
   totalElapsedTime: number; // total seconds since start
   isRunning: boolean;
   isPaused: boolean;
+  // Live Health-Tracking-Daten
+  liveSteps: number;
+  liveDistance: number; // in meters
+  livePace: number; // min/km
 
   // Actions
   startSession: (workout: IRunningWorkout) => void;
@@ -44,6 +52,7 @@ interface RunningState {
   previousSegment: () => void;
   updateTime: (segmentSeconds: number, totalSeconds: number) => void;
   completeCurrentSegment: () => void;
+  updateHealthData: (steps: number, distance: number, pace: number) => void;
 
   // Queries
   getSessionHistory: () => IRunningSession[];
@@ -106,6 +115,9 @@ export const useRunningStore = create<RunningState>()(
       totalElapsedTime: 0,
       isRunning: false,
       isPaused: false,
+      liveSteps: 0,
+      liveDistance: 0,
+      livePace: 0,
 
       startSession: (workout) => {
         const segments = flattenWorkoutSegments(workout);
@@ -128,6 +140,9 @@ export const useRunningStore = create<RunningState>()(
           totalElapsedTime: 0,
           isRunning: true,
           isPaused: false,
+          liveSteps: 0,
+          liveDistance: 0,
+          livePace: 0,
         });
       },
 
@@ -140,7 +155,7 @@ export const useRunningStore = create<RunningState>()(
       },
 
       endSession: () => {
-        const { activeSession, sessions, totalElapsedTime, currentSegmentIndex } = get();
+        const { activeSession, sessions, totalElapsedTime, currentSegmentIndex, liveSteps, liveDistance, livePace } = get();
         if (!activeSession) return null;
 
         const finishedSession: IRunningSession = {
@@ -149,6 +164,9 @@ export const useRunningStore = create<RunningState>()(
           finishedAt: new Date(),
           duration: totalElapsedTime,
           completedSegments: currentSegmentIndex + 1,
+          steps: liveSteps,
+          distance: liveDistance,
+          averagePace: livePace,
         };
 
         set({
@@ -159,6 +177,9 @@ export const useRunningStore = create<RunningState>()(
           totalElapsedTime: 0,
           isRunning: false,
           isPaused: false,
+          liveSteps: 0,
+          liveDistance: 0,
+          livePace: 0,
         });
 
         return finishedSession;
@@ -172,6 +193,9 @@ export const useRunningStore = create<RunningState>()(
           totalElapsedTime: 0,
           isRunning: false,
           isPaused: false,
+          liveSteps: 0,
+          liveDistance: 0,
+          livePace: 0,
         });
       },
 
@@ -202,6 +226,14 @@ export const useRunningStore = create<RunningState>()(
         set({
           segmentElapsedTime: segmentSeconds,
           totalElapsedTime: totalSeconds,
+        });
+      },
+
+      updateHealthData: (steps, distance, pace) => {
+        set({
+          liveSteps: steps,
+          liveDistance: distance,
+          livePace: pace,
         });
       },
 

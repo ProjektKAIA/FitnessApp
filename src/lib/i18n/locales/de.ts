@@ -488,9 +488,11 @@ const de = {
     workoutsPerWeek: '{{count}} Workouts/Woche',
     activate: 'Aktivieren',
     edit: 'Bearbeiten',
-    duplicate: 'Duplizieren',
+    start: 'Starten',
     deleteTitle: 'Plan löschen',
     deleteMessage: 'Möchtest du "{{name}}" wirklich löschen?',
+    noWorkoutToday: 'Kein Training heute',
+    noWorkoutTodayMessage: 'Für heute ist kein Workout in diesem Plan geplant.',
   },
 
   // Plan Editor Screen
@@ -521,7 +523,6 @@ const de = {
     activatePlan: 'Plan aktivieren',
     activePlan: 'Aktiver Plan',
     weeklySchedule: 'Wochenübersicht',
-    restDay: 'Ruhetag',
     estimatedDuration: 'Geschätzte Dauer',
   },
 
@@ -570,16 +571,19 @@ const de = {
 
   // Workout History
   workoutHistory: {
-    title: 'Workout-Verlauf',
-    emptyTitle: 'Noch keine Workouts',
-    emptyText: 'Starte dein erstes Workout, um deinen Verlauf zu sehen',
-    emptyFilteredTitle: 'Keine Workouts gefunden',
-    emptyFilteredText: 'Du hast noch keine {{direction}}-Workouts absolviert',
+    title: 'Dein Sport-Verlauf',
+    emptyTitle: 'Noch keine Aktivitäten',
+    emptyText: 'Starte dein erstes Training, um deinen Verlauf zu sehen',
+    emptyFilteredTitle: 'Keine Aktivitäten gefunden',
+    emptyFilteredText: 'Du hast noch keine {{direction}}-Aktivitäten absolviert',
     duration: 'Dauer',
     volume: 'Volumen',
     all: 'Alle',
-    filteredResults: '{{count}} Workout(s) gefunden',
+    filteredResults: '{{count}} Aktivität(en) gefunden',
     clearFilter: 'Filter zurücksetzen',
+    poses: 'Posen',
+    distance: 'Distanz',
+    pace: 'Tempo',
   },
 
   // Workout Detail
@@ -1252,6 +1256,23 @@ const de = {
     mainSet: 'Hauptteil',
     cooldown: 'Auslaufen',
     startWorkout: 'Workout starten',
+    // Active Screen
+    totalTime: 'Gesamtzeit',
+    steps: 'Schritte',
+    pacePerKm: 'Tempo /km',
+    cancel: 'Abbrechen',
+    finish: 'Beenden',
+    keepGoing: 'Weiter trainieren',
+    endWorkout: 'Training beenden?',
+    endWorkoutConfirm: 'Möchtest du das Training jetzt beenden?',
+    cancelWorkout: 'Training abbrechen?',
+    progressNotSaved: 'Dein Fortschritt wird nicht gespeichert.',
+    continue: 'Weiter',
+    upNext: 'Als Nächstes',
+    skip: 'Überspringen',
+    pause: 'Pause',
+    resume: 'Fortsetzen',
+    loading: 'Lädt...',
   },
 
   // Yoga

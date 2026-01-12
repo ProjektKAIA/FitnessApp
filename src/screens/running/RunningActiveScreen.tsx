@@ -21,6 +21,7 @@ import { useRunningStore, IFlatSegment } from '@/stores';
 import { getRunningWorkoutById, RUNNING_WORKOUT_TYPE_LABELS } from '@/data/runningLibrary';
 import { handleRunningCompletion } from '@/services/workoutCompletionService';
 import { useUserStore } from '@/stores';
+import { useLiveHealthTracking } from '@/hooks';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type ScreenRouteProp = RouteProp<RootStackParamList, 'RunningWorkoutActive'>;
@@ -73,6 +74,9 @@ export const RunningActiveScreen: React.FC = () => {
     totalElapsedTime,
     isRunning,
     isPaused,
+    liveSteps,
+    liveDistance,
+    livePace,
     startSession,
     pauseSession,
     resumeSession,
@@ -80,6 +84,7 @@ export const RunningActiveScreen: React.FC = () => {
     cancelSession,
     nextSegment,
     updateTime,
+    updateHealthData,
     getCurrentSegment,
     getNextSegment,
     getTotalSegments,
@@ -92,6 +97,22 @@ export const RunningActiveScreen: React.FC = () => {
   const totalTimerRef = useRef<number>(0);
 
   const [showEndModal, setShowEndModal] = useState(false);
+
+  // Live Health-Tracking (Schritte/Distanz via Apple Health / Google Fit)
+  const {
+    data: healthData,
+    isTracking: isHealthTracking,
+    hasPermissions: hasHealthPermissions,
+    startTracking,
+    stopTracking,
+  } = useLiveHealthTracking({ enabled: isRunning && !isPaused });
+
+  // Health-Daten mit Store synchronisieren
+  useEffect(() => {
+    if (isHealthTracking) {
+      updateHealthData(healthData.steps, healthData.distance, healthData.pace);
+    }
+  }, [healthData.steps, healthData.distance, healthData.pace, isHealthTracking]);
 
   // Start session on mount
   useEffect(() => {
@@ -267,12 +288,49 @@ export const RunningActiveScreen: React.FC = () => {
         {/* Total Timer */}
         <View style={styles.totalTimerContainer}>
           <Text style={[styles.totalTimerLabel, { color: colors.textSecondary }]}>
-            {lang === 'de' ? 'Gesamtzeit' : 'Total Time'}
+            {t('running.totalTime')}
           </Text>
           <Text style={[styles.totalTimer, { color: colors.text }]}>
             {formatTime(totalElapsedTime)}
           </Text>
         </View>
+
+        {/* Live Health Stats */}
+        {hasHealthPermissions && (
+          <View style={[styles.healthStatsContainer, { backgroundColor: colors.surface }]}>
+            <View style={styles.healthStatItem}>
+              <Text style={styles.healthStatIcon}>👣</Text>
+              <Text style={[styles.healthStatValue, { color: colors.text }]}>
+                {liveSteps.toLocaleString()}
+              </Text>
+              <Text style={[styles.healthStatLabel, { color: colors.textSecondary }]}>
+                {t('running.steps')}
+              </Text>
+            </View>
+            <View style={[styles.healthStatDivider, { backgroundColor: colors.border }]} />
+            <View style={styles.healthStatItem}>
+              <Text style={styles.healthStatIcon}>📏</Text>
+              <Text style={[styles.healthStatValue, { color: colors.text }]}>
+                {liveDistance >= 1000
+                  ? `${(liveDistance / 1000).toFixed(2)} km`
+                  : `${Math.round(liveDistance)} m`}
+              </Text>
+              <Text style={[styles.healthStatLabel, { color: colors.textSecondary }]}>
+                {t('running.distance')}
+              </Text>
+            </View>
+            <View style={[styles.healthStatDivider, { backgroundColor: colors.border }]} />
+            <View style={styles.healthStatItem}>
+              <Text style={styles.healthStatIcon}>⏱️</Text>
+              <Text style={[styles.healthStatValue, { color: colors.text }]}>
+                {livePace > 0 ? `${livePace.toFixed(1)}'` : '--'}
+              </Text>
+              <Text style={[styles.healthStatLabel, { color: colors.textSecondary }]}>
+                {t('running.pacePerKm')}
+              </Text>
+            </View>
+          </View>
+        )}
 
         {/* Current Segment Card */}
         <View style={[styles.segmentCard, { backgroundColor: effortColor }]}>
@@ -479,6 +537,34 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES['4xl'],
     fontWeight: '700',
     fontVariant: ['tabular-nums'],
+  },
+  healthStatsContainer: {
+    flexDirection: 'row',
+    borderRadius: BORDER_RADIUS.lg,
+    padding: SPACING.md,
+    marginBottom: SPACING.lg,
+    ...SHADOWS.sm,
+  },
+  healthStatItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  healthStatIcon: {
+    fontSize: 20,
+    marginBottom: SPACING.xs,
+  },
+  healthStatValue: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '700',
+    fontVariant: ['tabular-nums'],
+  },
+  healthStatLabel: {
+    fontSize: FONT_SIZES.xs,
+    marginTop: 2,
+  },
+  healthStatDivider: {
+    width: 1,
+    marginVertical: SPACING.xs,
   },
   segmentCard: {
     borderRadius: BORDER_RADIUS.xl,

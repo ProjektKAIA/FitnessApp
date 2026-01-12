@@ -488,9 +488,11 @@ const en = {
     workoutsPerWeek: '{{count}} workouts/week',
     activate: 'Activate',
     edit: 'Edit',
-    duplicate: 'Duplicate',
+    start: 'Start',
     deleteTitle: 'Delete Plan',
     deleteMessage: 'Do you really want to delete "{{name}}"?',
+    noWorkoutToday: 'No workout today',
+    noWorkoutTodayMessage: 'No workout is planned for today in this plan.',
   },
 
   // Plan Editor Screen
@@ -521,7 +523,6 @@ const en = {
     activatePlan: 'Activate Plan',
     activePlan: 'Active Plan',
     weeklySchedule: 'Weekly Schedule',
-    restDay: 'Rest Day',
     estimatedDuration: 'Estimated Duration',
   },
 
@@ -570,16 +571,19 @@ const en = {
 
   // Workout History
   workoutHistory: {
-    title: 'Workout History',
-    emptyTitle: 'No Workouts Yet',
-    emptyText: 'Start your first workout to see your history',
-    emptyFilteredTitle: 'No Workouts Found',
-    emptyFilteredText: 'You have no {{direction}} workouts yet',
+    title: 'Your Sport History',
+    emptyTitle: 'No Activities Yet',
+    emptyText: 'Start your first training to see your history',
+    emptyFilteredTitle: 'No Activities Found',
+    emptyFilteredText: 'You have no {{direction}} activities yet',
     duration: 'Duration',
     volume: 'Volume',
     all: 'All',
-    filteredResults: '{{count}} workout(s) found',
+    filteredResults: '{{count}} activity(s) found',
     clearFilter: 'Clear Filter',
+    poses: 'Poses',
+    distance: 'Distance',
+    pace: 'Pace',
   },
 
   // Workout Detail
@@ -1258,6 +1262,23 @@ const en = {
     mainSet: 'Main Set',
     cooldown: 'Cool-down',
     startWorkout: 'Start Workout',
+    // Active Screen
+    totalTime: 'Total Time',
+    steps: 'Steps',
+    pacePerKm: 'Pace /km',
+    cancel: 'Cancel',
+    finish: 'Finish',
+    keepGoing: 'Keep going',
+    endWorkout: 'End workout?',
+    endWorkoutConfirm: 'Do you want to end the workout now?',
+    cancelWorkout: 'Cancel workout?',
+    progressNotSaved: 'Your progress will not be saved.',
+    continue: 'Continue',
+    upNext: 'Up Next',
+    skip: 'Skip',
+    pause: 'Pause',
+    resume: 'Resume',
+    loading: 'Loading...',
   },
 
   // Yoga
