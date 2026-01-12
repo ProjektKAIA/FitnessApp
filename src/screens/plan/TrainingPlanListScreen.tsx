@@ -49,6 +49,10 @@ export const TrainingPlanListScreen: React.FC = () => {
     }
   };
 
+  const handleViewPlan = (plan: ITrainingPlan) => {
+    navigation.navigate('TrainingPlanDetail', { planId: plan.id });
+  };
+
   const handleEditPlan = (plan: ITrainingPlan) => {
     navigation.navigate('TrainingPlanEditor', { planId: plan.id, sportType: plan.sportType });
   };
@@ -149,96 +153,103 @@ export const TrainingPlanListScreen: React.FC = () => {
         ) : (
           <>
             {plans.map((plan) => (
-              <Card key={plan.id} style={styles.planCard} elevated>
-                <View style={styles.planHeader}>
-                  <View style={styles.planInfo}>
-                    <View style={styles.planTitleRow}>
-                      <Text style={[styles.planName, { color: colors.text }]}>{plan.name}</Text>
-                      {plan.id === activePlanId && (
-                        <View style={styles.activeBadge}>
-                          <Text style={styles.activeBadgeText}>
-                            {t('planList.active')}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-                    <View style={styles.planMeta}>
-                      <View
-                        style={[
-                          styles.sourceBadge,
-                          { backgroundColor: getSourceColor(plan.source) },
-                        ]}
-                      >
-                        <Text style={styles.sourceBadgeText}>
-                          {getSourceLabel(plan.source)}
-                        </Text>
+              <TouchableOpacity
+                key={plan.id}
+                activeOpacity={0.8}
+                onPress={() => handleViewPlan(plan)}
+              >
+                <Card style={styles.planCard} elevated>
+                  <View style={styles.planHeader}>
+                    <View style={styles.planInfo}>
+                      <View style={styles.planTitleRow}>
+                        <Text style={[styles.planName, { color: colors.text }]}>{plan.name}</Text>
+                        {plan.id === activePlanId && (
+                          <View style={styles.activeBadge}>
+                            <Text style={styles.activeBadgeText}>
+                              {t('planList.active')}
+                            </Text>
+                          </View>
+                        )}
                       </View>
-                      <Text style={[styles.workoutCount, { color: colors.textSecondary }]}>
-                        {t('planList.workoutsPerWeek', { count: getWorkoutCount(plan) })}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-
-                <View style={[styles.weekPreview, { borderTopColor: colors.border }]}>
-                  {DAYS.map((day) => {
-                    const workout = plan.weeklySchedule[day];
-                    return (
-                      <View
-                        key={day}
-                        style={[
-                          styles.dayDot,
-                          { backgroundColor: colors.background },
-                          workout && styles.dayDotActive,
-                        ]}
-                      >
-                        <Text
+                      <View style={styles.planMeta}>
+                        <View
                           style={[
-                            styles.dayLabel,
-                            { color: colors.textSecondary },
-                            workout && styles.dayLabelActive,
+                            styles.sourceBadge,
+                            { backgroundColor: getSourceColor(plan.source) },
                           ]}
                         >
-                          {t(`days.short.${day}`)}
+                          <Text style={styles.sourceBadgeText}>
+                            {getSourceLabel(plan.source)}
+                          </Text>
+                        </View>
+                        <Text style={[styles.workoutCount, { color: colors.textSecondary }]}>
+                          {t('planList.workoutsPerWeek', { count: getWorkoutCount(plan) })}
                         </Text>
                       </View>
-                    );
-                  })}
-                </View>
+                    </View>
+                    <Text style={[styles.viewArrow, { color: colors.textTertiary }]}>›</Text>
+                  </View>
 
-                <View style={styles.planActions}>
-                  {plan.id !== activePlanId && (
+                  <View style={[styles.weekPreview, { borderTopColor: colors.border }]}>
+                    {DAYS.map((day) => {
+                      const workout = plan.weeklySchedule[day];
+                      return (
+                        <View
+                          key={day}
+                          style={[
+                            styles.dayDot,
+                            { backgroundColor: colors.background },
+                            workout && styles.dayDotActive,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.dayLabel,
+                              { color: colors.textSecondary },
+                              workout && styles.dayLabelActive,
+                            ]}
+                          >
+                            {t(`days.short.${day}`)}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+
+                  <View style={styles.planActions}>
+                    {plan.id !== activePlanId && (
+                      <TouchableOpacity
+                        style={[styles.actionButton, styles.activateButton]}
+                        onPress={(e) => { e.stopPropagation(); handleActivatePlan(plan.id); }}
+                      >
+                        <Text style={styles.activateButtonText}>
+                          {t('planList.activate')}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                     <TouchableOpacity
-                      style={[styles.actionButton, styles.activateButton]}
-                      onPress={() => handleActivatePlan(plan.id)}
+                      style={styles.actionButton}
+                      onPress={(e) => { e.stopPropagation(); handleEditPlan(plan); }}
                     >
-                      <Text style={styles.activateButtonText}>
-                        {t('planList.activate')}
+                      <Text style={styles.actionButtonText}>{t('planList.edit')}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.actionButton}
+                      onPress={(e) => { e.stopPropagation(); handleDuplicatePlan(plan); }}
+                    >
+                      <Text style={styles.actionButtonText}>{t('planList.duplicate')}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.actionButton}
+                      onPress={(e) => { e.stopPropagation(); handleDeletePlan(plan); }}
+                    >
+                      <Text style={[styles.actionButtonText, styles.deleteText]}>
+                        {t('common.delete')}
                       </Text>
                     </TouchableOpacity>
-                  )}
-                  <TouchableOpacity
-                    style={styles.actionButton}
-                    onPress={() => handleEditPlan(plan)}
-                  >
-                    <Text style={styles.actionButtonText}>{t('planList.edit')}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.actionButton}
-                    onPress={() => handleDuplicatePlan(plan)}
-                  >
-                    <Text style={styles.actionButtonText}>{t('planList.duplicate')}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.actionButton}
-                    onPress={() => handleDeletePlan(plan)}
-                  >
-                    <Text style={[styles.actionButtonText, styles.deleteText]}>
-                      {t('common.delete')}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </Card>
+                  </View>
+                </Card>
+              </TouchableOpacity>
             ))}
 
             <TouchableOpacity
@@ -346,6 +357,11 @@ const styles = StyleSheet.create({
   },
   planInfo: {
     flex: 1,
+  },
+  viewArrow: {
+    fontSize: FONT_SIZES['2xl'],
+    fontWeight: '300',
+    marginLeft: SPACING.sm,
   },
   planTitleRow: {
     flexDirection: 'row',

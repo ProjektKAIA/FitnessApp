@@ -30,6 +30,7 @@ export {
   FitnessQuestionnaireScreen,
   TrainingPlanListScreen,
   TrainingPlanEditorScreen,
+  TrainingPlanDetailScreen,
   WorkoutDayEditorScreen,
   ExercisePickerScreen,
   ExerciseDetailScreen,

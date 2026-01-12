@@ -154,7 +154,6 @@ export const MoreScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const user = useUserStore((state) => state.user);
   const updateSettings = useUserStore((state) => state.updateSettings);
-  const logout = useUserStore((state) => state.logout);
   const settings = user?.settings;
   const currentLanguage = useLanguageStore((state) => state.language);
   const [isThemePickerVisible, setIsThemePickerVisible] = useState(false);
@@ -209,24 +208,6 @@ export const MoreScreen: React.FC = () => {
 
   const handleThemeSelect = (theme: ThemeOption) => {
     setTheme(theme);
-  };
-
-  const handleLogout = () => {
-    Alert.alert(
-      t('more.logoutTitle'),
-      t('more.logoutMessage'),
-      [
-        {
-          text: t('common.cancel'),
-          style: 'cancel',
-        },
-        {
-          text: t('more.logout'),
-          style: 'destructive',
-          onPress: () => logout(),
-        },
-      ]
-    );
   };
 
   const handleRateApp = async () => {
@@ -308,13 +289,6 @@ export const MoreScreen: React.FC = () => {
             onPress={() => navigation.navigate('Security')}
             {...menuItemProps}
           />
-          <MenuItem
-            icon="🚪"
-            title={t('more.logout')}
-            subtitle={t('more.logoutSubtitle')}
-            onPress={handleLogout}
-            {...menuItemProps}
-          />
         </Card>
 
         <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
@@ -367,13 +341,6 @@ export const MoreScreen: React.FC = () => {
             title={t('more.aiSettings')}
             subtitle={t('more.aiSettingsSubtitle')}
             onPress={() => navigation.navigate('AICoach')}
-            {...menuItemProps}
-          />
-          <MenuItem
-            icon="💬"
-            title={t('more.chatgptImport')}
-            subtitle={t('more.chatgptImportSubtitle')}
-            onPress={() => navigation.navigate('ChatGPTImport')}
             {...menuItemProps}
           />
         </Card>

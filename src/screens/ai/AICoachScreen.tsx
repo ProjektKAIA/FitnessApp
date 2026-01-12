@@ -1,4 +1,6 @@
-import React from 'react';
+// /workspaces/claude-workspace/fitnessapp/src/screens/ai/AICoachScreen.tsx
+
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +16,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
+import { chatGPTExportService, ParsedConversation } from '@/services/ai';
 import { useAICoachStore, ImportedChat } from '@/stores';
 import { useTheme } from '@/contexts';
 import { RootStackParamList } from '@/types';
@@ -21,12 +25,20 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const AICoachScreen: React.FC = () => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation<NavigationProp>();
+
+  // Store
   const importedChats = useAICoachStore((state) => state.importedChats);
   const activeChat = useAICoachStore((state) => state.activeChat);
   const setActiveChat = useAICoachStore((state) => state.setActiveChat);
   const removeChat = useAICoachStore((state) => state.removeChat);
+  const addImportedChat = useAICoachStore((state) => state.addImportedChat);
+
+  // Import state
+  const [isLoading, setIsLoading] = useState(false);
+  const [conversations, setConversations] = useState<ParsedConversation[]>([]);
+  const [showFitnessOnly, setShowFitnessOnly] = useState(true);
 
   const handleActivateChat = (chat: ImportedChat) => {
     setActiveChat(chat.id);
@@ -47,6 +59,49 @@ export const AICoachScreen: React.FC = () => {
     );
   };
 
+  const handlePickFile = async () => {
+    setIsLoading(true);
+    try {
+      const result = await chatGPTExportService.pickAndImportFile();
+
+      if (!result.success) {
+        Alert.alert(t('aiCoach.importError'), result.error || t('aiCoach.unknownError'));
+        return;
+      }
+
+      if (result.conversations) {
+        setConversations(result.conversations);
+      }
+    } catch (error) {
+      Alert.alert(
+        t('aiCoach.importError'),
+        error instanceof Error ? error.message : t('aiCoach.unknownError')
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSelectConversation = (conversation: ParsedConversation) => {
+    const extractedPlan = chatGPTExportService.extractWorkoutPlan(conversation);
+    addImportedChat(conversation, extractedPlan || undefined);
+
+    // Clear conversations list after import
+    setConversations([]);
+
+    Alert.alert(
+      t('aiCoach.importSuccess'),
+      t('aiCoach.chatImported', { title: conversation.title })
+    );
+  };
+
+  const displayedConversations = showFitnessOnly
+    ? chatGPTExportService.filterFitnessConversations(conversations)
+    : conversations;
+
+  const isAlreadyImported = (convId: string) =>
+    importedChats.some((chat) => chat.id === convId);
+
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('de-DE', {
       day: '2-digit',
@@ -55,6 +110,14 @@ export const AICoachScreen: React.FC = () => {
       hour: '2-digit',
       minute: '2-digit',
     }).format(new Date(date));
+  };
+
+  const formatDateShort = (date: Date) => {
+    return new Intl.DateTimeFormat('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(date);
   };
 
   return (
@@ -77,29 +140,131 @@ export const AICoachScreen: React.FC = () => {
       >
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('aiCoach.subtitle')}</Text>
 
-        <Card style={styles.infoCard}>
+        {/* Info Card */}
+        <Card style={[styles.infoCard, { backgroundColor: colors.primary + '10', borderColor: colors.primary + '30' }]}>
           <View style={styles.infoHeader}>
             <Text style={styles.infoIcon}>💡</Text>
-            <Text style={styles.infoTitle}>{t('aiCoach.howItWorks')}</Text>
+            <Text style={[styles.infoTitle, { color: colors.primary }]}>{t('aiCoach.howItWorks')}</Text>
           </View>
-          <Text style={styles.infoText}>{t('aiCoach.howItWorksText')}</Text>
+          <Text style={[styles.infoText, { color: isDark ? colors.textSecondary : COLORS.gray[700] }]}>
+            {t('aiCoach.howItWorksText')}
+          </Text>
         </Card>
 
-        <TouchableOpacity
-          style={[styles.importButton, { backgroundColor: colors.surface }]}
-          onPress={() => navigation.navigate('ChatGPTImport')}
-        >
-          <Text style={styles.importButtonIcon}>📥</Text>
-          <View style={styles.importButtonContent}>
-            <Text style={[styles.importButtonTitle, { color: colors.text }]}>{t('aiCoach.importFromChatGPT')}</Text>
-            <Text style={[styles.importButtonSubtitle, { color: colors.textSecondary }]}>{t('aiCoach.importDescription')}</Text>
+        {/* Import Section */}
+        <Card style={[styles.instructionCard, { backgroundColor: colors.card }]}>
+          <Text style={[styles.instructionTitle, { color: colors.text }]}>{t('aiCoach.howToExport')}</Text>
+          <View style={styles.stepContainer}>
+            <View style={styles.step}>
+              <Text style={styles.stepNumber}>1</Text>
+              <Text style={[styles.stepText, { color: colors.textSecondary }]}>{t('aiCoach.step1')}</Text>
+            </View>
+            <View style={styles.step}>
+              <Text style={styles.stepNumber}>2</Text>
+              <Text style={[styles.stepText, { color: colors.textSecondary }]}>{t('aiCoach.step2')}</Text>
+            </View>
+            <View style={styles.step}>
+              <Text style={styles.stepNumber}>3</Text>
+              <Text style={[styles.stepText, { color: colors.textSecondary }]}>{t('aiCoach.step3')}</Text>
+            </View>
+            <View style={styles.step}>
+              <Text style={styles.stepNumber}>4</Text>
+              <Text style={[styles.stepText, { color: colors.textSecondary }]}>{t('aiCoach.step4')}</Text>
+            </View>
           </View>
-          <Text style={[styles.importButtonArrow, { color: colors.primary }]}>→</Text>
-        </TouchableOpacity>
 
+          <TouchableOpacity
+            style={[styles.importButton, isLoading && styles.importButtonDisabled]}
+            onPress={handlePickFile}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color={COLORS.white} />
+            ) : (
+              <>
+                <Text style={styles.importButtonIcon}>📂</Text>
+                <Text style={styles.importButtonText}>{t('aiCoach.selectFile')}</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        </Card>
+
+        {/* Found Conversations */}
+        {conversations.length > 0 && (
+          <>
+            <View style={styles.filterRow}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                {t('aiCoach.foundConversations', { count: displayedConversations.length })}
+              </Text>
+              <TouchableOpacity
+                style={[styles.filterButton, { backgroundColor: colors.surfaceElevated }, showFitnessOnly && styles.filterButtonActive]}
+                onPress={() => setShowFitnessOnly(!showFitnessOnly)}
+              >
+                <Text
+                  style={[
+                    styles.filterButtonText,
+                    { color: colors.textSecondary },
+                    showFitnessOnly && styles.filterButtonTextActive,
+                  ]}
+                >
+                  {t('aiCoach.fitnessOnly')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {displayedConversations.length === 0 ? (
+              <Card style={styles.emptyCard}>
+                <Text style={styles.emptyIcon}>🔍</Text>
+                <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('aiCoach.noFitnessChats')}</Text>
+                <TouchableOpacity onPress={() => setShowFitnessOnly(false)}>
+                  <Text style={[styles.showAllLink, { color: colors.primary }]}>{t('aiCoach.showAllChats')}</Text>
+                </TouchableOpacity>
+              </Card>
+            ) : (
+              displayedConversations.map((conversation) => {
+                const imported = isAlreadyImported(conversation.id);
+
+                return (
+                  <TouchableOpacity
+                    key={conversation.id}
+                    style={[styles.conversationCard, { backgroundColor: colors.card }, imported && styles.conversationCardImported]}
+                    onPress={() => !imported && handleSelectConversation(conversation)}
+                    disabled={imported}
+                  >
+                    <View style={styles.conversationHeader}>
+                      <Text style={[styles.conversationTitle, { color: colors.text }]} numberOfLines={1}>
+                        {conversation.title}
+                      </Text>
+                      {imported && (
+                        <View style={styles.importedBadge}>
+                          <Text style={styles.importedBadgeText}>{t('aiCoach.imported')}</Text>
+                        </View>
+                      )}
+                    </View>
+                    <Text style={[styles.conversationPreview, { color: colors.textSecondary }]} numberOfLines={2}>
+                      {conversation.preview}
+                    </Text>
+                    <View style={styles.conversationMeta}>
+                      <Text style={[styles.conversationDate, { color: colors.textTertiary }]}>
+                        {formatDateShort(conversation.updatedAt)}
+                      </Text>
+                      <Text style={[styles.conversationCount, { color: colors.textTertiary }]}>
+                        {t('aiCoach.messageCount', { count: conversation.messageCount })}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })
+            )}
+          </>
+        )}
+
+        {/* Imported Chats */}
         {importedChats.length > 0 && (
           <>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('aiCoach.importedChats')}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text, marginTop: SPACING.xl }]}>
+              {t('aiCoach.importedChats')}
+            </Text>
 
             {importedChats.map((chat) => {
               const isActive = activeChat?.id === chat.id;
@@ -107,7 +272,7 @@ export const AICoachScreen: React.FC = () => {
               return (
                 <Card
                   key={chat.id}
-                  style={[styles.chatCard, isActive && styles.chatCardActive]}
+                  style={[styles.chatCard, { backgroundColor: colors.card }, isActive && styles.chatCardActive]}
                 >
                   <TouchableOpacity
                     style={styles.chatContent}
@@ -158,8 +323,9 @@ export const AICoachScreen: React.FC = () => {
           </>
         )}
 
-        {importedChats.length === 0 && (
-          <Card style={styles.emptyCard}>
+        {/* Empty State */}
+        {importedChats.length === 0 && conversations.length === 0 && (
+          <Card style={[styles.emptyCard, { backgroundColor: colors.card }]}>
             <Text style={styles.emptyIcon}>🤖</Text>
             <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('aiCoach.noChatsYet')}</Text>
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('aiCoach.noChatsDescription')}</Text>
@@ -173,7 +339,6 @@ export const AICoachScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.gray[100],
   },
   header: {
     flexDirection: 'row',
@@ -181,9 +346,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.md,
-    backgroundColor: COLORS.gray[100],
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray[200],
   },
   backButton: {
     width: 40,
@@ -193,12 +356,10 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 24,
-    color: COLORS.primary,
   },
   headerTitle: {
     fontSize: FONT_SIZES.lg,
     fontWeight: '600',
-    color: COLORS.gray[900],
   },
   headerSpacer: {
     width: 40,
@@ -212,14 +373,11 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: FONT_SIZES.base,
-    color: COLORS.gray[500],
     marginTop: SPACING.md,
     marginBottom: SPACING.xl,
   },
   infoCard: {
-    backgroundColor: COLORS.primary + '10',
     borderWidth: 1,
-    borderColor: COLORS.primary + '30',
     marginBottom: SPACING.lg,
   },
   infoHeader: {
@@ -234,50 +392,135 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: FONT_SIZES.base,
     fontWeight: '600',
-    color: COLORS.primary,
   },
   infoText: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[700],
     lineHeight: 20,
+  },
+  instructionCard: {
+    marginBottom: SPACING.xl,
+  },
+  instructionTitle: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    marginBottom: SPACING.md,
+  },
+  stepContainer: {
+    gap: SPACING.sm,
+    marginBottom: SPACING.lg,
+  },
+  step: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  stepNumber: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: COLORS.primary,
+    color: COLORS.white,
+    fontSize: FONT_SIZES.sm,
+    fontWeight: '600',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginRight: SPACING.sm,
+    overflow: 'hidden',
+  },
+  stepText: {
+    flex: 1,
+    fontSize: FONT_SIZES.sm,
   },
   importButton: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    padding: SPACING.lg,
+    backgroundColor: COLORS.primary,
+    paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.lg,
-    borderWidth: 2,
-    borderColor: COLORS.primary,
-    borderStyle: 'dashed',
-    marginBottom: SPACING.xl,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  importButtonDisabled: {
+    opacity: 0.7,
   },
   importButtonIcon: {
-    fontSize: 32,
-    marginRight: SPACING.md,
+    fontSize: 20,
+    marginRight: SPACING.sm,
   },
-  importButtonContent: {
-    flex: 1,
-  },
-  importButtonTitle: {
+  importButtonText: {
     fontSize: FONT_SIZES.base,
     fontWeight: '600',
-    color: COLORS.gray[900],
+    color: COLORS.white,
   },
-  importButtonSubtitle: {
+  filterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  filterButton: {
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.xs,
+    borderRadius: BORDER_RADIUS.full,
+  },
+  filterButtonActive: {
+    backgroundColor: COLORS.primary,
+  },
+  filterButtonText: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[500],
-    marginTop: 2,
   },
-  importButtonArrow: {
-    fontSize: FONT_SIZES.xl,
-    color: COLORS.primary,
+  filterButtonTextActive: {
+    color: COLORS.white,
   },
   sectionTitle: {
     fontSize: FONT_SIZES.lg,
     fontWeight: '600',
-    color: COLORS.gray[900],
     marginBottom: SPACING.md,
+  },
+  conversationCard: {
+    borderRadius: BORDER_RADIUS.lg,
+    padding: SPACING.lg,
+    marginBottom: SPACING.sm,
+  },
+  conversationCardImported: {
+    opacity: 0.6,
+    borderWidth: 1,
+    borderColor: COLORS.success,
+  },
+  conversationHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.xs,
+  },
+  conversationTitle: {
+    flex: 1,
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+  },
+  importedBadge: {
+    backgroundColor: COLORS.success,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: BORDER_RADIUS.sm,
+    marginLeft: SPACING.sm,
+  },
+  importedBadgeText: {
+    fontSize: FONT_SIZES.xs,
+    color: COLORS.white,
+    fontWeight: '500',
+  },
+  conversationPreview: {
+    fontSize: FONT_SIZES.sm,
+    marginBottom: SPACING.sm,
+  },
+  conversationMeta: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  conversationDate: {
+    fontSize: FONT_SIZES.xs,
+  },
+  conversationCount: {
+    fontSize: FONT_SIZES.xs,
   },
   chatCard: {
     marginBottom: SPACING.md,
@@ -301,7 +544,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: FONT_SIZES.base,
     fontWeight: '600',
-    color: COLORS.gray[900],
   },
   activeBadge: {
     backgroundColor: COLORS.success,
@@ -317,11 +559,9 @@ const styles = StyleSheet.create({
   },
   chatMeta: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[500],
   },
   chatMessages: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[400],
     marginTop: 2,
   },
   planBadge: {
@@ -346,18 +586,15 @@ const styles = StyleSheet.create({
   chatActions: {
     flexDirection: 'row',
     borderTopWidth: 1,
-    borderTopColor: COLORS.gray[100],
   },
   actionButton: {
     flex: 1,
     paddingVertical: SPACING.md,
     alignItems: 'center',
     borderRightWidth: 1,
-    borderRightColor: COLORS.gray[100],
   },
   actionButtonText: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.primary,
     fontWeight: '500',
   },
   deleteButton: {
@@ -379,13 +616,15 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: FONT_SIZES.lg,
     fontWeight: '600',
-    color: COLORS.gray[900],
     marginBottom: SPACING.sm,
   },
   emptyText: {
     fontSize: FONT_SIZES.sm,
-    color: COLORS.gray[500],
     textAlign: 'center',
     lineHeight: 20,
+  },
+  showAllLink: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '500',
   },
 });

@@ -36,6 +36,7 @@ import {
   FitnessQuestionnaireScreen,
   TrainingPlanListScreen,
   TrainingPlanEditorScreen,
+  TrainingPlanDetailScreen,
   WorkoutDayEditorScreen,
   ExercisePickerScreen,
   ExerciseDetailScreen,
@@ -362,6 +363,14 @@ export default function App() {
                 <Stack.Screen
                   name="TrainingPlanEditor"
                   component={TrainingPlanEditorScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="TrainingPlanDetail"
+                  component={TrainingPlanDetailScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',

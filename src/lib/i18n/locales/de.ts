@@ -512,6 +512,19 @@ const de = {
     removeWorkoutMessage: 'Möchtest du dieses Workout wirklich entfernen?',
   },
 
+  // Training Plan Detail Screen
+  trainingPlan: {
+    notFound: 'Plan nicht gefunden',
+    trainingDays: 'Tage',
+    exercises: 'Übungen',
+    sets: 'Sätze',
+    activatePlan: 'Plan aktivieren',
+    activePlan: 'Aktiver Plan',
+    weeklySchedule: 'Wochenübersicht',
+    restDay: 'Ruhetag',
+    estimatedDuration: 'Geschätzte Dauer',
+  },
+
   // Workout Day Editor Screen
   workoutEditor: {
     workoutName: 'Workout-Name',

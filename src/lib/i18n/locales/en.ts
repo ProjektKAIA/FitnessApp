@@ -512,6 +512,19 @@ const en = {
     removeWorkoutMessage: 'Do you really want to remove this workout?',
   },
 
+  // Training Plan Detail Screen
+  trainingPlan: {
+    notFound: 'Plan not found',
+    trainingDays: 'Days',
+    exercises: 'Exercises',
+    sets: 'Sets',
+    activatePlan: 'Activate Plan',
+    activePlan: 'Active Plan',
+    weeklySchedule: 'Weekly Schedule',
+    restDay: 'Rest Day',
+    estimatedDuration: 'Estimated Duration',
+  },
+
   // Workout Day Editor Screen
   workoutEditor: {
     workoutName: 'Workout Name',

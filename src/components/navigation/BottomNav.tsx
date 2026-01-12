@@ -47,9 +47,7 @@ export const BottomNav: React.FC<BottomTabBarProps> = ({
         style={[
           styles.container,
           {
-            backgroundColor: isDark
-              ? 'rgba(26, 26, 26, 0.92)'
-              : 'rgba(255, 255, 255, 0.92)',
+            backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
             borderColor: colors.border,
           },
         ]}

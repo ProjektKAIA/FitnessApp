@@ -371,6 +371,7 @@ const styles = StyleSheet.create({
     borderRadius: BORDER_RADIUS.xl,
     overflow: 'hidden',
     height: 140,
+    backgroundColor: COLORS.gray[900],
     ...SHADOWS.md,
   },
   sportCardBackground: {

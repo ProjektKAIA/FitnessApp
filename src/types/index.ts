@@ -441,6 +441,7 @@ export type RootStackParamList = {
   FitnessQuestionnaire: { sportType: TSportType };
   TrainingPlanList: { sportType?: TSportType; questionnaireAnswers?: Record<string, string | string[]> } | undefined;
   TrainingPlanEditor: { planId?: string; sportType: TSportType };
+  TrainingPlanDetail: { planId: string };
   WorkoutDayEditor: { planId: string; day: TTrainingDay };
   ExercisePicker: { planId: string; day: TTrainingDay; workoutId: string };
   HealthSettings: undefined;
