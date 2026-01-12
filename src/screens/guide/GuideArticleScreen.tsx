@@ -53,48 +53,85 @@ export const GuideArticleScreen: React.FC = () => {
     );
   }
 
+  const renderTextWithFormatting = (text: string, sectionId: string, pIndex: number) => {
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, partIndex) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return (
+          <Text
+            key={`${sectionId}-p-${pIndex}-part-${partIndex}`}
+            style={[styles.boldText, { color: colors.text }]}
+          >
+            {part.slice(2, -2)}
+          </Text>
+        );
+      }
+      return part;
+    });
+  };
+
   const renderSection = (section: IGuideSection, index: number) => {
     const paragraphs = section.content.split('\n\n');
 
     return (
-      <View key={section.id} style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          {t(section.titleKey)}
-        </Text>
-        {paragraphs.map((paragraph, pIndex) => {
-          // Handle bold text with **
-          const parts = paragraph.split(/(\*\*.*?\*\*)/g);
+      <Card key={section.id} style={styles.sectionCard}>
+        <View style={[styles.sectionHeader, { borderBottomColor: colors.border }]}>
+          <View style={[styles.sectionNumber, { backgroundColor: colors.primary }]}>
+            <Text style={styles.sectionNumberText}>{index + 1}</Text>
+          </View>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            {t(section.titleKey)}
+          </Text>
+        </View>
+        <View style={styles.sectionContent}>
+          {paragraphs.map((paragraph, pIndex) => {
+            // Check if paragraph is a list (starts with •)
+            const lines = paragraph.split('\n');
+            const isList = lines.every(line => line.trim().startsWith('•') || line.trim() === '');
 
-          return (
-            <Text
-              key={`${section.id}-p-${pIndex}`}
-              style={[styles.paragraph, { color: colors.textSecondary }]}
-            >
-              {parts.map((part, partIndex) => {
-                if (part.startsWith('**') && part.endsWith('**')) {
-                  return (
-                    <Text
-                      key={`${section.id}-p-${pIndex}-part-${partIndex}`}
-                      style={[styles.boldText, { color: colors.text }]}
-                    >
-                      {part.slice(2, -2)}
-                    </Text>
-                  );
-                }
-                // Handle bullet points
-                if (part.startsWith('• ')) {
-                  return (
-                    <Text key={`${section.id}-p-${pIndex}-part-${partIndex}`}>
-                      {'\n'}{part}
-                    </Text>
-                  );
-                }
-                return part;
-              })}
-            </Text>
-          );
-        })}
-      </View>
+            if (isList && lines.some(line => line.trim().startsWith('•'))) {
+              return (
+                <View key={`${section.id}-list-${pIndex}`} style={styles.listContainer}>
+                  {lines.filter(line => line.trim().startsWith('•')).map((line, lineIndex) => {
+                    const bulletText = line.trim().substring(2);
+                    return (
+                      <View key={`${section.id}-bullet-${pIndex}-${lineIndex}`} style={styles.bulletRow}>
+                        <View style={[styles.bulletPoint, { backgroundColor: colors.primary }]} />
+                        <Text style={[styles.bulletText, { color: colors.textSecondary }]}>
+                          {renderTextWithFormatting(bulletText, section.id, pIndex * 100 + lineIndex)}
+                        </Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              );
+            }
+
+            // Check if it's a heading (starts with **)
+            const isHeading = paragraph.startsWith('**') && paragraph.indexOf('**', 2) === paragraph.length - 2;
+            if (isHeading) {
+              return (
+                <Text
+                  key={`${section.id}-heading-${pIndex}`}
+                  style={[styles.subHeading, { color: colors.text }]}
+                >
+                  {paragraph.slice(2, -2)}
+                </Text>
+              );
+            }
+
+            // Regular paragraph
+            return (
+              <Text
+                key={`${section.id}-p-${pIndex}`}
+                style={[styles.paragraph, { color: colors.textSecondary }]}
+              >
+                {renderTextWithFormatting(paragraph, section.id, pIndex)}
+              </Text>
+            );
+          })}
+        </View>
+      </Card>
     );
   };
 
@@ -248,23 +285,75 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.sm,
   },
   articleContent: {
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
+    gap: SPACING.md,
   },
-  section: {
-    marginBottom: SPACING.xl,
+  sectionCard: {
+    padding: 0,
+    overflow: 'hidden',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.md,
+    borderBottomWidth: 1,
+    gap: SPACING.sm,
+  },
+  sectionNumber: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sectionNumberText: {
+    color: COLORS.white,
+    fontSize: FONT_SIZES.sm,
+    fontWeight: '700',
   },
   sectionTitle: {
-    fontSize: FONT_SIZES.lg,
+    fontSize: FONT_SIZES.base,
     fontWeight: '600',
-    marginBottom: SPACING.md,
+    flex: 1,
+  },
+  sectionContent: {
+    padding: SPACING.md,
+  },
+  subHeading: {
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.xs,
   },
   paragraph: {
-    fontSize: FONT_SIZES.base,
-    lineHeight: 24,
-    marginBottom: SPACING.md,
+    fontSize: FONT_SIZES.sm,
+    lineHeight: 22,
+    marginBottom: SPACING.sm,
   },
   boldText: {
     fontWeight: '600',
+  },
+  listContainer: {
+    marginVertical: SPACING.xs,
+    paddingLeft: SPACING.xs,
+  },
+  bulletRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: SPACING.xs,
+    paddingRight: SPACING.sm,
+  },
+  bulletPoint: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginTop: 7,
+    marginRight: SPACING.sm,
+  },
+  bulletText: {
+    flex: 1,
+    fontSize: FONT_SIZES.sm,
+    lineHeight: 20,
   },
   sourcesSection: {
     paddingHorizontal: SPACING.lg,
