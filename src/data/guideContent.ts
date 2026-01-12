@@ -1292,6 +1292,1067 @@ Denk dran: Supplements machen vielleicht 5% des Erfolgs aus. Die anderen 95% kom
       },
     ],
   },
+
+  // ============================================
+  // SCHLAF (Sleep)
+  // ============================================
+  sleep: {
+    id: 'sleep',
+    categoryId: 'health',
+    icon: '😴',
+    titleKey: 'guide.articles.sleep.title',
+    subtitleKey: 'guide.articles.sleep.subtitle',
+    readingTime: 12,
+    sections: [
+      {
+        id: 'intro',
+        titleKey: 'guide.articles.sleep.sections.intro.title',
+        content: `Schlaf ist der mächtigste Regenerationsfaktor überhaupt. Während wir schlafen, repariert der Körper Gewebe, konsolidiert Erinnerungen und reguliert Hormone – Prozesse, die für sportliche Leistung unverzichtbar sind.
+
+Die Deutsche Gesellschaft für Schlafforschung und Schlafmedizin (DGSM) betont: "Ausreichender und erholsamer Schlaf ist eine wesentliche Voraussetzung für körperliche und geistige Gesundheit."
+
+Dieser Guide erklärt die Wissenschaft hinter dem Schlaf und gibt praktische Tipps für bessere Erholung.`,
+      },
+      {
+        id: 'sleep-phases',
+        titleKey: 'guide.articles.sleep.sections.phases.title',
+        content: `**Die Architektur des Schlafs**
+
+Ein Schlafzyklus dauert etwa 90 Minuten und wiederholt sich 4-6 Mal pro Nacht.
+
+**Die 4 Schlafphasen:**
+
+**N1 – Einschlafphase (5%)**
+• Übergang vom Wachen zum Schlafen
+• Leicht aufzuwecken
+• Dauer: wenige Minuten
+
+**N2 – Leichter Schlaf (45-55%)**
+• Herzfrequenz und Temperatur sinken
+• Schlafspindeln im EEG
+• Wichtig für motorisches Lernen
+
+**N3 – Tiefschlaf (15-25%)**
+• Tiefste Schlafphase, schwer aufzuwecken
+• Wachstumshormon-Ausschüttung (bis zu 70% der Tagesproduktion)
+• Muskelregeneration und Immunsystem aktiv
+• Besonders wichtig in der ersten Nachthälfte
+
+**REM-Schlaf (20-25%)**
+• Rapid Eye Movement, lebhafte Träume
+• Gehirn hochaktiv, Körper paralysiert
+• Gedächtniskonsolidierung und Emotionsverarbeitung
+• Nimmt in der zweiten Nachthälfte zu
+
+**Für Sportler besonders wichtig:**
+Tiefschlaf (N3) ist die Phase der körperlichen Regeneration. Wer zu kurz schläft, verliert vor allem REM-Schlaf – wichtig für Koordination und Lernen.`,
+      },
+      {
+        id: 'hormones',
+        titleKey: 'guide.articles.sleep.sections.hormones.title',
+        content: `**Schlaf und Hormone – Die unsichtbaren Effekte**
+
+Schlafmangel bringt das hormonelle Gleichgewicht durcheinander – mit direkten Folgen für Training und Körperzusammensetzung.
+
+**Wachstumshormon (HGH)**
+• 70% der täglichen Ausschüttung im Tiefschlaf
+• Fördert Muskelaufbau und Fettabbau
+• Bei Schlafmangel: Signifikant reduziert
+
+**Testosteron**
+• Produktion hauptsächlich nachts
+• Studie (Leproult & Van Cauter, 2011): 5 Stunden Schlaf über eine Woche = 10-15% weniger Testosteron
+• Entspricht einer Alterung um 10-15 Jahre
+
+**Cortisol**
+• Stresshormon, normalerweise morgens am höchsten
+• Bei Schlafmangel: Erhöhte Abendwerte
+• Fördert Muskelabbau und Fetteinlagerung (besonders am Bauch)
+
+**Leptin und Ghrelin**
+• Leptin = Sättigungshormon (↓ bei Schlafmangel)
+• Ghrelin = Hungerhormon (↑ bei Schlafmangel)
+• Ergebnis: Mehr Hunger, weniger Sättigung
+
+**Insulin**
+• Schlafmangel reduziert Insulinsensitivität
+• Erhöhtes Risiko für Typ-2-Diabetes
+• Schlechtere Nährstoffverwertung
+
+**Fazit:**
+Schlafmangel ist wie ein Anti-Doping-Cocktail – weniger Muskelaufbau, mehr Fetteinlagerung, mehr Hunger.`,
+      },
+      {
+        id: 'performance',
+        titleKey: 'guide.articles.sleep.sections.performance.title',
+        content: `**Schlaf und sportliche Leistung**
+
+Die Forschung zeigt eindeutig: Schlaf ist ein legales Leistungsoptimierungsmittel.
+
+**Stanford-Basketballstudie (Mah et al., 2011):**
+• Spieler schliefen 10 Stunden pro Nacht (5-7 Wochen)
+• Ergebnis: Sprint-Zeit verbessert, Freiwurfquote +9%, Reaktionszeit schneller
+
+**Auswirkungen von Schlafmangel:**
+
+**Kraft und Power:**
+• 1 Nacht Schlafentzug: Maximalkraft -9% (Reilly & Piercy, 1994)
+• Reduktion der Muskelglykogen-Resynthese
+• Langsamere Erholung zwischen Sätzen
+
+**Ausdauer:**
+• Zeit bis zur Erschöpfung sinkt um 11% (Oliver et al., 2009)
+• Höhere wahrgenommene Anstrengung bei gleicher Leistung
+• Verschlechterte Thermoregulation
+
+**Verletzungsrisiko:**
+• Studie mit Jugendsportlern: <8h Schlaf = 1,7x höheres Verletzungsrisiko
+• Verschlechterte Koordination und Reaktionszeit
+• Langsamere Geweberegeneration
+
+**Kognitive Funktion:**
+• Reaktionszeit verlangsamt
+• Entscheidungsfindung beeinträchtigt
+• Fokus und Konzentration reduziert
+
+**Die Empfehlung der ACSM:**
+Athleten sollten 7-9 Stunden Schlaf anstreben, bei hohem Trainingsvolumen eher 9-10 Stunden.`,
+      },
+      {
+        id: 'sleep-hygiene',
+        titleKey: 'guide.articles.sleep.sections.hygiene.title',
+        content: `**Schlafhygiene – Praktische Optimierung**
+
+Die Schlafumgebung und Gewohnheiten haben großen Einfluss auf die Schlafqualität.
+
+**Schlafumgebung:**
+
+**Temperatur:**
+• Optimal: 16-19°C
+• Körpertemperatur muss zum Einschlafen sinken
+• Kühles Schlafzimmer unterstützt diesen Prozess
+
+**Dunkelheit:**
+• Komplette Dunkelheit ideal
+• Melatonin-Produktion wird durch Licht gehemmt
+• Verdunkelungsvorhänge oder Schlafmaske nutzen
+
+**Lärm:**
+• Stille oder konstantes Hintergrundrauschen
+• White Noise oder Ohrstöpsel bei Bedarf
+• Elektronische Geräte stumm schalten
+
+**Matratze und Kissen:**
+• Individuell anpassen
+• Alle 7-10 Jahre erneuern
+• Wirbelsäule sollte neutral liegen
+
+**Verhaltensregeln:**
+
+**1-Stunde-Regel vor dem Schlafen:**
+• Kein blaues Licht (Handy, Laptop, TV)
+• Keine intensive körperliche Aktivität
+• Keine schweren Mahlzeiten
+• Kein Koffein nach 14 Uhr
+
+**Konstanter Rhythmus:**
+• Jeden Tag zur gleichen Zeit aufstehen
+• Auch am Wochenende maximal ±1 Stunde abweichen
+• Zirkadianer Rhythmus liebt Routine`,
+      },
+      {
+        id: 'nutrition-sleep',
+        titleKey: 'guide.articles.sleep.sections.nutrition.title',
+        content: `**Ernährung für besseren Schlaf**
+
+Was du isst und wann du isst, beeinflusst deinen Schlaf.
+
+**Schlaffördernde Nährstoffe:**
+
+**Tryptophan:**
+• Vorstufe von Serotonin und Melatonin
+• Quellen: Truthahn, Eier, Käse, Nüsse, Samen
+• Am besten mit Kohlenhydraten kombinieren (verbessert Aufnahme)
+
+**Magnesium:**
+• Entspannt Muskeln und Nervensystem
+• Quellen: Nüsse, Vollkorn, grünes Blattgemüse
+• Supplementierung: 200-400 mg abends
+
+**Melatonin-reiche Lebensmittel:**
+• Sauerkirschen (hoher Melatonin-Gehalt)
+• Studien zeigen verbesserte Schlafqualität
+• 30-60 Minuten vor dem Schlafen
+
+**Timing der Mahlzeiten:**
+
+**Letzte große Mahlzeit:**
+• 2-3 Stunden vor dem Schlafen
+• Zu voller Magen stört den Schlaf
+• Aber: Nicht hungrig ins Bett gehen
+
+**Kohlenhydrate am Abend:**
+• Entgegen dem Mythos: Können Schlaf verbessern
+• Fördern Tryptophan-Aufnahme ins Gehirn
+• High-GI Kohlenhydrate 4h vor dem Schlafen optimal (Afaghi et al., 2007)
+
+**Was du meiden solltest:**
+• Koffein nach 14 Uhr (Halbwertszeit 5-6 Stunden)
+• Alkohol (stört REM-Schlaf und Tiefschlaf)
+• Scharfe Speisen am Abend
+• Zu viel Flüssigkeit (häufiges Aufwachen)`,
+      },
+      {
+        id: 'napping',
+        titleKey: 'guide.articles.sleep.sections.napping.title',
+        content: `**Power Naps – Strategisches Nickerchen**
+
+Kurze Nickerchen können Leistung und Erholung verbessern – wenn richtig eingesetzt.
+
+**Die optimale Nap-Dauer:**
+
+**10-20 Minuten (Power Nap):**
+• Nur leichter Schlaf (N1-N2)
+• Sofort mehr Wachheit und Fokus
+• Keine Schlaftrunkenheit
+• Ideal für Arbeitstage
+
+**60 Minuten:**
+• Einschließlich Tiefschlaf
+• Gut für Gedächtnis und Lernen
+• Kann kurze Schlaftrunkenheit verursachen
+
+**90 Minuten:**
+• Vollständiger Schlafzyklus
+• Alle Schlafphasen inklusive REM
+• Aufwachen am Ende des Zyklus = erfrischt
+• Ideal vor Wettkämpfen bei Schlafdefizit
+
+**Timing:**
+• Zwischen 13-15 Uhr optimal (natürliches Tief)
+• Nicht nach 16 Uhr (stört Nachtschlaf)
+• Bei Schlafproblemen: Naps vermeiden
+
+**Für Athleten:**
+
+**Vor dem Training:**
+• 20-Minuten-Nap kann Leistung verbessern
+• Besonders bei Schlafdefizit hilfreich
+
+**Nach dem Training:**
+• 20-60 Minuten beschleunigt Regeneration
+• Wachstumshormon-Ausschüttung
+
+**Coffee Nap:**
+• Kaffee trinken, dann 20 Min schlafen
+• Koffein wirkt nach dem Aufwachen
+• Studienergebnis: Besser als nur Kaffee oder nur Nap`,
+      },
+      {
+        id: 'tracking',
+        titleKey: 'guide.articles.sleep.sections.tracking.title',
+        content: `**Schlaf messen und optimieren**
+
+Was gemessen wird, kann verbessert werden.
+
+**Schlaftracker:**
+
+**Consumer-Geräte (Fitbit, Apple Watch, Oura Ring):**
+• Messen Bewegung, Herzfrequenz, HRV
+• Schätzen Schlafphasen ab
+• ~70-80% Übereinstimmung mit Polysomnographie
+• Gut für Trends, nicht für exakte Phasen
+
+**Was du tracken solltest:**
+• Gesamtschlafdauer
+• Schlafeffizienz (Zeit im Bett vs. Schlafzeit)
+• Anzahl der Aufwachphasen
+• Subjektive Erholung am Morgen
+
+**Schlaftagebuch führen:**
+• Zu Bett / Aufgestanden
+• Gefühlte Schlafqualität (1-10)
+• Koffein, Alkohol, Training am Vortag
+• Stresslevel
+
+**Herzratenvariabilität (HRV):**
+• Zeigt Erholungszustand des Nervensystems
+• Hohe HRV = gute Erholung
+• Morgens im Liegen messen
+• Trend über Wochen beobachten
+
+**Warnsignale für schlechten Schlaf:**
+• Regelmäßig <7 Stunden
+• Mehr als 30 Min zum Einschlafen
+• Häufiges Aufwachen nachts
+• Müdigkeit trotz ausreichender Schlafdauer
+• Leistungsabfall im Training`,
+      },
+      {
+        id: 'summary',
+        titleKey: 'guide.articles.sleep.sections.summary.title',
+        content: `**Die wichtigsten Punkte:**
+
+**Schlafdauer:**
+• 7-9 Stunden für die meisten Erwachsenen
+• Athleten: Eher 8-10 Stunden
+• Konsistenter Schlafrhythmus wichtiger als exakte Dauer
+
+**Schlafqualität:**
+• Tiefschlaf für körperliche Regeneration
+• REM-Schlaf für Koordination und Lernen
+• Beide Phasen brauchen ausreichende Schlafdauer
+
+**Hormonelle Effekte:**
+• Wachstumshormon hauptsächlich im Tiefschlaf
+• Schlafmangel senkt Testosteron, erhöht Cortisol
+• Hunger-/Sättigungshormone werden gestört
+
+**Praktische Tipps:**
+• Kühles, dunkles, ruhiges Schlafzimmer
+• 1 Stunde vor dem Schlafen kein Bildschirm
+• Konstante Schlafzeiten einhalten
+• Koffein nur bis 14 Uhr
+
+**Power Naps:**
+• 10-20 Minuten für schnelle Erholung
+• Nicht nach 16 Uhr
+• Besonders hilfreich bei Schlafdefizit
+
+**Merke:**
+Du kannst nicht "vorschlafen" – aber du kannst Schlafschulden aufbauen. Priorisiere Schlaf wie Training und Ernährung.`,
+      },
+    ],
+    sources: [
+      {
+        title: 'Sleep and Athletic Performance: The Effects of Sleep Loss on Exercise Performance',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/28662971/',
+        institution: 'Watson (2017) - Current Sports Medicine Reports',
+      },
+      {
+        title: 'Effect of Sleep Extension on the Athletic Performance of College Basketball Players',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/21731144/',
+        institution: 'Mah et al. (2011) - Sleep',
+      },
+      {
+        title: 'Effect of 1 Week of Sleep Restriction on Testosterone Levels',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/21632481/',
+        institution: 'Leproult & Van Cauter (2011) - JAMA',
+      },
+      {
+        title: 'Chronic Sleep Restriction and the Risk of Injury in Adolescent Athletes',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/25028798/',
+        institution: 'Milewski et al. (2014) - Journal of Pediatric Orthopaedics',
+      },
+      {
+        title: 'Schlaf und Erholung im Leistungssport',
+        url: 'https://www.dgsm.de/',
+        institution: 'Deutsche Gesellschaft für Schlafforschung und Schlafmedizin',
+      },
+      {
+        title: 'High-glycemic-index carbohydrate meals shorten sleep onset',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/17284739/',
+        institution: 'Afaghi et al. (2007) - American Journal of Clinical Nutrition',
+      },
+      {
+        title: 'Sleep Hygiene and Sleep Quality',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/25903579/',
+        institution: 'Irish et al. (2015) - Sleep Medicine Reviews',
+      },
+    ],
+  },
+
+  // ============================================
+  // STRESS (Stress Management)
+  // ============================================
+  stress: {
+    id: 'stress',
+    categoryId: 'health',
+    icon: '🧠',
+    titleKey: 'guide.articles.stress.title',
+    subtitleKey: 'guide.articles.stress.subtitle',
+    readingTime: 11,
+    sections: [
+      {
+        id: 'intro',
+        titleKey: 'guide.articles.stress.sections.intro.title',
+        content: `Stress ist nicht per se schlecht – er ist eine natürliche Anpassungsreaktion. Training selbst ist Stress. Das Problem entsteht, wenn Stress chronisch wird und die Erholung übersteigt.
+
+Das Robert Koch-Institut berichtet: Etwa 20% der Erwachsenen in Deutschland leiden unter chronischem Stress mit Auswirkungen auf die Gesundheit.
+
+Dieser Guide erklärt, wie Stress funktioniert, wann er schadet – und wie du ihn managst, um Training und Alltag in Balance zu bringen.`,
+      },
+      {
+        id: 'stress-response',
+        titleKey: 'guide.articles.stress.sections.response.title',
+        content: `**Die Stressreaktion verstehen**
+
+Die Stressreaktion ist ein evolutionäres Überlebensprogramm – "Fight or Flight".
+
+**Akuter Stress (hilfreich):**
+• Adrenalin und Noradrenalin werden freigesetzt
+• Herzfrequenz und Blutdruck steigen
+• Glukose wird mobilisiert
+• Fokus und Reaktionsfähigkeit erhöht
+• Nach der Bedrohung: Rückkehr zur Baseline
+
+**Chronischer Stress (schädlich):**
+• Cortisol bleibt dauerhaft erhöht
+• Körper kann nicht mehr regenerieren
+• Immunsystem wird unterdrückt
+• Schlafqualität leidet
+• Fetteinlagerung am Bauch nimmt zu
+
+**Die HPA-Achse:**
+Hypothalamus → Hypophyse → Nebenniere
+
+Diese Achse reguliert die Cortisolausschüttung. Bei chronischem Stress wird sie dysreguliert – der Körper "vergisst", wie er entspannen kann.
+
+**Wichtig für Sportler:**
+Training ist ein kontrollierter Stressor. Aber: Training + Arbeitsstress + Schlafmangel + Beziehungsprobleme = Gesamtstress überfordert die Anpassungsfähigkeit.
+
+**Das Stress-Fass-Modell:**
+Stell dir deinen Körper als Fass vor. Jeder Stressor füllt es. Wenn es überläuft, kommst du nicht mehr hinterher.`,
+      },
+      {
+        id: 'cortisol',
+        titleKey: 'guide.articles.stress.sections.cortisol.title',
+        content: `**Cortisol – Freund und Feind**
+
+Cortisol ist nicht "das böse Hormon" – es ist lebensnotwendig. Problematisch wird es bei chronischer Erhöhung.
+
+**Normale Cortisol-Funktionen:**
+• Mobilisiert Energie (Glukose aus Speichern)
+• Reguliert Immunantwort
+• Folgt einem Tagesrhythmus (morgens hoch, abends niedrig)
+• Hilft bei der Anpassung an Stress
+
+**Cortisol im Training:**
+• Steigt während des Trainings an (normal!)
+• Ermöglicht Energiebereitstellung
+• Nach dem Training: Sollte sinken
+• Bei guter Erholung: Kein Problem
+
+**Chronisch erhöhtes Cortisol:**
+• Muskelabbau (katabol)
+• Fetteinlagerung, besonders am Bauch
+• Erhöhter Blutzucker
+• Unterdrücktes Immunsystem
+• Schlafprobleme
+• Verminderte Testosteronproduktion
+
+**Zeichen für zu viel Stress:**
+• Leistungsstagnation trotz Training
+• Ständige Müdigkeit
+• Häufige Infekte
+• Gereiztheit und Stimmungsschwankungen
+• Heißhunger auf Süßes/Salziges
+• Schlafprobleme
+
+**Cortisol senken:**
+• Ausreichend Schlaf (wichtigster Faktor!)
+• Entspannungstechniken
+• Soziale Kontakte
+• Zeit in der Natur
+• Lachen und Spaß`,
+      },
+      {
+        id: 'training-stress',
+        titleKey: 'guide.articles.stress.sections.training.title',
+        content: `**Training und Stress – Die Balance finden**
+
+Training ist Stress. Erfolgreiche Athleten managen ihren Gesamtstress – nicht nur die Trainingsbelastung.
+
+**Das Supercompensations-Prinzip:**
+• Training = Reiz (Stress)
+• Erholung = Anpassung
+• Nächste Einheit = Auf höherem Level
+• ABER: Nur bei ausreichender Erholung!
+
+**Übertraining – wenn die Balance kippt:**
+
+**Frühe Warnsignale:**
+• Leistungsstagnation
+• Erhöhte Morgen-Herzfrequenz
+• Gestörter Schlaf
+• Motivationsverlust
+• Vermehrte Verletzungen
+
+**Manifestes Übertraining:**
+• Leistungsabfall über Wochen
+• Chronische Müdigkeit
+• Depression und Angst
+• Hormonstörungen
+• Kann Monate zur Erholung brauchen
+
+**Wie Alltagsstress das Training beeinflusst:**
+Studie (Stults-Kolehmainen et al., 2014): Personen mit hohem Alltagsstress erholten sich langsamer von Krafttraining. Gleiche Trainingsbelastung, schlechtere Anpassung.
+
+**Praktische Konsequenz:**
+An stressigen Tagen: Trainingsvolumen oder -intensität reduzieren. Der Körper hat nur ein "Erholungsbudget".
+
+**Die 80/20-Regel:**
+80% der Trainingseinheiten: Moderat
+20% der Trainingseinheiten: Intensiv
+Mehr ist oft nicht besser!`,
+      },
+      {
+        id: 'stress-management',
+        titleKey: 'guide.articles.stress.sections.management.title',
+        content: `**Evidenzbasierte Stressmanagement-Techniken**
+
+Diese Methoden sind wissenschaftlich untersucht und wirksam.
+
+**1. Atemübungen:**
+
+**Box Breathing (4-4-4-4):**
+• 4 Sekunden einatmen
+• 4 Sekunden halten
+• 4 Sekunden ausatmen
+• 4 Sekunden halten
+• 4-5 Runden, mehrmals täglich
+
+**Physiologischer Seufzer:**
+• Doppelte Einatmung (durch Nase)
+• Lange Ausatmung (durch Mund)
+• Aktiviert Parasympathikus in Sekunden
+• Stanford-Studie: Effektivste schnelle Methode
+
+**2. Progressive Muskelentspannung:**
+• Muskelgruppen nacheinander anspannen (5 Sek)
+• Dann entspannen (30 Sek)
+• Ganzer Körper: 15-20 Minuten
+• Vor dem Schlafen besonders effektiv
+
+**3. Meditation:**
+• Schon 10 Minuten täglich wirksam
+• Apps wie Headspace, Calm, 7Mind
+• Fokus auf Atem oder Body Scan
+• Studie: 8 Wochen MBSR senkt Cortisol signifikant
+
+**4. Zeit in der Natur:**
+• "Forest Bathing" (Shinrin-yoku)
+• 20 Minuten reichen für messbare Effekte
+• Senkt Cortisol, Blutdruck, Herzfrequenz
+• Steigert Immunfunktion`,
+      },
+      {
+        id: 'lifestyle',
+        titleKey: 'guide.articles.stress.sections.lifestyle.title',
+        content: `**Lifestyle-Faktoren für weniger Stress**
+
+Langfristige Stressresilienz entsteht durch tägliche Gewohnheiten.
+
+**Schlaf (der wichtigste Faktor):**
+• 7-9 Stunden Priorität geben
+• Konstante Schlafzeiten
+• Schlafschulden erhöhen Stressempfindlichkeit dramatisch
+
+**Bewegung:**
+• Regelmäßige moderate Bewegung senkt Cortisol
+• Aber: Nicht übertrainieren!
+• Yoga und leichtes Cardio besonders stressabbauend
+• Bewegung im Freien verstärkt den Effekt
+
+**Ernährung:**
+• Blutzuckerspitzen vermeiden (führen zu Cortisol-Ausschüttung)
+• Ausreichend Protein und gesunde Fette
+• Koffein limitieren bei Stressempfindlichkeit
+• Alkohol reduzieren (stört Schlaf, erhöht Cortisol)
+
+**Soziale Verbindungen:**
+• Oxytocin (Bindungshormon) wirkt anti-Cortisol
+• Positive soziale Kontakte sind Stresspuffer
+• Einsamkeit ist ein massiver Stressor
+• Qualität vor Quantität
+
+**Mindset:**
+• Stress als Herausforderung, nicht als Bedrohung sehen
+• Studien zeigen: Die Interpretation von Stress beeinflusst die Wirkung
+• "Ich bin aufgeregt" statt "Ich bin gestresst"
+• Kontrollierbaren Fokus behalten
+
+**Digital Detox:**
+• Benachrichtigungen minimieren
+• Bildschirmzeit vor dem Schlafen reduzieren
+• Social Media bewusst konsumieren
+• Erreichbarkeit begrenzen`,
+      },
+      {
+        id: 'recovery-strategies',
+        titleKey: 'guide.articles.stress.sections.recovery.title',
+        content: `**Aktive Erholungsstrategien**
+
+Erholung ist nicht nur Nichtstun – sie kann aktiv gefördert werden.
+
+**Parasympathikus aktivieren:**
+
+**Kälteanwendung:**
+• Kaltes Wasser im Gesicht (Tauchreflex)
+• Kalte Duschen (60-90 Sekunden am Ende)
+• Aktiviert Vagusnerv
+• Senkt akut Herzfrequenz und Cortisol
+
+**Wärmeanwendung:**
+• Sauna (nachweislich stressreduzierend)
+• Warmes Bad (vor dem Schlafen)
+• Entspannt Muskulatur
+• Fördert Durchblutung
+
+**Massage und Selbstmassage:**
+• Senkt Cortisol, erhöht Serotonin
+• Foam Rolling als Selbstmassage
+• Auch kurze Sessions wirksam
+
+**Herzratenvariabilität (HRV) Training:**
+• Biofeedback für Nervensystem
+• Apps: Elite HRV, HRV4Training
+• Training des Vagustonus
+• Langfristig: Bessere Stressresilienz
+
+**Hobbys und Lachen:**
+• Aktivitäten ohne Leistungsdruck
+• Lachen senkt messbar Cortisol
+• Musik hören oder machen
+• Kreative Tätigkeiten
+
+**Grenzen setzen:**
+• "Nein" sagen lernen
+• Arbeitszeiten einhalten
+• Erholungszeiten blockieren wie Termine
+• Pausen ohne schlechtes Gewissen`,
+      },
+      {
+        id: 'summary',
+        titleKey: 'guide.articles.stress.sections.summary.title',
+        content: `**Die wichtigsten Punkte:**
+
+**Stress verstehen:**
+• Akuter Stress ist natürlich und hilfreich
+• Chronischer Stress schadet Gesundheit und Leistung
+• Der Körper summiert allen Stress (Training + Leben)
+
+**Cortisol im Blick:**
+• Normal: Morgens hoch, abends niedrig
+• Chronisch erhöht: Muskelabbau, Fetteinlagerung, Schlafprobleme
+• Wichtigste Gegenmaßnahme: Ausreichend Schlaf
+
+**Training anpassen:**
+• An stressigen Tagen weniger intensiv trainieren
+• Übertraining ernst nehmen
+• 80% moderat, 20% intensiv
+
+**Praktische Techniken:**
+• Atemübungen (Box Breathing, Physiologischer Seufzer)
+• Progressive Muskelentspannung
+• Meditation (10 Min/Tag reichen)
+• Zeit in der Natur
+
+**Lifestyle:**
+• Schlaf priorisieren
+• Soziale Kontakte pflegen
+• Digitale Auszeiten nehmen
+• Erholung aktiv einplanen
+
+**Merke:**
+Du kannst nicht allen Stress vermeiden – aber du kannst deine Erholungsfähigkeit trainieren. Stressmanagement ist eine Fähigkeit, die sich verbessern lässt.`,
+      },
+    ],
+    sources: [
+      {
+        title: 'Stress und Gesundheit in Deutschland',
+        url: 'https://www.rki.de/',
+        institution: 'Robert Koch-Institut',
+      },
+      {
+        title: 'Recovery from stress-induced cortisol secretion',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/',
+        institution: 'Psychoneuroendocrinology',
+      },
+      {
+        title: 'Chronic Psychological Stress Impairs Recovery of Muscular Function',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/24343323/',
+        institution: 'Stults-Kolehmainen et al. (2014) - Medicine & Science in Sports',
+      },
+      {
+        title: 'Brief structured respiration practices enhance mood and reduce physiological arousal',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/36630953/',
+        institution: 'Balban et al. (2023) - Cell Reports Medicine (Stanford)',
+      },
+      {
+        title: 'Effect of Forest Bathing on Physiological and Psychological Responses',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/28245811/',
+        institution: 'International Journal of Environmental Research',
+      },
+      {
+        title: 'Mindfulness-Based Stress Reduction and Health Benefits',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/23724462/',
+        institution: 'JAMA Internal Medicine',
+      },
+      {
+        title: 'Overtraining Syndrome in Athletes',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/27566991/',
+        institution: 'Sports Medicine',
+      },
+    ],
+  },
+
+  // ============================================
+  // REGENERATION (Recovery)
+  // ============================================
+  recovery: {
+    id: 'recovery',
+    categoryId: 'health',
+    icon: '🛁',
+    titleKey: 'guide.articles.recovery.title',
+    subtitleKey: 'guide.articles.recovery.subtitle',
+    readingTime: 13,
+    sections: [
+      {
+        id: 'intro',
+        titleKey: 'guide.articles.recovery.sections.intro.title',
+        content: `"Wachstum passiert nicht im Training, sondern in der Erholung." Dieser Grundsatz wird oft zitiert, aber selten konsequent umgesetzt.
+
+Die Deutsche Sporthochschule Köln betont: "Regeneration ist ein aktiver Prozess, der durch gezielte Maßnahmen unterstützt werden kann. Training ohne ausreichende Erholung führt zu Stagnation oder Leistungsabfall."
+
+Dieser Guide erklärt die Wissenschaft der Regeneration und welche Methoden tatsächlich funktionieren – basierend auf aktueller Forschung.`,
+      },
+      {
+        id: 'science',
+        titleKey: 'guide.articles.recovery.sections.science.title',
+        content: `**Die Physiologie der Regeneration**
+
+Was passiert eigentlich, wenn wir uns erholen?
+
+**Superkompensation:**
+1. Training setzt einen Reiz (Stress)
+2. Leistungsfähigkeit sinkt kurzzeitig
+3. In der Erholung: Anpassung ÜBER das Ausgangsniveau
+4. Nächstes Training auf höherem Level
+
+**Zeitliche Abläufe:**
+
+**Neurale Erholung (Stunden):**
+• Nervensystem erholt sich schnell
+• Koordination und Technik zuerst wieder da
+
+**Energiespeicher (12-48 Stunden):**
+• Glykogen-Resynthese
+• Abhängig von Kohlenhydratzufuhr
+• Nach 24h meist vollständig
+
+**Muskuläre Reparatur (24-72 Stunden):**
+• Mikrorisse werden repariert
+• Muskelproteinsynthese erhöht für 24-48h
+• Abhängig von Intensität und Volumen
+
+**Bindegewebe (48-96+ Stunden):**
+• Sehnen und Bänder erholen langsamer
+• Grund für gestaffelte Belastung
+
+**Individuelle Faktoren:**
+• Alter (ältere Athleten brauchen länger)
+• Trainingserfahrung (Fortgeschrittene erholen schneller)
+• Schlafqualität
+• Ernährungsstatus
+• Psychischer Stress
+
+**Die Faustregel:**
+Je intensiver die Belastung, desto länger die Erholung. Schwere Kniebeugen: 72h+. Leichtes Cardio: 24h.`,
+      },
+      {
+        id: 'nutrition-recovery',
+        titleKey: 'guide.articles.recovery.sections.nutrition.title',
+        content: `**Ernährung für optimale Regeneration**
+
+Die Ernährung nach dem Training legt den Grundstein für Erholung und Anpassung.
+
+**Protein:**
+
+**Timing:**
+• Post-Workout: 20-40g Protein
+• Fenster: 0-4 Stunden (nicht so eng wie früher gedacht)
+• Vor dem Schlafen: 40g Casein verlängert Muskelproteinsynthese
+
+**Menge:**
+• 1,6-2,2 g/kg Körpergewicht täglich
+• Gleichmäßig über den Tag verteilen
+• 0,4-0,5 g/kg pro Mahlzeit optimal
+
+**Kohlenhydrate:**
+
+**Glykogen-Resynthese:**
+• 1-1,2 g/kg Körpergewicht post-workout
+• Bei mehreren Einheiten pro Tag: Kritisch wichtig
+• Bei einer Einheit pro Tag: Weniger zeitkritisch
+
+**Quellen:**
+• Reis, Kartoffeln, Haferflocken
+• Obst für schnelle Energie
+• Bei intensivem Training: Höherer Bedarf
+
+**Hydration:**
+
+**Flüssigkeitsverlust ausgleichen:**
+• Wiegen vor und nach dem Training
+• 1,5 Liter pro kg Gewichtsverlust trinken
+• Mit Elektrolyten bei starkem Schwitzen
+
+**Täglicher Bedarf:**
+• 35-40 ml pro kg Körpergewicht
+• Mehr bei Training und Hitze
+
+**Mikronährstoffe:**
+• Magnesium: Muskelentspannung, 300-400 mg/Tag
+• Zink: Immunsystem und Testosteron
+• Omega-3: Entzündungshemmend
+• Antioxidantien: Vorsicht bei Überdosierung (können Anpassung hemmen)`,
+      },
+      {
+        id: 'active-recovery',
+        titleKey: 'guide.articles.recovery.sections.active.title',
+        content: `**Aktive Regeneration**
+
+Leichte Bewegung kann die Erholung beschleunigen – richtig eingesetzt.
+
+**Warum aktive Erholung funktioniert:**
+• Erhöhte Durchblutung = mehr Nährstoffe zu den Muskeln
+• Abtransport von Stoffwechselprodukten
+• Aufrechterhaltung der Beweglichkeit
+• Psychologischer Effekt: "Ich tue etwas"
+
+**Geeignete Aktivitäten:**
+• Leichtes Cardio (Zone 1, 30-40 Min)
+• Schwimmen (gelenkschonend, Wasserdruck)
+• Radfahren (wenig exzentrische Belastung)
+• Spazierengehen
+• Leichtes Yoga
+
+**Intensität:**
+• Herzfrequenz: 50-60% HFmax
+• Unterhaltung problemlos möglich
+• Keine Ermüdung, kein Schwitzen
+• Fühlt sich leicht an – und sollte es auch sein!
+
+**Wann aktive Erholung:**
+• 24-48 Stunden nach intensivem Training
+• An "Rest Days"
+• Bei Muskelkater (leichte Bewegung kann helfen)
+
+**Wann KEINE aktive Erholung:**
+• Bei Verletzungen (Arzt fragen)
+• Bei extremer Erschöpfung (dann Ruhe)
+• Wenn sie selbst zum Stress wird
+
+**Häufiger Fehler:**
+"Aktive Erholung" wird zu intensiv. Dann ist es Training, keine Erholung.`,
+      },
+      {
+        id: 'passive-recovery',
+        titleKey: 'guide.articles.recovery.sections.passive.title',
+        content: `**Passive Regenerationsmaßnahmen**
+
+Was die Forschung zu beliebten Methoden sagt.
+
+**Schlaf (Goldstandard):**
+• Wichtigste Regenerationsmaßnahme überhaupt
+• 7-9 Stunden, bei intensivem Training mehr
+• Qualität > Quantität
+• Nicht durch andere Maßnahmen ersetzbar
+
+**Kälteanwendung:**
+
+**Eisbad/Kryotherapie:**
+• Effektiv für akute Entzündungsreduktion
+• ABER: Kann Muskelanpassung hemmen!
+• Studie (Roberts et al., 2015): Regelmäßige Eisbäder reduzierten Muskelzuwächse
+• Einsatz: Wettkampfphasen ja, Aufbauphase nein
+
+**Kalte Dusche:**
+• Weniger extrem, kaum Nachteile
+• Aktiviert Parasympathikus
+• Psychologisch belebend
+
+**Wärmeanwendung:**
+
+**Sauna:**
+• Studien zeigen: Verbesserte Erholung
+• Erhöht Wachstumshormon kurzfristig
+• Fördert Schlafqualität
+• 2-3x pro Woche, 15-20 Min
+
+**Warmes Bad:**
+• Entspannt Muskulatur
+• Vor dem Schlafen: Körpertemperatur sinkt danach = einschlaffördernd
+• Mit Magnesiumsalz (Epsom Salt) noch effektiver
+
+**Kompressionskleidung:**
+• Moderate Evidenz für schnellere Erholung
+• Kann Muskelkater leicht reduzieren
+• Während und nach dem Training tragen
+• Nicht teuer sein, Hauptsache Kompression`,
+      },
+      {
+        id: 'massage-mobility',
+        titleKey: 'guide.articles.recovery.sections.massage.title',
+        content: `**Massage, Foam Rolling & Mobility**
+
+Hands-on Methoden für bessere Erholung.
+
+**Sportmassage:**
+• Senkt Cortisol, erhöht Serotonin und Dopamin
+• Verbessert Durchblutung
+• Löst Verspannungen
+• Psychologisch entspannend
+• Evidenz: Moderat positiv für Erholung
+
+**Foam Rolling (Selbstmassage):**
+
+**Was die Forschung sagt:**
+• Kann Muskelkater leicht reduzieren (ca. 1 Punkt auf 10er-Skala)
+• Verbessert kurzfristig Beweglichkeit
+• Keine negativen Effekte auf Kraft
+• Ideal vor dem Training oder abends
+
+**Anwendung:**
+• 30-60 Sekunden pro Muskelgruppe
+• Langsam und kontrolliert
+• Nicht direkt auf Knochen oder Gelenke
+• Bei Schmerz: Druck reduzieren
+
+**Mobility-Arbeit:**
+
+**Dehnen:**
+• Statisch nach dem Training oder abends
+• Dynamisch vor dem Training
+• Erhält Beweglichkeit, verbessert sie kaum
+• 30-60 Sekunden pro Position
+
+**Mobility-Flows:**
+• Aktive Bewegung durch Bewegungsumfang
+• Vor dem Training ideal
+• Hält Gelenke gesund
+• 5-10 Minuten reichen
+
+**Percussion-Massage (Massage Gun):**
+• Vibration + Druck
+• Studien zeigen: Ähnlich effektiv wie Foam Rolling
+• Praktischer für bestimmte Bereiche
+• Nicht übermaßig anwenden (2 Min pro Bereich)`,
+      },
+      {
+        id: 'programming',
+        titleKey: 'guide.articles.recovery.sections.programming.title',
+        content: `**Regeneration in die Trainingsplanung integrieren**
+
+Die beste Regenerationsstrategie ist eingebaute Erholung im Trainingsplan.
+
+**Mikrozyklus (Woche):**
+• Nicht jeden Tag maximal trainieren
+• Leichte und schwere Tage wechseln
+• 1-2 echte Ruhetage pro Woche
+• Beispiel: Hart - Moderat - Hart - Leicht - Hart - Aktive Erholung - Ruhe
+
+**Mesozyklus (3-6 Wochen):**
+• Nach 3-4 Wochen intensiven Trainings: Deload-Woche
+• Volumen um 40-60% reduzieren
+• Intensität kann bleiben oder auch sinken
+• Verhindert Übertraining, ermöglicht Superkompensation
+
+**Makrozyklus (Monate):**
+• Periodisierung einbauen
+• Phasen mit unterschiedlichen Schwerpunkten
+• Nach der Saison: Komplette Erholungsphase (1-2 Wochen)
+
+**Zeichen, dass du mehr Erholung brauchst:**
+• Leistung stagniert oder sinkt
+• Motivation fehlt
+• Schlaf verschlechtert sich
+• Erhöhte Morgen-Herzfrequenz
+• Appetitlosigkeit oder Heißhunger
+• Häufige Infekte
+
+**Das Erholungs-Budget:**
+Stell dir vor, du hast jeden Tag 100 Erholungspunkte. Training, Arbeit, Stress – alles zieht ab. Schlaf, Ernährung, Entspannung lädt auf. Gehe nie ins Minus.`,
+      },
+      {
+        id: 'summary',
+        titleKey: 'guide.articles.recovery.sections.summary.title',
+        content: `**Die Regenerations-Hierarchie:**
+
+**1. Schlaf (nicht ersetzbar)**
+• 7-9 Stunden, Qualität zählt
+• Der wichtigste Regenerationsfaktor
+
+**2. Ernährung (Grundlage)**
+• Protein: 1,6-2,2 g/kg, verteilt über den Tag
+• Kohlenhydrate: Je nach Trainingsintensität
+• Hydration: 35-40 ml/kg + Trainingsverluste
+
+**3. Trainingsplanung (eingebaute Erholung)**
+• Deload alle 3-6 Wochen
+• Schwere und leichte Tage wechseln
+• Ruhetage einplanen
+
+**4. Aktive Erholung (unterstützend)**
+• Leichtes Cardio, Schwimmen, Spazieren
+• Nur wenn wirklich leicht!
+
+**5. Passive Maßnahmen (nice to have)**
+• Sauna, warmes Bad
+• Kälteanwendung: Mit Vorsicht
+• Massage, Foam Rolling
+
+**Was du NICHT brauchst:**
+• Teure Gadgets
+• Stundenlanges Stretching
+• Jeden Tag "aktive Erholung"
+• Extreme Kältekammern
+
+**Der wichtigste Tipp:**
+Höre auf deinen Körper. Müdigkeit, Leistungsabfall und Motivationsverlust sind Warnsignale. Manchmal ist die beste Trainingseinheit gar keine.
+
+Regeneration ist kein Luxus – sie ist die Hälfte des Trainings.`,
+      },
+    ],
+    sources: [
+      {
+        title: 'Regeneration und Erholung im Sport',
+        url: 'https://www.dshs-koeln.de/',
+        institution: 'Deutsche Sporthochschule Köln',
+      },
+      {
+        title: 'Post-exercise cold water immersion attenuates acute anabolic signalling',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/26174323/',
+        institution: 'Roberts et al. (2015) - Journal of Physiology',
+      },
+      {
+        title: 'Sleep and Athletic Performance',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/28662971/',
+        institution: 'Watson (2017) - Current Sports Medicine Reports',
+      },
+      {
+        title: 'Effects of foam rolling on performance and recovery',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/29145783/',
+        institution: 'Wiewelhove et al. (2019) - Frontiers in Physiology',
+      },
+      {
+        title: 'Dietary Protein and Muscle Mass: Evidence-Based Guidelines',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/28698222/',
+        institution: 'Morton et al. (2018) - British Journal of Sports Medicine',
+      },
+      {
+        title: 'Sauna bathing and recovery from exercise',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/',
+        institution: 'Scandinavian Journal of Medicine & Science in Sports',
+      },
+      {
+        title: 'Massage for promoting recovery in athletes',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/29755363/',
+        institution: 'Davis et al. (2020) - Sports Medicine',
+      },
+    ],
+  },
 };
 
 export const getGuideArticle = (articleId: string): IGuideArticle | undefined => {

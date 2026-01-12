@@ -1506,6 +1506,99 @@ const en = {
           },
         },
       },
+      sleep: {
+        title: 'Sleep & Performance',
+        subtitle: 'How sleep affects your athletic performance and recovery',
+        sections: {
+          intro: {
+            title: 'Introduction',
+          },
+          phases: {
+            title: 'Sleep Phases & Cycles',
+          },
+          hormones: {
+            title: 'Hormonal Recovery',
+          },
+          performance: {
+            title: 'Sleep & Athletic Performance',
+          },
+          hygiene: {
+            title: 'Sleep Hygiene',
+          },
+          nutrition: {
+            title: 'Nutrition & Sleep',
+          },
+          napping: {
+            title: 'Power Naps & Daytime Sleep',
+          },
+          tracking: {
+            title: 'Sleep Tracking',
+          },
+          summary: {
+            title: 'Summary',
+          },
+        },
+      },
+      stress: {
+        title: 'Stress Management',
+        subtitle: 'Cortisol, training and strategies for better balance',
+        sections: {
+          intro: {
+            title: 'Introduction',
+          },
+          physiology: {
+            title: 'Stress Physiology',
+          },
+          cortisol: {
+            title: 'Cortisol & Training',
+          },
+          trainingStress: {
+            title: 'Managing Training Stress',
+          },
+          acuteManagement: {
+            title: 'Acute Stress Management',
+          },
+          lifestyle: {
+            title: 'Lifestyle Factors',
+          },
+          adaptation: {
+            title: 'Stress Adaptation',
+          },
+          summary: {
+            title: 'Summary',
+          },
+        },
+      },
+      recovery: {
+        title: 'Recovery',
+        subtitle: 'The science behind optimal recovery and supercompensation',
+        sections: {
+          intro: {
+            title: 'Introduction',
+          },
+          physiology: {
+            title: 'Recovery Physiology',
+          },
+          nutrition: {
+            title: 'Nutrition for Recovery',
+          },
+          activeRecovery: {
+            title: 'Active Recovery',
+          },
+          passiveRecovery: {
+            title: 'Passive Recovery',
+          },
+          massage: {
+            title: 'Massage & Mobility',
+          },
+          programming: {
+            title: 'Programming Recovery',
+          },
+          summary: {
+            title: 'Summary',
+          },
+        },
+      },
     },
 
     sport: {

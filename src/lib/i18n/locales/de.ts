@@ -1500,6 +1500,99 @@ const de = {
           },
         },
       },
+      sleep: {
+        title: 'Schlaf & Leistung',
+        subtitle: 'Wie Schlaf deine sportliche Leistung und Regeneration beeinflusst',
+        sections: {
+          intro: {
+            title: 'Einführung',
+          },
+          phases: {
+            title: 'Schlafphasen & Zyklen',
+          },
+          hormones: {
+            title: 'Hormonelle Regeneration',
+          },
+          performance: {
+            title: 'Schlaf & sportliche Leistung',
+          },
+          hygiene: {
+            title: 'Schlafhygiene',
+          },
+          nutrition: {
+            title: 'Ernährung & Schlaf',
+          },
+          napping: {
+            title: 'Powernaps & Mittagsschlaf',
+          },
+          tracking: {
+            title: 'Schlaf tracken',
+          },
+          summary: {
+            title: 'Zusammenfassung',
+          },
+        },
+      },
+      stress: {
+        title: 'Stressmanagement',
+        subtitle: 'Cortisol, Training und Strategien für eine bessere Balance',
+        sections: {
+          intro: {
+            title: 'Einführung',
+          },
+          physiology: {
+            title: 'Stressphysiologie',
+          },
+          cortisol: {
+            title: 'Cortisol & Training',
+          },
+          trainingStress: {
+            title: 'Trainingsstress managen',
+          },
+          acuteManagement: {
+            title: 'Akutes Stressmanagement',
+          },
+          lifestyle: {
+            title: 'Lifestyle-Faktoren',
+          },
+          adaptation: {
+            title: 'Stress-Adaptation',
+          },
+          summary: {
+            title: 'Zusammenfassung',
+          },
+        },
+      },
+      recovery: {
+        title: 'Regeneration',
+        subtitle: 'Die Wissenschaft hinter optimaler Erholung und Supercompensation',
+        sections: {
+          intro: {
+            title: 'Einführung',
+          },
+          physiology: {
+            title: 'Regenerationsphysiologie',
+          },
+          nutrition: {
+            title: 'Ernährung für Regeneration',
+          },
+          activeRecovery: {
+            title: 'Aktive Regeneration',
+          },
+          passiveRecovery: {
+            title: 'Passive Regeneration',
+          },
+          massage: {
+            title: 'Massage & Mobility',
+          },
+          programming: {
+            title: 'Regeneration planen',
+          },
+          summary: {
+            title: 'Zusammenfassung',
+          },
+        },
+      },
     },
 
     sport: {
