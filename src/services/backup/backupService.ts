@@ -13,6 +13,7 @@ import {
 } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
 import { logger } from '@/lib/logger';
+import { safeJsonParse, isValidBackupData } from '@/lib';
 
 const log = logger.scope('BackupService');
 
@@ -149,15 +150,14 @@ export const readBackupFile = async (filePath: string): Promise<BackupData | nul
     }
 
     const content = await FileSystem.readAsStringAsync(filePath);
-    const backupData = JSON.parse(content) as BackupData;
+    const parseResult = safeJsonParse(content, isValidBackupData);
 
-    // Validate backup structure
-    if (!backupData.version || !backupData.data) {
-      log.error('Invalid backup structure');
+    if (!parseResult.success || !parseResult.data) {
+      log.error('Invalid backup structure or parse error');
       return null;
     }
 
-    return backupData;
+    return parseResult.data as BackupData;
   } catch (error) {
     log.error('Error reading backup', error);
     return null;

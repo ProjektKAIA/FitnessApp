@@ -12,33 +12,26 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import {
-  getAuth,
-  deleteUser,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
-} from 'firebase/auth';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { Card } from '@/components/common';
-import { useUserStore } from '@/stores';
+import { useUserStore, useWorkoutStore } from '@/stores';
 import { useTheme } from '@/contexts';
+import { storage } from '@/lib';
 
 export const DeleteAccountScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const navigation = useNavigation();
   const logout = useUserStore((state) => state.logout);
-  const [password, setPassword] = useState('');
+  const setWorkouts = useWorkoutStore((state) => state.setWorkouts);
   const [confirmText, setConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   const requiredConfirmText = t('deleteAccount.confirmWord');
   const isConfirmValid = confirmText.toLowerCase() === requiredConfirmText.toLowerCase();
-  const canDelete = password.length > 0 && isConfirmValid;
 
-  const handleDeleteAccount = async () => {
-    if (!canDelete) return;
+  const handleDeleteData = async () => {
+    if (!isConfirmValid) return;
 
     Alert.alert(
       t('deleteAccount.finalConfirmTitle'),
@@ -51,40 +44,27 @@ export const DeleteAccountScreen: React.FC = () => {
           onPress: async () => {
             setIsDeleting(true);
             try {
-              const auth = getAuth();
-              const user = auth.currentUser;
+              // Clear workouts
+              setWorkouts([]);
 
-              if (!user || !user.email) {
-                throw new Error('No user logged in');
-              }
+              // Clear all storage (this clears all persisted store data)
+              await storage.clear();
 
-              // Re-authenticate before deletion
-              const credential = EmailAuthProvider.credential(user.email, password);
-              await reauthenticateWithCredential(user, credential);
-
-              // Delete the user
-              await deleteUser(user);
-
-              // Clear local data
+              // Logout (resets user store)
               logout();
 
               Alert.alert(
                 t('deleteAccount.successTitle'),
-                t('deleteAccount.successMessage')
+                t('deleteAccount.successMessage'),
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => navigation.goBack(),
+                  },
+                ]
               );
-            } catch (error: unknown) {
-              console.error('[DeleteAccount]:', error);
-              const errorCode = (error as { code?: string })?.code;
-
-              if (errorCode === 'auth/wrong-password') {
-                Alert.alert(t('common.error'), t('deleteAccount.wrongPassword'));
-              } else if (errorCode === 'auth/too-many-requests') {
-                Alert.alert(t('common.error'), t('deleteAccount.tooManyRequests'));
-              } else if (errorCode === 'auth/requires-recent-login') {
-                Alert.alert(t('common.error'), t('deleteAccount.requiresRecentLogin'));
-              } else {
-                Alert.alert(t('common.error'), t('deleteAccount.error'));
-              }
+            } catch {
+              Alert.alert(t('common.error'), t('deleteAccount.error'));
             } finally {
               setIsDeleting(false);
             }
@@ -111,71 +91,52 @@ export const DeleteAccountScreen: React.FC = () => {
           <Text style={styles.warningText}>{t('deleteAccount.warningText')}</Text>
         </Card>
 
-        <Text style={styles.sectionTitle}>{t('deleteAccount.whatWillBeDeleted')}</Text>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('deleteAccount.whatWillBeDeleted')}</Text>
         <Card style={styles.listCard}>
           <View style={styles.listItem}>
             <Text style={styles.listBullet}>•</Text>
-            <Text style={styles.listText}>{t('deleteAccount.deleteItem1')}</Text>
+            <Text style={[styles.listText, { color: colors.textSecondary }]}>{t('deleteAccount.deleteItem1')}</Text>
           </View>
           <View style={styles.listItem}>
             <Text style={styles.listBullet}>•</Text>
-            <Text style={styles.listText}>{t('deleteAccount.deleteItem2')}</Text>
+            <Text style={[styles.listText, { color: colors.textSecondary }]}>{t('deleteAccount.deleteItem2')}</Text>
           </View>
           <View style={styles.listItem}>
             <Text style={styles.listBullet}>•</Text>
-            <Text style={styles.listText}>{t('deleteAccount.deleteItem3')}</Text>
+            <Text style={[styles.listText, { color: colors.textSecondary }]}>{t('deleteAccount.deleteItem3')}</Text>
           </View>
           <View style={styles.listItem}>
             <Text style={styles.listBullet}>•</Text>
-            <Text style={styles.listText}>{t('deleteAccount.deleteItem4')}</Text>
+            <Text style={[styles.listText, { color: colors.textSecondary }]}>{t('deleteAccount.deleteItem4')}</Text>
           </View>
         </Card>
 
-        <Text style={styles.sectionTitle}>{t('deleteAccount.confirmIdentity')}</Text>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('deleteAccount.confirmSection')}</Text>
         <Card style={styles.formCard}>
-          <Text style={styles.inputLabel}>{t('deleteAccount.enterPassword')}</Text>
-          <View style={styles.passwordContainer}>
-            <TextInput
-              style={styles.passwordInput}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-              placeholder="••••••••"
-              placeholderTextColor={COLORS.gray[400]}
-              autoCapitalize="none"
-            />
-            <TouchableOpacity
-              style={styles.eyeButton}
-              onPress={() => setShowPassword(!showPassword)}
-            >
-              <Text style={styles.eyeIcon}>{showPassword ? '🙈' : '👁️'}</Text>
-            </TouchableOpacity>
-          </View>
-
-          <Text style={styles.inputLabel}>
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>
             {t('deleteAccount.typeToConfirm', { word: requiredConfirmText })}
           </Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: colors.surface, color: colors.text, borderColor: colors.border }]}
             value={confirmText}
             onChangeText={setConfirmText}
             placeholder={requiredConfirmText}
-            placeholderTextColor={COLORS.gray[400]}
+            placeholderTextColor={colors.textTertiary}
             autoCapitalize="none"
           />
         </Card>
 
         <TouchableOpacity
-          style={[styles.deleteButton, !canDelete && styles.deleteButtonDisabled]}
-          onPress={handleDeleteAccount}
-          disabled={!canDelete || isDeleting}
+          style={[styles.deleteButton, !isConfirmValid && styles.deleteButtonDisabled]}
+          onPress={handleDeleteData}
+          disabled={!isConfirmValid || isDeleting}
         >
           <Text style={styles.deleteButtonText}>
             {isDeleting ? t('deleteAccount.deleting') : t('deleteAccount.deleteButton')}
           </Text>
         </TouchableOpacity>
 
-        <Text style={styles.disclaimer}>{t('deleteAccount.disclaimer')}</Text>
+        <Text style={[styles.disclaimer, { color: colors.textTertiary }]}>{t('deleteAccount.disclaimer')}</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -278,28 +239,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: COLORS.gray[700],
     marginBottom: SPACING.xs,
-  },
-  passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.gray[50],
-    borderRadius: BORDER_RADIUS.md,
-    borderWidth: 1,
-    borderColor: COLORS.gray[200],
-    marginBottom: SPACING.lg,
-  },
-  passwordInput: {
-    flex: 1,
-    fontSize: FONT_SIZES.base,
-    color: COLORS.gray[900],
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.md,
-  },
-  eyeButton: {
-    padding: SPACING.md,
-  },
-  eyeIcon: {
-    fontSize: 20,
   },
   input: {
     backgroundColor: COLORS.gray[50],

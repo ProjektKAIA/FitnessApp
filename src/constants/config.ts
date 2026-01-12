@@ -15,4 +15,3 @@ export const REST_TIMER_OPTIONS = [30, 60, 90, 120, 180, 300];
 export const APP_VERSION = '1.0.0';
 
 export const DEV_MODE = __DEV__;
-export const DEV_LOGIN_ENABLED = DEV_MODE;

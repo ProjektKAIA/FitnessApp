@@ -40,3 +40,10 @@ export {
   SUPPORTED_LANGUAGES,
   type Language,
 } from './i18n';
+
+export {
+  safeJsonParse,
+  isValidBackupData,
+  isValidImportData,
+  type SafeParseResult,
+} from './safeJson';

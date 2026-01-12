@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from './logger';
 
+const log = logger.scope('Storage');
 const STORAGE_PREFIX = '@fitnessapp:';
 
 export interface StorageOptions {
@@ -21,7 +23,7 @@ export async function getItem<T>(key: string, options?: StorageOptions): Promise
 
     return JSON.parse(value) as T;
   } catch (error) {
-    console.error(`Storage getItem error for key "${key}":`, error);
+    log.error('getItem error', error, { key });
     return null;
   }
 }
@@ -32,7 +34,7 @@ export async function setItem<T>(key: string, value: T, options?: StorageOptions
     await AsyncStorage.setItem(fullKey, JSON.stringify(value));
     return true;
   } catch (error) {
-    console.error(`Storage setItem error for key "${key}":`, error);
+    log.error('setItem error', error, { key });
     return false;
   }
 }
@@ -43,7 +45,7 @@ export async function removeItem(key: string, options?: StorageOptions): Promise
     await AsyncStorage.removeItem(fullKey);
     return true;
   } catch (error) {
-    console.error(`Storage removeItem error for key "${key}":`, error);
+    log.error('removeItem error', error, { key });
     return false;
   }
 }
@@ -56,7 +58,7 @@ export async function clear(options?: StorageOptions): Promise<boolean> {
     await AsyncStorage.multiRemove(appKeys);
     return true;
   } catch (error) {
-    console.error('Storage clear error:', error);
+    log.error('clear error', error);
     return false;
   }
 }
@@ -69,7 +71,7 @@ export async function getAllKeys(options?: StorageOptions): Promise<string[]> {
       .filter((key) => key.startsWith(prefix))
       .map((key) => key.replace(prefix, ''));
   } catch (error) {
-    console.error('Storage getAllKeys error:', error);
+    log.error('getAllKeys error', error);
     return [];
   }
 }

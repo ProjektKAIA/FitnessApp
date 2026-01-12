@@ -19,6 +19,7 @@ import { useUserStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useTheme } from '@/contexts';
+import { safeJsonParse, isValidImportData } from '@/lib';
 
 interface ImportData {
   exportDate?: string;
@@ -70,7 +71,15 @@ export const DataImportScreen: React.FC = () => {
 
       const content = await FileSystem.readAsStringAsync(file.uri);
 
-      const data = JSON.parse(content) as ImportData;
+      const parseResult = safeJsonParse(content, isValidImportData);
+      if (!parseResult.success || !parseResult.data) {
+        Alert.alert(t('common.error'), t('dataImport.invalidFile'));
+        setSelectedFile(null);
+        setImportData(null);
+        return;
+      }
+
+      const data = parseResult.data as ImportData;
       setImportData(data);
 
       // Auto-select available data types
@@ -80,8 +89,7 @@ export const DataImportScreen: React.FC = () => {
         health: !!data.health,
         settings: !!data.settings,
       });
-    } catch (error) {
-      console.error('[DataImport]:', error);
+    } catch {
       Alert.alert(t('common.error'), t('dataImport.invalidFile'));
       setSelectedFile(null);
       setImportData(null);
@@ -141,8 +149,7 @@ export const DataImportScreen: React.FC = () => {
 
               Alert.alert(t('common.success'), t('dataImport.success'));
               navigation.goBack();
-            } catch (error) {
-              console.error('[DataImport]:', error);
+            } catch {
               Alert.alert(t('common.error'), t('dataImport.error'));
             } finally {
               setIsImporting(false);

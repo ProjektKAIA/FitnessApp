@@ -485,12 +485,6 @@ export type OnboardingStackParamList = {
   Goal: undefined;
 };
 
-export type AuthStackParamList = {
-  Login: undefined;
-  Register: undefined;
-  ForgotPassword: undefined;
-};
-
 export type MainTabParamList = {
   Home: undefined;
   Workout: undefined;

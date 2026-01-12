@@ -39,6 +39,7 @@ import {
   getStorageTypeIcon,
   getRecommendedStorageType,
 } from '@/services/backup/cloudStorageService';
+import { safeJsonParse, isValidBackupData } from '@/lib';
 
 interface StorageOption {
   type: BackupStorageType;
@@ -154,7 +155,6 @@ export const DataBackupScreen: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error('[DataBackup] Create error:', error);
       setError(error instanceof Error ? error.message : 'Unknown error');
       Alert.alert(t('backup.error'), t('backup.backupFailed'));
     } finally {
@@ -195,14 +195,14 @@ export const DataBackupScreen: React.FC = () => {
         return;
       }
 
-      // Backup parsen
-      const backupData = JSON.parse(loadResult.content) as BackupData;
-
-      // Validieren
-      if (!backupData.version || !backupData.data) {
+      // Backup sicher parsen und validieren
+      const parseResult = safeJsonParse(loadResult.content, isValidBackupData);
+      if (!parseResult.success || !parseResult.data) {
         Alert.alert(t('backup.error'), t('backup.invalidBackup'));
         return;
       }
+
+      const backupData = parseResult.data as BackupData;
 
       // Optionen anzeigen
       Alert.alert(
@@ -225,7 +225,6 @@ export const DataBackupScreen: React.FC = () => {
         ]
       );
     } catch (error) {
-      console.error('[DataBackup] Restore error:', error);
       setError(error instanceof Error ? error.message : 'Unknown error');
       Alert.alert(t('backup.error'), t('backup.restoreFailed'));
     } finally {
@@ -249,8 +248,7 @@ export const DataBackupScreen: React.FC = () => {
       } else {
         Alert.alert(t('backup.error'), result.error || t('backup.restoreFailed'));
       }
-    } catch (error) {
-      console.error('[DataBackup] Execute restore error:', error);
+    } catch {
       Alert.alert(t('backup.error'), t('backup.restoreFailed'));
     } finally {
       setRestoring(false);
