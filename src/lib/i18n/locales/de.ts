@@ -101,10 +101,13 @@ const de = {
     chooseSport: 'Wähle deine Sportart',
     sportCards: {
       fitnessDesc: 'Krafttraining & Muskelaufbau',
+      customDesc: 'Erstelle dein eigenes Workout',
       runningDesc: 'Lauftraining & Ausdauer',
       yogaDesc: 'Flexibilität & Entspannung',
       calisthenicsDesc: 'Bodyweight & Körperkontrolle',
     },
+    lastWorkout: 'Letztes Training',
+    volume: 'Volumen',
   },
 
   // Workout Active Screen
@@ -463,7 +466,8 @@ const de = {
     martial_arts: 'Kampfsport',
     swimming: 'Schwimmen',
     yoga: 'Yoga',
-    custom: 'Benutzerdefiniert',
+    calisthenics: 'Calisthenics',
+    custom: 'Eigenes Training',
   },
 
   // Sport Selection Screen
@@ -1010,6 +1014,8 @@ const de = {
     infoTextLocal: 'Mit der biometrischen Entsperrung kannst du die App zusätzlich schützen. Deine Daten werden lokal auf deinem Gerät gespeichert.',
     biometricNotAvailable: 'Biometrische Authentifizierung ist auf diesem Gerät nicht verfügbar.',
     biometricError: 'Fehler bei der biometrischen Authentifizierung.',
+    appLocked: 'App gesperrt',
+    authenticateToUnlock: 'Bitte authentifiziere dich, um die App zu entsperren.',
   },
 
   // Data Export Screen

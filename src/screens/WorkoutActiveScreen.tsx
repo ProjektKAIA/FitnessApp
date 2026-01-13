@@ -75,12 +75,12 @@ export const WorkoutActiveScreen: React.FC = () => {
   };
 
   const SAMPLE_EXERCISES = [
-    { nameKey: 'exercises.benchPress', muscleGroup: 'chest' as const },
-    { nameKey: 'exercises.inclineDumbbellPress', muscleGroup: 'chest' as const },
-    { nameKey: 'exercises.cableFlyes', muscleGroup: 'chest' as const },
-    { nameKey: 'exercises.overheadPress', muscleGroup: 'shoulders' as const },
-    { nameKey: 'exercises.lateralRaises', muscleGroup: 'shoulders' as const },
-    { nameKey: 'exercises.tricepPushdowns', muscleGroup: 'triceps' as const },
+    { nameKey: 'exercises.benchPress', muscleGroup: 'chest' as const, exerciseId: 'bench_press' },
+    { nameKey: 'exercises.inclineDumbbellPress', muscleGroup: 'chest' as const, exerciseId: 'incline_bench' },
+    { nameKey: 'exercises.cableFlyes', muscleGroup: 'chest' as const, exerciseId: 'cable_crossover' },
+    { nameKey: 'exercises.overheadPress', muscleGroup: 'shoulders' as const, exerciseId: 'overhead_press' },
+    { nameKey: 'exercises.lateralRaises', muscleGroup: 'shoulders' as const, exerciseId: 'lateral_raise' },
+    { nameKey: 'exercises.tricepPushdowns', muscleGroup: 'triceps' as const, exerciseId: 'tricep_pushdown' },
   ];
 
   useEffect(() => {
@@ -188,10 +188,11 @@ export const WorkoutActiveScreen: React.FC = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleAddExercise = (exercise: { nameKey: string; muscleGroup: 'chest' | 'shoulders' | 'triceps' }) => {
+  const handleAddExercise = (exercise: { nameKey: string; muscleGroup: 'chest' | 'shoulders' | 'triceps'; exerciseId: string }) => {
     addExercise({
       name: t(exercise.nameKey),
       muscleGroup: exercise.muscleGroup,
+      exerciseId: exercise.exerciseId,
       sets: [{ id: '1', weight: 0, reps: 0, completed: false }],
     });
     setShowExerciseModal(false);

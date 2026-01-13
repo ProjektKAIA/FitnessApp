@@ -208,12 +208,15 @@ export const FitnessQuestionnaireScreen: React.FC = () => {
     } else {
       // Bestes Template finden und Plan erstellen
       const template = findBestTemplate();
-      createPlanFromTemplate(template);
+      const planId = createPlanFromTemplate(template);
 
-      // Zur Hauptseite navigieren
+      // Zum neuen Plan navigieren
       navigation.reset({
-        index: 0,
-        routes: [{ name: 'Main' }],
+        index: 1,
+        routes: [
+          { name: 'Main' },
+          { name: 'TrainingPlanDetail', params: { planId } },
+        ],
       });
     }
   };

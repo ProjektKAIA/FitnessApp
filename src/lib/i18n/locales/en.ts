@@ -101,10 +101,13 @@ const en = {
     chooseSport: 'Choose your sport',
     sportCards: {
       fitnessDesc: 'Strength training & muscle building',
+      customDesc: 'Create your own workout',
       runningDesc: 'Running & endurance',
       yogaDesc: 'Flexibility & relaxation',
       calisthenicsDesc: 'Bodyweight & body control',
     },
+    lastWorkout: 'Last Workout',
+    volume: 'Volume',
   },
 
   // Workout Active Screen
@@ -463,7 +466,8 @@ const en = {
     martial_arts: 'Martial Arts',
     swimming: 'Swimming',
     yoga: 'Yoga',
-    custom: 'Custom',
+    calisthenics: 'Calisthenics',
+    custom: 'Custom Workout',
   },
 
   // Sport Selection Screen
@@ -1010,6 +1014,8 @@ const en = {
     infoTextLocal: 'With biometric unlock you can add extra protection to the app. Your data is stored locally on your device.',
     biometricNotAvailable: 'Biometric authentication is not available on this device.',
     biometricError: 'Error during biometric authentication.',
+    appLocked: 'App Locked',
+    authenticateToUnlock: 'Please authenticate to unlock the app.',
   },
 
   // Data Export Screen

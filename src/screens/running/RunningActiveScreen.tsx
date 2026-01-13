@@ -180,15 +180,26 @@ export const RunningActiveScreen: React.FC = () => {
     const finishedSession = endSession();
     if (finishedSession) {
       // Process completion
+      let calories = 0;
       try {
-        await handleRunningCompletion(
+        const result = await handleRunningCompletion(
           finishedSession,
           user?.weight
         );
+        calories = result?.calories || 0;
       } catch (error) {
         console.error('[RunningActive] Completion error:', error);
       }
-      navigation.replace('RunningHome');
+
+      // Navigate to results screen
+      navigation.replace('RunningResults', {
+        workoutName: finishedSession.workoutName,
+        totalTime: totalTimerRef.current,
+        totalDistance: liveDistance,
+        totalSteps: liveSteps,
+        avgPace: livePace,
+        calories,
+      });
     }
   };
 

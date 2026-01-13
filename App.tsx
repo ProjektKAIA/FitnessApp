@@ -4,14 +4,15 @@ import 'react-native-gesture-handler';
 // Initialize i18n before any other imports that might use translations
 import i18n from '@/lib/i18n';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, AppState, AppStateStatus, Text } from 'react-native';
 import { useTranslation, I18nextProvider } from 'react-i18next';
+import * as LocalAuthentication from 'expo-local-authentication';
 
 import {
   HomeScreen,
@@ -60,6 +61,7 @@ import {
   RunningPlanDetailScreen,
   RunningWorkoutDetailScreen,
   RunningActiveScreen,
+  RunningResultsScreen,
   // Yoga Screens
   YogaHomeScreen,
   YogaSessionListScreen,
@@ -72,16 +74,19 @@ import {
   CalisthenicsWorkoutDetailScreen,
   // Homeworkout Screens
   HomeworkoutHomeScreen,
+  // Custom Screens
+  CustomHomeScreen,
   // Guide Screens
   GuideArticleScreen,
 } from '@/screens';
 import { BottomNav } from '@/components/navigation';
 import { ErrorBoundary, LoadingScreen } from '@/components/common';
 import { ThemeProvider } from '@/contexts';
-import { useConsentStore, useLanguageStore, useTrackingStore } from '@/stores';
+import { useConsentStore, useLanguageStore, useTrackingStore, useSecurityStore } from '@/stores';
 import { RootStackParamList, MainTabParamList, OnboardingStackParamList } from '@/types';
 import { initI18n } from '@/lib/i18n';
 import { requestAppTracking } from '@/utils/tracking';
+import { createHealthService } from '@/services/health';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -159,6 +164,10 @@ export default function App() {
   const setTrackingPermissionStatus = useTrackingStore((state) => state.setTrackingPermissionStatus);
   const setHasAskedForTracking = useTrackingStore((state) => state.setHasAskedForTracking);
 
+  const biometricEnabled = useSecurityStore((state) => state.biometricEnabled);
+  const [isLocked, setIsLocked] = useState(false);
+  const appState = useRef(AppState.currentState);
+
   const hasCompletedConsent = hasAcceptedPrivacyPolicy && hasAcceptedTerms && hasRespondedToTracking;
 
   // Initialize app
@@ -167,6 +176,8 @@ export default function App() {
       try {
         await initI18n();
         await initializeLanguage();
+        // Initialize health service
+        await createHealthService();
       } catch (error) {
         console.error('[App] Initialization error:', error);
       } finally {
@@ -175,6 +186,36 @@ export default function App() {
     };
     init();
   }, [initializeLanguage]);
+
+  // App Lock - Authenticate when app comes from background
+  useEffect(() => {
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      // App came from background to foreground
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        if (biometricEnabled && isReady && hasCompletedConsent && hasCompletedOnboarding) {
+          setIsLocked(true);
+          try {
+            const result = await LocalAuthentication.authenticateAsync({
+              promptMessage: t('security.biometricPrompt'),
+              fallbackLabel: t('security.usePassword'),
+              cancelLabel: t('common.cancel'),
+            });
+            if (result.success) {
+              setIsLocked(false);
+            }
+            // If cancelled, keep locked - user can try again by going to background and back
+          } catch (error) {
+            console.error('[App] Biometric auth error:', error);
+            setIsLocked(false); // Don't lock on error
+          }
+        }
+      }
+      appState.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => subscription.remove();
+  }, [biometricEnabled, isReady, hasCompletedConsent, hasCompletedOnboarding, t]);
 
   // Request App Tracking Transparency after onboarding
   useEffect(() => {
@@ -205,6 +246,17 @@ export default function App() {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#6366f1" />
+      </View>
+    );
+  }
+
+  // Show lock screen if biometric is enabled and app is locked
+  if (isLocked) {
+    return (
+      <View style={styles.lockContainer}>
+        <Text style={styles.lockIcon}>🔐</Text>
+        <Text style={styles.lockText}>{t('security.appLocked')}</Text>
+        <Text style={styles.lockSubtext}>{t('security.authenticateToUnlock')}</Text>
       </View>
     );
   }
@@ -506,6 +558,15 @@ export default function App() {
                     gestureEnabled: false,
                   }}
                 />
+                <Stack.Screen
+                  name="RunningResults"
+                  component={RunningResultsScreen}
+                  options={{
+                    presentation: 'fullScreenModal',
+                    animation: 'slide_from_bottom',
+                    gestureEnabled: false,
+                  }}
+                />
                 {/* Yoga Screens */}
                 <Stack.Screen
                   name="YogaHome"
@@ -600,6 +661,16 @@ export default function App() {
                   }}
                 />
 
+                {/* Custom Workout Screens */}
+                <Stack.Screen
+                  name="CustomHome"
+                  component={CustomHomeScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+
                 {/* Guide Screens */}
                 <Stack.Screen
                   name="GuideArticle"
@@ -630,5 +701,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#0f172a',
+  },
+  lockContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0f172a',
+    padding: 24,
+  },
+  lockIcon: {
+    fontSize: 64,
+    marginBottom: 24,
+  },
+  lockText: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#ffffff',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  lockSubtext: {
+    fontSize: 16,
+    color: '#94a3b8',
+    textAlign: 'center',
   },
 });

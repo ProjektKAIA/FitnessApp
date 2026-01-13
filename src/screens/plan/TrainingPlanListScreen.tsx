@@ -33,7 +33,6 @@ export const TrainingPlanListScreen: React.FC = () => {
   const activePlanId = useTrainingPlanStore((state) => state.activePlanId);
   const setActivePlan = useTrainingPlanStore((state) => state.setActivePlan);
   const deletePlan = useTrainingPlanStore((state) => state.deletePlan);
-  const duplicatePlan = useTrainingPlanStore((state) => state.duplicatePlan);
 
   // Show all plans when no sportType filter, otherwise filter by sportType
   const plans = useMemo(
@@ -76,11 +75,9 @@ export const TrainingPlanListScreen: React.FC = () => {
     );
   };
 
-  const handleDuplicatePlan = (plan: ITrainingPlan) => {
-    const newPlanId = duplicatePlan(plan.id);
-    if (newPlanId) {
-      navigation.navigate('TrainingPlanEditor', { planId: newPlanId, sportType: plan.sportType });
-    }
+  const handleStartPlan = (plan: ITrainingPlan) => {
+    // Navigiere zum Plan Detail, wo der User ein Workout auswählen kann
+    navigation.navigate('TrainingPlanDetail', { planId: plan.id });
   };
 
   const getWorkoutCount = (plan: ITrainingPlan): number => {
@@ -234,10 +231,10 @@ export const TrainingPlanListScreen: React.FC = () => {
                       <Text style={styles.actionButtonText}>{t('planList.edit')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      style={styles.actionButton}
-                      onPress={(e) => { e.stopPropagation(); handleDuplicatePlan(plan); }}
+                      style={[styles.actionButton, styles.startButton]}
+                      onPress={(e) => { e.stopPropagation(); handleStartPlan(plan); }}
                     >
-                      <Text style={styles.actionButtonText}>{t('planList.duplicate')}</Text>
+                      <Text style={styles.startButtonText}>{t('planList.start')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.actionButton}
@@ -251,14 +248,6 @@ export const TrainingPlanListScreen: React.FC = () => {
                 </Card>
               </TouchableOpacity>
             ))}
-
-            <TouchableOpacity
-              style={[styles.addPlanButton, { borderColor: colors.border }]}
-              onPress={handleCreatePlan}
-            >
-              <Text style={[styles.addPlanIcon, { color: colors.textTertiary }]}>+</Text>
-              <Text style={[styles.addPlanText, { color: colors.textSecondary }]}>{t('planList.createNew')}</Text>
-            </TouchableOpacity>
           </>
         )}
       </ScrollView>
@@ -456,28 +445,15 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: COLORS.gray[700],
   },
+  startButton: {
+    backgroundColor: COLORS.success,
+  },
+  startButtonText: {
+    fontSize: FONT_SIZES.sm,
+    fontWeight: '500',
+    color: COLORS.white,
+  },
   deleteText: {
     color: COLORS.error,
-  },
-  addPlanButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: SPACING.lg,
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    borderColor: COLORS.gray[300],
-    borderRadius: BORDER_RADIUS.lg,
-    marginTop: SPACING.sm,
-  },
-  addPlanIcon: {
-    fontSize: FONT_SIZES.xl,
-    color: COLORS.gray[400],
-    marginRight: SPACING.sm,
-  },
-  addPlanText: {
-    fontSize: FONT_SIZES.base,
-    color: COLORS.gray[500],
-    fontWeight: '500',
   },
 });

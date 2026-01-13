@@ -68,7 +68,8 @@ export const HomeScreen: React.FC = () => {
   }, [getWorkoutHistory]);
 
   const handleStartWorkout = () => {
-    navigation.navigate('WorkoutActive', { workoutId: 'new' });
+    // Navigiere zur Workout-Auswahl statt direkt zu starten
+    navigation.navigate('Workout');
   };
 
   const handleWorkoutHistoryPress = () => {
@@ -179,7 +180,7 @@ export const HomeScreen: React.FC = () => {
             <AdTile
               size="1x1"
               title={t('guide.nutrition.supplements')}
-              onPress={() => navigation.navigate('Guide')}
+              onPress={() => navigation.navigate('GuideArticle', { articleId: 'supplements' })}
               transparent
             />
             <AdTile
@@ -216,7 +217,6 @@ export const HomeScreen: React.FC = () => {
             description={t('home.premium.description')}
             ctaText={t('home.premium.cta')}
             onPress={() => handleAffiliateAdPress('https://www.example.com', 'Premium Supplements')}
-            onClose={() => {}}
           />
         </View>
       </ScrollView>

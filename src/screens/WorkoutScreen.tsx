@@ -19,8 +19,8 @@ import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants
 import { Button } from '@/components/common';
 import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { useTheme } from '@/contexts';
-import { useWorkoutStore, useTrainingPlanStore, useUserStore } from '@/stores';
-import { RootStackParamList, TSportType } from '@/types';
+import { useWorkoutStore } from '@/stores';
+import { RootStackParamList, TSportType, IWorkout } from '@/types';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -36,11 +36,15 @@ interface SportCardData {
 
 export const WorkoutScreen: React.FC = () => {
   const { t } = useTranslation();
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
-  const startWorkout = useWorkoutStore((state) => state.startWorkout);
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
-  const user = useUserStore((state) => state.user);
+  const workoutHistory = useWorkoutStore((state) => state.getWorkoutHistory());
+
+  // Letztes abgeschlossenes Training
+  const lastWorkout: IWorkout | null = workoutHistory.length > 0
+    ? workoutHistory[workoutHistory.length - 1]
+    : null;
 
   const sportCards: SportCardData[] = [
     {
@@ -53,12 +57,21 @@ export const WorkoutScreen: React.FC = () => {
       available: true,
     },
     {
+      type: 'custom',
+      title: t('sportTypes.custom'),
+      subtitle: t('workout.sportCards.customDesc'),
+      icon: '⚡',
+      image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800',
+      color: COLORS.accent,
+      available: true,
+    },
+    {
       type: 'running',
       title: t('sportTypes.running'),
       subtitle: t('workout.sportCards.runningDesc'),
       icon: '🏃',
       image: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800',
-      color: COLORS.accent,
+      color: COLORS.warning,
       available: true,
     },
     {
@@ -97,6 +110,9 @@ export const WorkoutScreen: React.FC = () => {
       case 'fitness':
         navigation.navigate('TrainingPlanList');
         break;
+      case 'custom':
+        navigation.navigate('CustomHome');
+        break;
       case 'running':
         navigation.navigate('RunningHome');
         break;
@@ -114,22 +130,16 @@ export const WorkoutScreen: React.FC = () => {
     }
   };
 
-  const handleStartEmptyWorkout = () => {
-    startWorkout({
-      userId: user?.id || 'guest',
-      name: t('workoutActive.newWorkout'),
-      direction: 'gym',
-      exercises: [],
-      duration: 0,
-      totalVolume: 0,
-    });
-    navigation.navigate('WorkoutActive', { workoutId: 'new' });
-  };
-
   const handleContinueWorkout = () => {
     if (activeWorkout) {
       navigation.navigate('WorkoutActive', { workoutId: activeWorkout.id });
     }
+  };
+
+  const formatDate = (date: Date | string | undefined): string => {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
   };
 
   return (
@@ -170,23 +180,38 @@ export const WorkoutScreen: React.FC = () => {
           </TouchableOpacity>
         )}
 
-        {/* Quick Start */}
-        <TouchableOpacity
-          style={[styles.quickStartCard, { backgroundColor: colors.surfaceElevated }]}
-          onPress={handleStartEmptyWorkout}
-          activeOpacity={0.8}
-        >
-          <View style={[styles.quickStartIconContainer, { backgroundColor: colors.primary }]}>
-            <Text style={styles.quickStartIcon}>⚡</Text>
-          </View>
-          <View style={styles.quickStartContent}>
-            <Text style={[styles.quickStartTitle, { color: colors.text }]}>{t('workout.quickStart')}</Text>
-            <Text style={[styles.quickStartSubtitle, { color: colors.textSecondary }]}>
-              {t('workout.quickStartDesc')}
-            </Text>
-          </View>
-          <Text style={[styles.quickStartArrow, { color: colors.textTertiary }]}>›</Text>
-        </TouchableOpacity>
+        {/* Last Workout Card */}
+        {lastWorkout && !activeWorkout && (
+          <TouchableOpacity
+            style={[styles.lastWorkoutCard, { backgroundColor: colors.surfaceElevated }]}
+            onPress={() => navigation.navigate('WorkoutDetail', { workoutId: lastWorkout.id })}
+            activeOpacity={0.9}
+          >
+            <View style={styles.lastWorkoutHeader}>
+              <Text style={[styles.lastWorkoutLabel, { color: colors.textSecondary }]}>
+                {t('workout.lastWorkout')}
+              </Text>
+              <Text style={[styles.lastWorkoutDate, { color: colors.textTertiary }]}>
+                {formatDate(lastWorkout.finishedAt)}
+              </Text>
+            </View>
+            <Text style={[styles.lastWorkoutName, { color: colors.text }]}>{lastWorkout.name}</Text>
+            <View style={styles.lastWorkoutStats}>
+              <View style={styles.lastWorkoutStat}>
+                <Text style={[styles.statValue, { color: colors.text }]}>{lastWorkout.exercises.length}</Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('common.exercises')}</Text>
+              </View>
+              <View style={styles.lastWorkoutStat}>
+                <Text style={[styles.statValue, { color: colors.text }]}>{lastWorkout.duration} min</Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('common.duration')}</Text>
+              </View>
+              <View style={styles.lastWorkoutStat}>
+                <Text style={[styles.statValue, { color: colors.text }]}>{Math.round(lastWorkout.totalVolume)} kg</Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('workout.volume')}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
 
         {/* Sport Cards */}
         <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('workout.chooseSport')}</Text>
@@ -325,40 +350,6 @@ const styles = StyleSheet.create({
   continueButton: {
     marginTop: SPACING.lg,
   },
-  quickStartCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: SPACING.lg,
-    marginBottom: SPACING.xl,
-    borderRadius: BORDER_RADIUS.xl,
-    padding: SPACING.lg,
-    ...SHADOWS.sm,
-  },
-  quickStartIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: BORDER_RADIUS.lg,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: SPACING.md,
-  },
-  quickStartIcon: {
-    fontSize: 24,
-  },
-  quickStartContent: {
-    flex: 1,
-  },
-  quickStartTitle: {
-    fontSize: FONT_SIZES.base,
-    fontWeight: '600',
-    marginBottom: 2,
-  },
-  quickStartSubtitle: {
-    fontSize: FONT_SIZES.sm,
-  },
-  quickStartArrow: {
-    fontSize: 24,
-  },
   sectionTitle: {
     fontSize: FONT_SIZES.lg,
     fontWeight: '600',
@@ -461,5 +452,47 @@ const styles = StyleSheet.create({
   },
   bottomSpacing: {
     height: SPACING['3xl'],
+  },
+  lastWorkoutCard: {
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.lg,
+    borderRadius: BORDER_RADIUS.xl,
+    padding: SPACING.lg,
+  },
+  lastWorkoutHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
+  },
+  lastWorkoutLabel: {
+    fontSize: FONT_SIZES.xs,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  lastWorkoutDate: {
+    fontSize: FONT_SIZES.xs,
+  },
+  lastWorkoutName: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '600',
+    marginBottom: SPACING.md,
+  },
+  lastWorkoutStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  lastWorkoutStat: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statValue: {
+    fontSize: FONT_SIZES.lg,
+    fontWeight: '700',
+  },
+  statLabel: {
+    fontSize: FONT_SIZES.xs,
+    marginTop: 2,
   },
 });

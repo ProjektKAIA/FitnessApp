@@ -459,6 +459,14 @@ export type RootStackParamList = {
   RunningPlanDetail: { planId: string };
   RunningWorkoutActive: { workoutId: string };
   RunningWorkoutDetail: { workoutId: string };
+  RunningResults: {
+    workoutName: string;
+    totalTime: number;
+    totalDistance: number;
+    totalSteps: number;
+    avgPace: number;
+    calories: number;
+  };
   RunningQuestionnaire: undefined;
   // Yoga Screens
   YogaHome: undefined;
@@ -474,6 +482,8 @@ export type RootStackParamList = {
   CalisthenicsWorkoutDetail: { workoutId: string };
   // Homeworkout Screens
   HomeworkoutHome: undefined;
+  // Custom Workout Screens
+  CustomHome: undefined;
   // Guide Screens
   GuideArticle: { articleId: string };
 };
