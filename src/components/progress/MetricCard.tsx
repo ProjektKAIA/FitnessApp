@@ -17,6 +17,7 @@ interface Props {
   onPress?: () => void;
   compact?: boolean;
   darkMode?: boolean;
+  fillHeight?: boolean;
 }
 
 export const MetricCard: React.FC<Props> = ({
@@ -30,6 +31,7 @@ export const MetricCard: React.FC<Props> = ({
   onPress,
   compact = false,
   darkMode = false,
+  fillHeight = false,
 }) => {
   const bgColor = darkMode ? '#1E1E2E' : COLORS.white;
   const titleColor = darkMode ? COLORS.gray[400] : COLORS.gray[500];
@@ -61,7 +63,7 @@ export const MetricCard: React.FC<Props> = ({
   };
 
   const content = (
-    <View style={[styles.container, compact && styles.containerCompact, { backgroundColor: bgColor }]}>
+    <View style={[styles.container, compact && styles.containerCompact, fillHeight && styles.containerFillHeight, { backgroundColor: bgColor }]}>
       <View style={styles.header}>
         {icon && (
           <Text style={[styles.icon, iconColor && { color: iconColor }]}>{icon}</Text>
@@ -98,7 +100,7 @@ export const MetricCard: React.FC<Props> = ({
 
   if (onPress) {
     return (
-      <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
+      <TouchableOpacity activeOpacity={0.7} onPress={onPress} style={fillHeight && styles.containerFillHeight}>
         {content}
       </TouchableOpacity>
     );
@@ -116,6 +118,9 @@ const styles = StyleSheet.create({
   containerCompact: {
     padding: SPACING.md,
     minWidth: 100,
+  },
+  containerFillHeight: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',

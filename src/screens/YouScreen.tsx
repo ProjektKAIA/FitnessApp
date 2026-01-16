@@ -342,6 +342,7 @@ export const YouScreen: React.FC = () => {
               unit={t('progress.days')}
               onPress={() => navigation.navigate('StreakDetail')}
               darkMode={isDark}
+              fillHeight
             />
           </View>
           <View style={styles.metricCardTouchable}>
@@ -352,6 +353,7 @@ export const YouScreen: React.FC = () => {
               subtitle={t('progress.allTime')}
               onPress={() => navigation.navigate('WorkoutHistory')}
               darkMode={isDark}
+              fillHeight
             />
           </View>
         </View>
@@ -632,6 +634,7 @@ const styles = StyleSheet.create({
   },
   metricCardTouchable: {
     flex: 1,
+    minHeight: 100,
   },
   bottomSpacing: {
     height: SPACING['3xl'],
