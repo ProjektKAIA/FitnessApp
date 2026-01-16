@@ -69,6 +69,7 @@ export const YouScreen: React.FC = () => {
     updateRingConfig,
     toggleRing,
     addRing,
+    setDailyCalorieGoal,
   } = useUserGoalsStore();
 
   const todayCalories = getTodayCalories();
@@ -85,8 +86,10 @@ export const YouScreen: React.FC = () => {
   const [showCalorieInput, setShowCalorieInput] = useState(false);
   const [showGoalInput, setShowGoalInput] = useState(false);
   const [showHealthInput, setShowHealthInput] = useState(false);
+  const [showCalorieGoalInput, setShowCalorieGoalInput] = useState(false);
   const [calorieInputValue, setCalorieInputValue] = useState('');
   const [goalInputValue, setGoalInputValue] = useState('');
+  const [calorieGoalInputValue, setCalorieGoalInputValue] = useState('');
 
   // Pull to refresh handler
   const handleRefresh = useCallback(async () => {
@@ -198,6 +201,20 @@ export const YouScreen: React.FC = () => {
     }
   };
 
+  const handleEditCalorieGoal = () => {
+    setCalorieGoalInputValue(dailyCalorieGoal.toString());
+    setShowCalorieGoalInput(true);
+  };
+
+  const handleSaveCalorieGoal = () => {
+    const value = parseInt(calorieGoalInputValue, 10);
+    if (!isNaN(value) && value > 0) {
+      setDailyCalorieGoal(value);
+      setCalorieGoalInputValue('');
+      setShowCalorieGoalInput(false);
+    }
+  };
+
   const handleAddGoal = () => {
     if (goalInputValue.trim()) {
       addGoal(goalInputValue.trim());
@@ -232,14 +249,11 @@ export const YouScreen: React.FC = () => {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerContent}>
-            <LinearGradient
-              colors={['#6366F1', '#8B5CF6']}
-              style={styles.avatarContainer}
-            >
-              <Text style={styles.avatarText}>
-                {user?.name?.charAt(0)?.toUpperCase() || '👤'}
+            <View style={[styles.avatarContainer, { backgroundColor: isDark ? '#2D3748' : '#E2E8F0' }]}>
+              <Text style={[styles.avatarText, { color: isDark ? '#F7FAFC' : '#1A202C' }]}>
+                {user?.name?.charAt(0)?.toUpperCase() || 'G'}
               </Text>
-            </LinearGradient>
+            </View>
             <View style={styles.headerTextContainer}>
               <Text style={[styles.greeting, { color: colors.textSecondary }]}>{t('home.greeting')}</Text>
               <Text style={[styles.userName, { color: colors.text }]}>{user?.name || t('you.guest')}</Text>
@@ -261,10 +275,10 @@ export const YouScreen: React.FC = () => {
                 {t('you.todayActivity')}
               </Text>
               <TouchableOpacity
-                style={[styles.editRingsButton, { backgroundColor: isDark ? 'rgba(99, 102, 241, 0.2)' : 'rgba(99, 102, 241, 0.1)' }]}
+                style={[styles.editRingsButton, { backgroundColor: isDark ? 'rgba(100, 116, 139, 0.3)' : 'rgba(100, 116, 139, 0.15)' }]}
                 onPress={() => setShowRingEditor(true)}
               >
-                <Text style={styles.editRingsText}>{t('common.edit')}</Text>
+                <Text style={[styles.editRingsText, { color: isDark ? '#94A3B8' : '#64748B' }]}>{t('common.edit')}</Text>
               </TouchableOpacity>
             </View>
 
@@ -279,17 +293,10 @@ export const YouScreen: React.FC = () => {
 
             {!isHealthEnabled && (
               <TouchableOpacity
-                style={styles.connectHealthButton}
+                style={[styles.connectHealthButton, { backgroundColor: '#FF2D55' }]}
                 onPress={() => navigation.navigate('HealthSettings')}
               >
-                <LinearGradient
-                  colors={['#6366F1', '#8B5CF6']}
-                  style={styles.connectHealthGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                >
-                  <Text style={styles.connectHealthText}>{t('you.connectHealth')}</Text>
-                </LinearGradient>
+                <Text style={styles.connectHealthText}>{t('you.connectHealth')}</Text>
               </TouchableOpacity>
             )}
           </LinearGradient>
@@ -351,13 +358,15 @@ export const YouScreen: React.FC = () => {
           action={{ label: t('you.addCalories'), onPress: () => setShowCalorieInput(true) }}
           darkMode={isDark}
         />
-        <CalorieCard
-          dailyCalorieGoal={dailyCalorieGoal}
-          consumed={todayCalories?.consumed ?? 0}
-          workoutBurned={todayCalories?.workoutBurned ?? 0}
-          balance={calorieBalance}
-          targetLabel={getCalorieTargetLabel()}
-        />
+        <TouchableOpacity onPress={handleEditCalorieGoal} activeOpacity={0.7}>
+          <CalorieCard
+            dailyCalorieGoal={dailyCalorieGoal}
+            consumed={todayCalories?.consumed ?? 0}
+            workoutBurned={todayCalories?.workoutBurned ?? 0}
+            balance={calorieBalance}
+            targetLabel={getCalorieTargetLabel()}
+          />
+        </TouchableOpacity>
 
         {/* Goals Section */}
         <SectionHeader
@@ -479,6 +488,36 @@ export const YouScreen: React.FC = () => {
         </KeyboardAvoidingView>
       </Modal>
 
+      {/* Calorie Goal Edit Modal */}
+      <Modal visible={showCalorieGoalInput} transparent animationType="fade" onRequestClose={() => setShowCalorieGoalInput(false)}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: modalBgColor }]}>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>{t('you.editCalorieGoal')}</Text>
+            <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('you.dailyCalorieGoal')}</Text>
+            <TextInput
+              style={[styles.modalInput, { backgroundColor: inputBgColor, color: colors.text }]}
+              placeholder="2000"
+              placeholderTextColor={colors.textTertiary}
+              keyboardType="numeric"
+              value={calorieGoalInputValue}
+              onChangeText={setCalorieGoalInputValue}
+              autoFocus
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButtonCancel, { backgroundColor: isDark ? COLORS.gray[700] : COLORS.gray[200] }]}
+                onPress={() => setShowCalorieGoalInput(false)}
+              >
+                <Text style={[styles.modalButtonCancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalButtonConfirm} onPress={handleSaveCalorieGoal}>
+                <Text style={styles.modalButtonConfirmText}>{t('common.save')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
+
       {/* Health Input Modal */}
       <HealthInputModal visible={showHealthInput} onClose={() => setShowHealthInput(false)} />
     </SafeAreaView>
@@ -567,13 +606,10 @@ const styles = StyleSheet.create({
   },
   editRingsText: {
     fontSize: FONT_SIZES.sm,
-    color: '#6366F1',
     fontWeight: '600',
   },
   connectHealthButton: {
     marginTop: SPACING.lg,
-  },
-  connectHealthGradient: {
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.full,
@@ -639,7 +675,7 @@ const styles = StyleSheet.create({
   },
   modalButtonConfirm: {
     flex: 1,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#1F2937',
     paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.lg,
     alignItems: 'center',

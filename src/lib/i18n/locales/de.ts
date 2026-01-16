@@ -951,6 +951,8 @@ const de = {
     workouts: 'Workouts',
     caloriesSection: 'Kalorien',
     addCalories: 'Kalorien eintragen',
+    editCalorieGoal: 'Kalorienbedarf anpassen',
+    dailyCalorieGoal: 'Täglicher Kalorienbedarf',
     dailyNeed: 'Tagesbedarf',
     consumed: 'Gegessen',
     workoutBurned: 'Workout verbrannt',
