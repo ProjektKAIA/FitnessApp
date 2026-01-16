@@ -37,6 +37,7 @@ export interface HealthEntry {
   weight?: number;
   bloodPressureSystolic?: number;
   bloodPressureDiastolic?: number;
+  heartRate?: number;
 }
 
 export interface UserGoal {

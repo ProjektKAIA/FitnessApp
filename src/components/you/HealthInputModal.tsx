@@ -19,6 +19,7 @@ export const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onC
   const [weight, setWeight] = useState('');
   const [systolic, setSystolic] = useState('');
   const [diastolic, setDiastolic] = useState('');
+  const [heartRate, setHeartRate] = useState('');
 
   const modalBgColor = isDark ? '#1E1E2E' : COLORS.white;
   const inputBgColor = isDark ? COLORS.gray[800] : COLORS.gray[100];
@@ -31,13 +32,14 @@ export const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onC
         setWeight(latestEntry.weight?.toString() || '');
         setSystolic(latestEntry.bloodPressureSystolic?.toString() || '');
         setDiastolic(latestEntry.bloodPressureDiastolic?.toString() || '');
+        setHeartRate(latestEntry.heartRate?.toString() || '');
       }
     }
   }, [visible, getLatestHealthEntry]);
 
   const handleSave = () => {
     const latestEntry = getLatestHealthEntry();
-    const entry: { weight?: number; bloodPressureSystolic?: number; bloodPressureDiastolic?: number } = {};
+    const entry: { weight?: number; bloodPressureSystolic?: number; bloodPressureDiastolic?: number; heartRate?: number } = {};
 
     // Use new value if entered, otherwise keep existing value
     if (weight) {
@@ -54,6 +56,12 @@ export const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onC
       entry.bloodPressureDiastolic = latestEntry.bloodPressureDiastolic;
     }
 
+    if (heartRate) {
+      entry.heartRate = parseInt(heartRate, 10);
+    } else if (latestEntry?.heartRate) {
+      entry.heartRate = latestEntry.heartRate;
+    }
+
     if (Object.keys(entry).length > 0) {
       addHealthEntry(entry);
     }
@@ -61,6 +69,7 @@ export const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onC
     setWeight('');
     setSystolic('');
     setDiastolic('');
+    setHeartRate('');
     onClose();
   };
 
@@ -100,6 +109,16 @@ export const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onC
               onChangeText={setDiastolic}
             />
           </View>
+
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t('you.pulse')} (bpm)</Text>
+          <TextInput
+            style={[styles.modalInput, { backgroundColor: inputBgColor, color: colors.text }]}
+            placeholder="70"
+            placeholderTextColor={colors.textTertiary}
+            keyboardType="numeric"
+            value={heartRate}
+            onChangeText={setHeartRate}
+          />
 
           <View style={styles.modalButtons}>
             <TouchableOpacity

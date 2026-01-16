@@ -336,7 +336,7 @@ export const YouScreen: React.FC = () => {
             <MetricCard
               icon="❤️"
               title={t('you.pulse')}
-              value={todaySummary?.restingHeartRate?.bpm ?? '--'}
+              value={todaySummary?.restingHeartRate?.bpm ?? latestHealth?.heartRate ?? '--'}
               unit="bpm"
               compact
               darkMode={isDark}
