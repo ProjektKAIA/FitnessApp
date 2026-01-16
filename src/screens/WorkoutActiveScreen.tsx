@@ -308,19 +308,32 @@ export const WorkoutActiveScreen: React.FC = () => {
                     ? getExerciseById(exercise.exerciseId)
                     : getExerciseByName(exercise.name);
 
-                  if (libraryExercise) {
-                    navigation.navigate('ExerciseDetail', { exerciseId: libraryExercise.id });
+                  // Fallback: try by name if exerciseId lookup failed
+                  const foundExercise = libraryExercise || getExerciseByName(exercise.name);
+
+                  if (foundExercise) {
+                    // Show exercise info as modal popup
+                    const instructions = foundExercise.instructions
+                      .map((i) => `${i.step}. ${i.text}`)
+                      .join('\n');
+                    const tips = foundExercise.tips.join('\n• ');
+
+                    Alert.alert(
+                      foundExercise.name,
+                      `${t('exerciseDetail.instructions')}:\n${instructions}\n\n💡 ${t('exerciseDetail.tips')}:\n• ${tips}`,
+                      [
+                        {
+                          text: t('exerciseDetail.moreDetails'),
+                          onPress: () => navigation.navigate('ExerciseDetail', { exerciseId: foundExercise.id }),
+                        },
+                        { text: 'OK', style: 'cancel' },
+                      ]
+                    );
                   } else {
-                    // Also try by name if exerciseId lookup failed
-                    const byName = getExerciseByName(exercise.name);
-                    if (byName) {
-                      navigation.navigate('ExerciseDetail', { exerciseId: byName.id });
-                    } else {
-                      Alert.alert(
-                        exercise.name,
-                        t('workoutActive.noExerciseDetails')
-                      );
-                    }
+                    Alert.alert(
+                      exercise.name,
+                      t('workoutActive.noExerciseDetails')
+                    );
                   }
                 }}
               >

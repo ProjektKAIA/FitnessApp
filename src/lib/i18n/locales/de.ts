@@ -1219,6 +1219,7 @@ const de = {
     breathing: 'Atmung',
     tips: 'Tipps',
     commonMistakes: 'Häufige Fehler',
+    moreDetails: 'Mehr Details',
   },
 
   // Difficulty Levels
