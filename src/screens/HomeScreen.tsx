@@ -11,17 +11,14 @@ import { useTranslation } from 'react-i18next';
 
 import {
   WorkoutTile,
-  StatTile,
   DirectionTile,
   AdTile,
-  HealthTile,
   getTileGap,
 } from '@/components/tiles';
 import { FLOATING_TAB_BAR_HEIGHT } from '@/components/navigation';
 import { COLORS, FONT_SIZES, SPACING } from '@/constants';
 import { useTheme } from '@/contexts';
-import { useStatsStore, useWorkoutStore } from '@/stores';
-import { useHealthStore } from '@/stores/healthStore';
+import { useWorkoutStore } from '@/stores';
 import { RootStackParamList, MainTabParamList, TDirection } from '@/types';
 
 type NavigationProp = CompositeNavigationProp<
@@ -40,13 +37,8 @@ export const HomeScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
-  const stats = useStatsStore((state) => state.stats);
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
   const getWorkoutHistory = useWorkoutStore((state) => state.getWorkoutHistory);
-
-  const healthSettings = useHealthStore((state) => state.settings);
-  const todaySummary = useHealthStore((state) => state.todaySummary);
-  const isHealthEnabled = healthSettings.enabled && healthSettings.permissionsGranted;
 
   const directionCounts = useMemo(() => {
     const workouts = getWorkoutHistory();
@@ -72,10 +64,6 @@ export const HomeScreen: React.FC = () => {
     navigation.navigate('Workout');
   };
 
-  const handleWorkoutHistoryPress = () => {
-    navigation.navigate('WorkoutHistory');
-  };
-
   const handleDirectionPress = (direction: TDirection) => {
     if (direction === 'yoga') {
       navigation.navigate('YogaHome');
@@ -86,10 +74,6 @@ export const HomeScreen: React.FC = () => {
     } else {
       navigation.navigate('WorkoutHistory', { direction });
     }
-  };
-
-  const handleHealthPress = () => {
-    navigation.navigate('HealthDashboard');
   };
 
   const handleAffiliateAdPress = (url: string, advertiserName: string) => {
@@ -152,29 +136,6 @@ export const HomeScreen: React.FC = () => {
             />
           </View>
 
-          {isHealthEnabled && (
-            <View style={styles.row}>
-              <HealthTile
-                size="1x1"
-                steps={todaySummary?.steps?.count ?? 0}
-                stepsGoal={healthSettings.stepsGoal}
-                calories={todaySummary?.calories?.active ?? 0}
-                activeMinutes={todaySummary?.activeMinutes ?? 0}
-                onPress={handleHealthPress}
-              />
-              <StatTile
-                label={t('home.totalWorkouts')}
-                value={stats.totalWorkouts}
-                icon="💪"
-                onPress={handleWorkoutHistoryPress}
-              />
-              <StatTile
-                label={t('you.streak')}
-                value={stats.currentStreak}
-                icon="🔥"
-              />
-            </View>
-          )}
 
           <View style={styles.row}>
             <DirectionTile
