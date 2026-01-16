@@ -10,6 +10,7 @@ import {
 import Svg, { Circle } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, TILE } from '@/constants';
+import { useTheme } from '@/contexts';
 import { TTileSize } from '@/types';
 
 interface Props {
@@ -45,6 +46,7 @@ export const HealthTile: React.FC<Props> = ({
   onPress,
 }) => {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const { tileWidth, tileHeight } = useMemo(() => {
@@ -73,9 +75,11 @@ export const HealthTile: React.FC<Props> = ({
     return value.toLocaleString();
   };
 
+  const ringBgColor = isDark ? COLORS.gray[700] : COLORS.gray[200];
+
   return (
     <TouchableOpacity
-      style={[styles.tile, { width: tileWidth, height: tileHeight }]}
+      style={[styles.tile, { width: tileWidth, height: tileHeight, backgroundColor: colors.card }]}
       activeOpacity={onPress ? 0.7 : 1}
       onPress={onPress}
       disabled={!onPress}
@@ -89,7 +93,7 @@ export const HealthTile: React.FC<Props> = ({
               cx={center}
               cy={center}
               r={radius}
-              stroke={COLORS.gray[200]}
+              stroke={ringBgColor}
               strokeWidth={strokeWidth}
               fill="none"
             />
@@ -110,7 +114,7 @@ export const HealthTile: React.FC<Props> = ({
               cx={center}
               cy={center}
               r={radius - strokeWidth - 2}
-              stroke={COLORS.gray[200]}
+              stroke={ringBgColor}
               strokeWidth={strokeWidth}
               fill="none"
             />
@@ -131,7 +135,7 @@ export const HealthTile: React.FC<Props> = ({
               cx={center}
               cy={center}
               r={radius - (strokeWidth + 2) * 2}
-              stroke={COLORS.gray[200]}
+              stroke={ringBgColor}
               strokeWidth={strokeWidth}
               fill="none"
             />
@@ -154,18 +158,18 @@ export const HealthTile: React.FC<Props> = ({
         <View style={styles.statsContainer}>
           <View style={styles.statRow}>
             <View style={[styles.statDot, { backgroundColor: '#FF2D55' }]} />
-            <Text style={styles.statLabel}>{t('health.summary.steps')}</Text>
-            <Text style={styles.statValue}>{formatSteps(steps)}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('health.summary.steps')}</Text>
+            <Text style={[styles.statValue, { color: colors.text }]}>{formatSteps(steps)}</Text>
           </View>
           <View style={styles.statRow}>
             <View style={[styles.statDot, { backgroundColor: '#30D158' }]} />
-            <Text style={styles.statLabel}>{t('health.summary.kcal')}</Text>
-            <Text style={styles.statValue}>{calories}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('health.summary.kcal')}</Text>
+            <Text style={[styles.statValue, { color: colors.text }]}>{calories}</Text>
           </View>
           <View style={styles.statRow}>
             <View style={[styles.statDot, { backgroundColor: '#007AFF' }]} />
-            <Text style={styles.statLabel}>{t('health.summary.active')}</Text>
-            <Text style={styles.statValue}>{activeMinutes}m</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('health.summary.active')}</Text>
+            <Text style={[styles.statValue, { color: colors.text }]}>{activeMinutes}m</Text>
           </View>
         </View>
       </View>
@@ -175,7 +179,6 @@ export const HealthTile: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   tile: {
-    backgroundColor: COLORS.white,
     borderRadius: 0,
     overflow: 'hidden',
   },
@@ -207,11 +210,9 @@ const styles = StyleSheet.create({
   statLabel: {
     flex: 1,
     fontSize: FONT_SIZES.xs,
-    color: COLORS.gray[500],
   },
   statValue: {
     fontSize: FONT_SIZES.sm,
     fontWeight: '600',
-    color: COLORS.gray[900],
   },
 });

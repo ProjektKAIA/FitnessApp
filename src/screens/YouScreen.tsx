@@ -11,6 +11,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -33,6 +34,7 @@ import type { RingType, RingConfig } from '@/stores/userGoalsStore';
 import { RootStackParamList } from '@/types';
 import { useStatsStore, useUserGoalsStore, useUserStore } from '@/stores';
 import { useHealthStore } from '@/stores/healthStore';
+import { getHealthService } from '@/services/health';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -46,7 +48,11 @@ export const YouScreen: React.FC = () => {
   const user = useUserStore((state) => state.user);
   const healthSettings = useHealthStore((state) => state.settings);
   const todaySummary = useHealthStore((state) => state.todaySummary);
+  const setTodaySummary = useHealthStore((state) => state.setTodaySummary);
   const isHealthEnabled = healthSettings.enabled && healthSettings.permissionsGranted;
+
+  // Pull to refresh state
+  const [refreshing, setRefreshing] = useState(false);
 
   // User Goals Store
   const {
@@ -81,6 +87,25 @@ export const YouScreen: React.FC = () => {
   const [showHealthInput, setShowHealthInput] = useState(false);
   const [calorieInputValue, setCalorieInputValue] = useState('');
   const [goalInputValue, setGoalInputValue] = useState('');
+
+  // Pull to refresh handler
+  const handleRefresh = useCallback(async () => {
+    if (!isHealthEnabled) return;
+
+    setRefreshing(true);
+    try {
+      const healthService = getHealthService();
+      if (healthService) {
+        const today = new Date();
+        const summary = await healthService.getDailySummary(today);
+        setTodaySummary(summary);
+      }
+    } catch (error) {
+      console.error('[YouScreen] Refresh error:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [isHealthEnabled, setTodaySummary]);
 
   // Dynamic gradient colors based on theme
   const cardGradient: [string, string] = isDark
@@ -195,6 +220,14 @@ export const YouScreen: React.FC = () => {
         style={styles.scrollView}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+          />
+        }
       >
         {/* Header */}
         <View style={styles.header}>

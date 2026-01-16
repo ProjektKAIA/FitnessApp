@@ -257,6 +257,9 @@ const en = {
     backupDataSubtitle: 'Back up to iCloud or Google Drive',
     cloudSync: 'Cloud Sync',
     cloudSyncDisabled: 'Disabled',
+    cloudSyncDisableTitle: 'Disable Cloud Sync?',
+    cloudSyncDisableWarning: 'Your data will only be stored locally. If you lose your phone or uninstall the app, your saved data will be permanently lost.',
+    cloudSyncDisableConfirm: 'Store locally',
     deleteAccount: 'Delete Account',
     deleteAccountSubtitle: 'Permanently delete',
 
@@ -1599,6 +1602,78 @@ const en = {
           },
           programming: {
             title: 'Programming Recovery',
+          },
+          summary: {
+            title: 'Summary',
+          },
+        },
+      },
+      muscleBuilding: {
+        title: 'Muscle Building',
+        subtitle: 'Understanding hypertrophy – training, nutrition and science',
+        sections: {
+          intro: {
+            title: 'Introduction',
+          },
+          biology: {
+            title: 'Biology of Muscle Growth',
+          },
+          trainingParameters: {
+            title: 'Optimal Training Parameters',
+          },
+          repRanges: {
+            title: 'Rep Ranges',
+          },
+          muscleGroups: {
+            title: 'Training by Muscle Groups',
+          },
+          nutrition: {
+            title: 'Nutrition for Muscle Building',
+          },
+          supplements: {
+            title: 'Supplements',
+          },
+          commonMistakes: {
+            title: 'Common Mistakes',
+          },
+          programs: {
+            title: 'Training Programs',
+          },
+          summary: {
+            title: 'Summary',
+          },
+        },
+      },
+      flexibility: {
+        title: 'Flexibility & Mobility',
+        subtitle: 'Understanding flexibility – methods, myths and practical routines',
+        sections: {
+          intro: {
+            title: 'Introduction',
+          },
+          definitions: {
+            title: 'Flexibility vs. Mobility',
+          },
+          methods: {
+            title: 'Stretching Methods',
+          },
+          myths: {
+            title: 'Flexibility Myths',
+          },
+          practical: {
+            title: 'Practical Implementation',
+          },
+          problemAreas: {
+            title: 'Problem Areas & Solutions',
+          },
+          loadedStretching: {
+            title: 'Loaded Stretching',
+          },
+          foamRolling: {
+            title: 'Foam Rolling',
+          },
+          programming: {
+            title: 'Programming Flexibility',
           },
           summary: {
             title: 'Summary',

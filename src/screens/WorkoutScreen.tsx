@@ -39,7 +39,10 @@ export const WorkoutScreen: React.FC = () => {
   const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
-  const workoutHistory = useWorkoutStore((state) => state.getWorkoutHistory());
+  const workouts = useWorkoutStore((state) => state.workouts);
+
+  // Filter außerhalb des Selectors um infinite loop zu vermeiden
+  const workoutHistory = workouts.filter((w) => w.status === 'completed');
 
   // Letztes abgeschlossenes Training
   const lastWorkout: IWorkout | null = workoutHistory.length > 0

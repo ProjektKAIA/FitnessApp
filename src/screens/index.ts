@@ -50,6 +50,7 @@ export {
   RunningPlanDetailScreen,
   RunningWorkoutDetailScreen,
   RunningActiveScreen,
+  RunningResultsScreen,
 } from './running';
 export {
   YogaHomeScreen,
@@ -64,4 +65,5 @@ export {
   CalisthenicsWorkoutDetailScreen,
 } from './calisthenics';
 export { HomeworkoutHomeScreen } from './homeworkout';
+export { CustomHomeScreen } from './custom';
 export { GuideArticleScreen } from './guide';

@@ -27,6 +27,7 @@ import { useUserStore, useLanguageStore, SUPPORTED_LANGUAGES, useBackupStore } f
 import { useHealthStore } from '@/stores/healthStore';
 import { useTheme } from '@/contexts';
 import { RootStackParamList, IUserSettings } from '@/types';
+import { appReviewService } from '@/services/appReview';
 
 interface MenuItemProps {
   icon: string;
@@ -171,14 +172,34 @@ export const MoreScreen: React.FC = () => {
 
   const handleToggleCloudSync = () => {
     const newValue = !isCloudConnected;
-    setCloudConnected(newValue);
 
-    if (newValue) {
-      // Set storage type based on platform
-      const cloudType = Platform.OS === 'ios' ? 'icloud' : 'gdrive';
-      setStorageType(cloudType);
+    if (!newValue && isCloudConnected) {
+      // Show warning when disabling cloud sync
+      Alert.alert(
+        t('more.cloudSyncDisableTitle'),
+        t('more.cloudSyncDisableWarning'),
+        [
+          {
+            text: t('common.cancel'),
+            style: 'cancel',
+          },
+          {
+            text: t('more.cloudSyncDisableConfirm'),
+            style: 'destructive',
+            onPress: () => {
+              setCloudConnected(false);
+              setStorageType('local');
+            },
+          },
+        ]
+      );
     } else {
-      setStorageType('local');
+      setCloudConnected(newValue);
+      if (newValue) {
+        // Set storage type based on platform
+        const cloudType = Platform.OS === 'ios' ? 'icloud' : 'gdrive';
+        setStorageType(cloudType);
+      }
     }
   };
 
@@ -211,27 +232,25 @@ export const MoreScreen: React.FC = () => {
   };
 
   const handleRateApp = async () => {
-    const iosAppId = 'YOUR_APP_ID';
-    const androidPackage = 'com.framefit.app';
+    try {
+      const success = await appReviewService.openStoreForReview();
+      if (!success) {
+        // Fallback zu Store-Link wenn nativer Dialog nicht verfügbar
+        const iosAppId = 'YOUR_APP_ID';
+        const androidPackage = 'com.framefit.app';
 
-    const storeUrl = Platform.select({
-      ios: `https://apps.apple.com/app/id${iosAppId}?action=write-review`,
-      android: `https://play.google.com/store/apps/details?id=${androidPackage}`,
-      default: '',
-    });
+        const storeUrl = Platform.select({
+          ios: `https://apps.apple.com/app/id${iosAppId}?action=write-review`,
+          android: `https://play.google.com/store/apps/details?id=${androidPackage}`,
+          default: '',
+        });
 
-    if (storeUrl) {
-      try {
-        const canOpen = await Linking.canOpenURL(storeUrl);
-        if (canOpen) {
+        if (storeUrl) {
           await Linking.openURL(storeUrl);
-        } else {
-          Alert.alert(t('common.error'), t('more.rateAppError'));
         }
-      } catch (error) {
-        console.error('[RateApp]:', error);
-        Alert.alert(t('common.error'), t('more.rateAppError'));
       }
+    } catch (error) {
+      console.error('[RateApp]:', error);
     }
   };
 

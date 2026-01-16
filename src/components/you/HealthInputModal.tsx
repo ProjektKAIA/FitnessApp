@@ -1,6 +1,6 @@
 // /workspaces/claude-workspace/fitnessapp/src/components/you/HealthInputModal.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
@@ -15,7 +15,7 @@ interface HealthInputModalProps {
 export const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onClose }) => {
   const { t } = useTranslation();
   const { colors, isDark } = useTheme();
-  const { addHealthEntry } = useUserGoalsStore();
+  const { addHealthEntry, getLatestHealthEntry } = useUserGoalsStore();
   const [weight, setWeight] = useState('');
   const [systolic, setSystolic] = useState('');
   const [diastolic, setDiastolic] = useState('');
@@ -23,13 +23,35 @@ export const HealthInputModal: React.FC<HealthInputModalProps> = ({ visible, onC
   const modalBgColor = isDark ? '#1E1E2E' : COLORS.white;
   const inputBgColor = isDark ? COLORS.gray[800] : COLORS.gray[100];
 
+  // Pre-fill with existing values when modal opens
+  useEffect(() => {
+    if (visible) {
+      const latestEntry = getLatestHealthEntry();
+      if (latestEntry) {
+        setWeight(latestEntry.weight?.toString() || '');
+        setSystolic(latestEntry.bloodPressureSystolic?.toString() || '');
+        setDiastolic(latestEntry.bloodPressureDiastolic?.toString() || '');
+      }
+    }
+  }, [visible, getLatestHealthEntry]);
+
   const handleSave = () => {
+    const latestEntry = getLatestHealthEntry();
     const entry: { weight?: number; bloodPressureSystolic?: number; bloodPressureDiastolic?: number } = {};
 
-    if (weight) entry.weight = parseFloat(weight);
+    // Use new value if entered, otherwise keep existing value
+    if (weight) {
+      entry.weight = parseFloat(weight);
+    } else if (latestEntry?.weight) {
+      entry.weight = latestEntry.weight;
+    }
+
     if (systolic && diastolic) {
       entry.bloodPressureSystolic = parseInt(systolic, 10);
       entry.bloodPressureDiastolic = parseInt(diastolic, 10);
+    } else if (latestEntry?.bloodPressureSystolic && latestEntry?.bloodPressureDiastolic) {
+      entry.bloodPressureSystolic = latestEntry.bloodPressureSystolic;
+      entry.bloodPressureDiastolic = latestEntry.bloodPressureDiastolic;
     }
 
     if (Object.keys(entry).length > 0) {

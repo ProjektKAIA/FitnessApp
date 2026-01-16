@@ -63,8 +63,8 @@ interface ExerciseRowProps {
 
 const ExerciseRow: React.FC<ExerciseRowProps> = ({ exercise, index, colors }) => (
   <View style={[styles.exerciseRow, { borderBottomColor: colors.border }]}>
-    <View style={styles.exerciseIndex}>
-      <Text style={[styles.exerciseIndexText, { color: colors.textTertiary }]}>
+    <View style={[styles.exerciseIndex, { backgroundColor: colors.surfaceElevated }]}>
+      <Text style={[styles.exerciseIndexText, { color: colors.textSecondary }]}>
         {index + 1}
       </Text>
     </View>
@@ -106,7 +106,7 @@ const DayCard: React.FC<DayCardProps> = ({ day, workout, colors, isDark }) => {
           <Text style={[styles.dayLabel, { color: colors.text }]}>{DAY_LABELS[day]}</Text>
           <View style={[styles.restBadge, { backgroundColor: colors.surfaceElevated }]}>
             <Text style={[styles.restBadgeText, { color: colors.textSecondary }]}>
-              {t('trainingPlan.restDay')}
+              {t('planEditor.restDay')}
             </Text>
           </View>
         </View>
@@ -213,7 +213,9 @@ export const TrainingPlanDetailScreen: React.FC = () => {
   };
 
   const handleEdit = () => {
-    navigation.navigate('TrainingPlanEditor', { planId });
+    if (plan) {
+      navigation.navigate('TrainingPlanEditor', { planId, sportType: plan.sportType });
+    }
   };
 
   if (!plan) {
@@ -504,7 +506,6 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: COLORS.gray[200],
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: SPACING.sm,

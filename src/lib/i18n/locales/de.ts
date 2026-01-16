@@ -257,6 +257,9 @@ const de = {
     backupDataSubtitle: 'In iCloud oder Google Drive sichern',
     cloudSync: 'Cloud-Sync',
     cloudSyncDisabled: 'Deaktiviert',
+    cloudSyncDisableTitle: 'Cloud-Sync deaktivieren?',
+    cloudSyncDisableWarning: 'Deine Daten werden nur noch lokal gespeichert. Bei Handyverlust oder App-Deinstallation sind deine gespeicherten Daten unwiderruflich weg.',
+    cloudSyncDisableConfirm: 'Lokal speichern',
     deleteAccount: 'Konto löschen',
     deleteAccountSubtitle: 'Permanent löschen',
 
@@ -1593,6 +1596,78 @@ const de = {
           },
           programming: {
             title: 'Regeneration planen',
+          },
+          summary: {
+            title: 'Zusammenfassung',
+          },
+        },
+      },
+      muscleBuilding: {
+        title: 'Muskelaufbau',
+        subtitle: 'Hypertrophie verstehen – Training, Ernährung und Wissenschaft',
+        sections: {
+          intro: {
+            title: 'Einführung',
+          },
+          biology: {
+            title: 'Biologie des Muskelwachstums',
+          },
+          trainingParameters: {
+            title: 'Optimale Trainingsparameter',
+          },
+          repRanges: {
+            title: 'Wiederholungsbereiche',
+          },
+          muscleGroups: {
+            title: 'Training nach Muskelgruppen',
+          },
+          nutrition: {
+            title: 'Ernährung für Muskelaufbau',
+          },
+          supplements: {
+            title: 'Supplemente',
+          },
+          commonMistakes: {
+            title: 'Häufige Fehler',
+          },
+          programs: {
+            title: 'Trainingsprogramme',
+          },
+          summary: {
+            title: 'Zusammenfassung',
+          },
+        },
+      },
+      flexibility: {
+        title: 'Beweglichkeit & Mobilität',
+        subtitle: 'Flexibilität verstehen – Methoden, Mythen und praktische Routinen',
+        sections: {
+          intro: {
+            title: 'Einführung',
+          },
+          definitions: {
+            title: 'Flexibilität vs. Mobilität',
+          },
+          methods: {
+            title: 'Dehnmethoden',
+          },
+          myths: {
+            title: 'Mythen über Beweglichkeit',
+          },
+          practical: {
+            title: 'Praktische Umsetzung',
+          },
+          problemAreas: {
+            title: 'Problemzonen & Lösungen',
+          },
+          loadedStretching: {
+            title: 'Loaded Stretching',
+          },
+          foamRolling: {
+            title: 'Foam Rolling',
+          },
+          programming: {
+            title: 'Beweglichkeit programmieren',
           },
           summary: {
             title: 'Zusammenfassung',

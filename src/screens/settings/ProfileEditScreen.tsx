@@ -23,7 +23,7 @@ import { useTheme } from '@/contexts';
 
 export const ProfileEditScreen: React.FC = () => {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
   const user = useUserStore((state) => state.user);
   const updateProfile = useUserStore((state) => state.updateProfile);
@@ -232,16 +232,16 @@ export const ProfileEditScreen: React.FC = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>{t('profile.birthday')}</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>{t('profile.birthday')}</Text>
               <TouchableOpacity
-                style={styles.dateInput}
+                style={[styles.dateInput, { backgroundColor: colors.background, borderColor: colors.border }]}
                 onPress={() => setShowDatePicker(true)}
               >
-                <Text style={birthday ? styles.dateText : styles.datePlaceholder}>
+                <Text style={[birthday ? styles.dateText : styles.datePlaceholder, { color: birthday ? colors.text : colors.textTertiary }]}>
                   {birthday ? formatDate(birthday) : t('profile.birthdayPlaceholder')}
                 </Text>
                 {birthday && (
-                  <Text style={styles.ageText}>
+                  <Text style={[styles.ageText, { color: colors.textSecondary }]}>
                     ({calculateAge(birthday)} {t('profile.years')})
                   </Text>
                 )}
@@ -249,7 +249,7 @@ export const ProfileEditScreen: React.FC = () => {
             </View>
 
             {showDatePicker && (
-              <View style={styles.datePickerContainer}>
+              <View style={[styles.datePickerContainer, { backgroundColor: colors.surface }]}>
                 <DateTimePicker
                   value={birthday || new Date(2000, 0, 1)}
                   mode="date"
@@ -257,13 +257,14 @@ export const ProfileEditScreen: React.FC = () => {
                   onChange={handleDateChange}
                   maximumDate={new Date()}
                   minimumDate={new Date(1920, 0, 1)}
+                  themeVariant={isDark ? 'dark' : 'light'}
                 />
                 {Platform.OS === 'ios' && (
                   <TouchableOpacity
-                    style={styles.datePickerDone}
+                    style={[styles.datePickerDone, { borderTopColor: colors.border }]}
                     onPress={() => setShowDatePicker(false)}
                   >
-                    <Text style={styles.datePickerDoneText}>{t('common.done')}</Text>
+                    <Text style={[styles.datePickerDoneText, { color: colors.primary }]}>{t('common.done')}</Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -271,40 +272,40 @@ export const ProfileEditScreen: React.FC = () => {
           </Card>
 
           <Card style={styles.formCard}>
-            <Text style={styles.sectionTitle}>{t('profile.bodyStats')}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('profile.bodyStats')}</Text>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>
                 {t('profile.weight')} ({isMetric ? 'kg' : 'lb'})
               </Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                 value={weight}
                 onChangeText={setWeight}
                 placeholder={isMetric ? '70' : '154'}
-                placeholderTextColor={COLORS.gray[400]}
+                placeholderTextColor={colors.textTertiary}
                 keyboardType="decimal-pad"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>
                 {t('profile.height')} ({isMetric ? 'cm' : 'in'})
               </Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
                 value={height}
                 onChangeText={setHeight}
                 placeholder={isMetric ? '175' : '69'}
-                placeholderTextColor={COLORS.gray[400]}
+                placeholderTextColor={colors.textTertiary}
                 keyboardType="decimal-pad"
               />
             </View>
 
             {weight && height && (
-              <View style={styles.bmiContainer}>
-                <Text style={styles.bmiLabel}>{t('profile.bmi')}</Text>
-                <Text style={styles.bmiValue}>
+              <View style={[styles.bmiContainer, { borderTopColor: colors.border }]}>
+                <Text style={[styles.bmiLabel, { color: colors.textSecondary }]}>{t('profile.bmi')}</Text>
+                <Text style={[styles.bmiValue, { color: colors.primary }]}>
                   {calculateBMI(parseFloat(weight), parseFloat(height), isMetric)}
                 </Text>
               </View>

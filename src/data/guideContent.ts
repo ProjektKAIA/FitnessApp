@@ -2353,6 +2353,892 @@ Regeneration ist kein Luxus – sie ist die Hälfte des Trainings.`,
       },
     ],
   },
+
+  // ============================================
+  // MUSKELAUFBAU (Muscle Building)
+  // ============================================
+  'muscle-building': {
+    id: 'muscle-building',
+    categoryId: 'sport',
+    icon: '💪',
+    titleKey: 'guide.articles.muscleBuilding.title',
+    subtitleKey: 'guide.articles.muscleBuilding.subtitle',
+    readingTime: 18,
+    sections: [
+      {
+        id: 'intro',
+        titleKey: 'guide.articles.muscleBuilding.sections.intro.title',
+        content: `Muskelaufbau (Hypertrophie) ist ein komplexer biologischer Prozess, der durch gezielte Reize ausgelöst und durch Ernährung sowie Erholung unterstützt wird.
+
+Dieser Guide basiert auf den aktuellsten wissenschaftlichen Erkenntnissen zu Muskelwachstum – von den Grundlagen der Proteinbiosynthese bis zu praktischen Trainingsempfehlungen.
+
+**Was du lernen wirst:**
+• Die Biologie des Muskelwachstums
+• Optimale Trainingsparameter für Hypertrophie
+• Die Rolle der Ernährung beim Muskelaufbau
+• Häufige Fehler und wie du sie vermeidest`,
+      },
+      {
+        id: 'biology',
+        titleKey: 'guide.articles.muscleBuilding.sections.biology.title',
+        content: `**Wie wachsen Muskeln?**
+
+Muskelwachstum ist eine Anpassungsreaktion auf mechanische Belastung. Der Prozess läuft in drei Phasen ab:
+
+**1. Mechanische Spannung & Mikrotraumata**
+Beim Training entstehen minimale Schäden an den Muskelfasern. Dies aktiviert Satellitenzellen und löst Signalkaskaden aus.
+
+**2. Entzündungsreaktion & Reparatur**
+Der Körper reagiert mit einer kontrollierten Entzündung. Immunzellen räumen beschädigtes Gewebe auf und bereiten die Reparatur vor.
+
+**3. Proteinbiosynthese & Superkompensation**
+Neue Proteine werden eingebaut – mehr als vorher. Der Muskel wächst nicht während des Trainings, sondern in der Erholungsphase.
+
+**Die drei Hauptmechanismen der Hypertrophie:**
+
+**Mechanische Spannung**
+• Der wichtigste Faktor
+• Durch schwere Gewichte und kontrollierte Bewegungen
+• Je höher die Spannung, desto stärker das Wachstumssignal
+
+**Metabolischer Stress**
+• "Der Pump" – Ansammlung von Stoffwechselprodukten
+• Laktat, Wasserstoffionen, anorganisches Phosphat
+• Unterstützt Hypertrophie zusätzlich zur mechanischen Spannung
+
+**Muskelschaden**
+• Mikrotraumata durch exzentrische Belastung
+• Nicht mehr als Haupttreiber gesehen
+• Übermäßiger Muskelschaden behindert sogar den Fortschritt`,
+      },
+      {
+        id: 'training-parameters',
+        titleKey: 'guide.articles.muscleBuilding.sections.trainingParameters.title',
+        content: `**Die optimalen Trainingsparameter**
+
+Basierend auf Meta-Analysen von Schoenfeld et al. und aktueller Forschung:
+
+**Trainingsvolumen**
+• **Minimum:** 10 Sätze pro Muskelgruppe/Woche
+• **Optimal:** 12-20 Sätze pro Muskelgruppe/Woche
+• **Maximum sinnvoll:** 20-25 Sätze (darüber kaum Zusatznutzen)
+
+**Intensität (% vom 1RM)**
+• **Effektiver Bereich:** 30-85% des 1RM
+• **Sweet Spot für Hypertrophie:** 60-80% (6-15 Wiederholungen)
+• Entscheidend: Sätze nahe am Muskelversagen beenden (1-3 RIR)
+
+**Frequenz**
+• Jede Muskelgruppe mindestens 2x pro Woche trainieren
+• Mehr als 4x pro Woche bringt keinen signifikanten Zusatznutzen
+• Anfänger: 3x Ganzkörper
+• Fortgeschrittene: 4x Push/Pull/Legs oder Upper/Lower Split
+
+**Progression**
+• Steigere Gewicht oder Wiederholungen progressiv
+• Die 2-für-2-Regel: Wenn du in 2 Trainings alle Ziel-Reps schaffst → Gewicht erhöhen
+• Progression ist der langfristig wichtigste Faktor
+
+**Pausenzeiten**
+• Für Hypertrophie: 2-3 Minuten bei Grundübungen
+• 1-2 Minuten bei Isolationsübungen
+• Längere Pausen = mehr Qualität pro Satz`,
+      },
+      {
+        id: 'rep-ranges',
+        titleKey: 'guide.articles.muscleBuilding.sections.repRanges.title',
+        content: `**Der Mythos der "Hypertrophie-Zone"**
+
+Lange Zeit galt: 8-12 Wiederholungen = Muskelaufbau. Die Forschung zeigt ein differenzierteres Bild.
+
+**Was die Wissenschaft sagt:**
+
+Eine Landmark-Studie von Schoenfeld et al. (2017) zeigte:
+• Muskelwachstum ist in einem breiten Rep-Bereich möglich (6-30+)
+• Voraussetzung: Sätze werden nahe am Muskelversagen beendet
+• Niedrige Reps (unter 6) fördern mehr Kraft, höhere Reps mehr Ausdauer
+
+**Praktische Empfehlung:**
+
+**Grundübungen (Kniebeuge, Kreuzheben, Bankdrücken)**
+• 6-10 Wiederholungen
+• Hier ist Technik unter Ermüdung kritisch
+• Schwere Gewichte = mehr mechanische Spannung
+
+**Zusatzübungen (Rudern, Schulterdrücken)**
+• 8-12 Wiederholungen
+• Guter Kompromiss aus Spannung und Volumen
+
+**Isolationsübungen (Curls, Seitheben)**
+• 10-15+ Wiederholungen
+• Geringere systemische Belastung
+• Hier ist Muskelversagen sicherer zu erreichen
+
+**Der beste Ansatz:**
+Nutze verschiedene Rep-Bereiche! Periodisiere zwischen schweren (6-8), mittleren (8-12) und leichten (12-20) Phasen oder kombiniere sie in einer Woche.`,
+      },
+      {
+        id: 'muscle-groups',
+        titleKey: 'guide.articles.muscleBuilding.sections.muscleGroups.title',
+        content: `**Training nach Muskelgruppen**
+
+Nicht alle Muskeln reagieren gleich auf Training. Hier die wichtigsten Unterschiede:
+
+**Große Muskelgruppen**
+
+**Rücken (Latissimus, Trapezius, Rhomboiden)**
+• Hohes Volumen verträglich: 15-25 Sätze/Woche
+• Vielfältige Zugrichtungen nutzen (vertikal + horizontal)
+• Übungen: Klimmzüge, Rudern, Latzug, Face Pulls
+
+**Brust (Pectoralis major)**
+• Moderates Volumen: 10-18 Sätze/Woche
+• Flach, schräg und negativ für volle Entwicklung
+• Übungen: Bankdrücken, Schrägbankdrücken, Fliegende
+
+**Beine (Quadrizeps, Beinbeuger, Gesäß)**
+• Tolerieren hohes Volumen
+• Quadrizeps: 12-20 Sätze/Woche
+• Beinbeuger: 8-15 Sätze/Woche (oft vernachlässigt!)
+• Übungen: Kniebeuge, Beinpresse, Rumänisches Kreuzheben, Ausfallschritte
+
+**Kleine Muskelgruppen**
+
+**Schultern (Deltoideus)**
+• Vordere Schulter: Viel Arbeit durch Drückübungen
+• Seitliche Schulter: Gezielte Isolation nötig
+• Hintere Schulter: Oft vernachlässigt, wichtig für Balance
+• 8-16 Sätze/Woche für Seiten- und hintere Schulter
+
+**Arme (Bizeps, Trizeps)**
+• Bekommen viel indirektes Training
+• Direktes Volumen: 6-12 Sätze/Woche
+• Variation der Griffwinkel für volle Entwicklung
+
+**Waden**
+• Brauchen hohe Frequenz (3-4x/Woche)
+• 12-20 Sätze/Woche
+• Hohe Wiederholungen (12-20) funktionieren gut`,
+      },
+      {
+        id: 'nutrition',
+        titleKey: 'guide.articles.muscleBuilding.sections.nutrition.title',
+        content: `**Ernährung für Muskelaufbau**
+
+Training setzt den Reiz – Ernährung liefert das Baumaterial. Ohne richtige Ernährung kein optimaler Muskelaufbau.
+
+**Kalorienüberschuss**
+
+• **Für Muskelaufbau nötig:** 200-500 kcal über dem Erhaltungsbedarf
+• **Zu viel:** Mehr Fett als Muskeln
+• **Zu wenig:** Suboptimaler Aufbau, verschenktes Potential
+
+**Empfehlung nach Trainingslevel:**
+• Anfänger: +300-500 kcal (schnellerer Aufbau möglich)
+• Fortgeschrittene: +200-300 kcal (langsamerer, sauberer Aufbau)
+
+**Protein – Der Schlüsselfaktor**
+
+• **Optimale Menge:** 1,6-2,2 g/kg Körpergewicht pro Tag
+• **Mehr als 2,2 g/kg:** Kein zusätzlicher Nutzen für Muskelaufbau
+• **Verteilung:** 4-5 Mahlzeiten mit je 20-40g Protein
+
+**Timing:**
+• Pre-Workout: Nicht kritisch, aber vorteilhaft
+• Post-Workout: Innerhalb von 2-3 Stunden
+• Vor dem Schlafen: 30-40g Casein oder Magerquark
+
+**Kohlenhydrate**
+
+• **Funktion:** Energie für Training, Glykogenspeicher füllen
+• **Empfehlung:** 3-6 g/kg Körpergewicht (je nach Aktivität)
+• **Timing:** Vor und nach dem Training am wichtigsten
+
+**Fette**
+
+• **Minimum:** 0,5 g/kg Körpergewicht
+• **Optimal:** 0,8-1,2 g/kg
+• **Wichtig für:** Hormonsynthese (Testosteron!), Vitaminaufnahme`,
+      },
+      {
+        id: 'supplements',
+        titleKey: 'guide.articles.muscleBuilding.sections.supplements.title',
+        content: `**Supplemente für Muskelaufbau**
+
+Die meisten Supplements sind überflüssig. Diese haben tatsächlich wissenschaftliche Evidenz:
+
+**Tier 1 – Nachgewiesene Wirkung**
+
+**Kreatin-Monohydrat**
+• Das am besten erforschte Supplement
+• Wirkung: +5-10% Kraft, +1-2 kg Muskelmasse (langfristig)
+• Dosierung: 3-5g täglich, kein Laden nötig
+• Timing: Egal, Konsistenz zählt
+• Kosten: ~10€/Monat
+
+**Proteinpulver**
+• Kein Muss, aber praktisch
+• Für Leute, die ihren Proteinbedarf nicht über Nahrung decken
+• Whey: Schnell, ideal post-workout
+• Casein: Langsam, gut vor dem Schlafen
+
+**Koffein**
+• 3-6 mg/kg Körpergewicht vor dem Training
+• Verbessert Kraft und Ausdauer
+• Toleranz beachten
+
+**Tier 2 – Möglicherweise nützlich**
+
+**Beta-Alanin**
+• Puffert Milchsäure
+• Nutzen hauptsächlich bei höheren Wiederholungen (15+)
+• 3-5g täglich
+
+**Citrullin-Malat**
+• Verbessert Durchblutung und Ausdauer
+• 6-8g vor dem Training
+
+**Tier 3 – Überbewertet**
+
+• BCAAs (unnötig bei ausreichend Protein)
+• Glutamin (nur bei Darmgesundheit relevant)
+• Testosterone Booster (keine Wirkung)
+• Die meisten Pre-Workouts (überteuert)`,
+      },
+      {
+        id: 'common-mistakes',
+        titleKey: 'guide.articles.muscleBuilding.sections.commonMistakes.title',
+        content: `**Die häufigsten Fehler beim Muskelaufbau**
+
+**1. Zu wenig Protein**
+• Problem: Ohne Bausteine kein Aufbau
+• Lösung: Protein bei jeder Mahlzeit, 1,6-2,2 g/kg täglich
+
+**2. Inkonsistentes Training**
+• Problem: Sporadisches Training = keine Progression
+• Lösung: 3-5x pro Woche, Woche für Woche
+
+**3. Keine Progression**
+• Problem: Gleiche Gewichte seit Monaten
+• Lösung: Führe Trainingstagebuch, steigere systematisch
+
+**4. Zu viel Volumen zu früh**
+• Problem: Übertraining, Verletzungen, Burnout
+• Lösung: Starte konservativ, steigere bei Plateaus
+
+**5. Zu wenig Schlaf**
+• Problem: Regeneration findet im Schlaf statt
+• Lösung: 7-9 Stunden, Schlafhygiene optimieren
+
+**6. Ego-Lifting**
+• Problem: Schwere Gewichte mit schlechter Form
+• Lösung: Gewicht reduzieren, Range of Motion maximieren
+
+**7. Nur Lieblings-Übungen**
+• Problem: Muskuläre Dysbalancen, Verletzungsrisiko
+• Lösung: Balanciertes Programm, Push/Pull-Verhältnis 1:1
+
+**8. Zu viel Cardio**
+• Problem: Interference Effect bei extremem Volumen
+• Lösung: 2-3x moderate Ausdauer stört nicht
+
+**9. Unrealistische Erwartungen**
+• Realität Muskelaufbau (natürlich):
+  - Anfänger: 8-12 kg im ersten Jahr möglich
+  - Fortgeschrittene: 2-4 kg pro Jahr
+  - Weit Fortgeschrittene: 1-2 kg pro Jahr
+
+**10. Supplement-Fokus statt Basics**
+• Problem: Supplements vor solider Ernährung
+• Lösung: Erst Grundlagen, dann Supplemente`,
+      },
+      {
+        id: 'programs',
+        titleKey: 'guide.articles.muscleBuilding.sections.programs.title',
+        content: `**Bewährte Trainingsprogramme**
+
+**Für Anfänger (0-1 Jahr)**
+
+**Ganzkörpertraining 3x/Woche**
+• Kniebeuge, Bankdrücken, Rudern
+• Schulterdrücken, Kreuzheben/RDL
+• Jede Übung 3 Sätze, 8-12 Wiederholungen
+• Fokus: Technik lernen, linear steigern
+
+**Für Fortgeschrittene (1-3 Jahre)**
+
+**Push/Pull/Legs 2x/Woche (6 Tage)**
+• Push: Brust, Schulter, Trizeps
+• Pull: Rücken, Bizeps, hintere Schulter
+• Legs: Quadrizeps, Beinbeuger, Waden
+• 4-5 Übungen pro Training, 3-4 Sätze
+
+**Upper/Lower 4x/Woche**
+• Oberkörper: 2x (Push + Pull)
+• Unterkörper: 2x
+• Gut für Regeneration und Zeitmanagement
+
+**Für Weit Fortgeschrittene (3+ Jahre)**
+
+**Spezialisierungs-Blöcke**
+• 4-6 Wochen Fokus auf Schwachstellen
+• Erhöhtes Volumen für Zielmuskel
+• Reduziertes Volumen für andere Bereiche
+
+**Periodisierung wichtig:**
+• Linear: Jede Woche etwas mehr
+• Wellenförmig: Schwere/leichte Wochen wechseln
+• Block: Phasen mit unterschiedlichen Zielen
+
+**Der wichtigste Faktor:**
+Das beste Programm ist das, das du konsistent durchziehst. Wähle etwas, das zu deinem Leben passt.`,
+      },
+      {
+        id: 'summary',
+        titleKey: 'guide.articles.muscleBuilding.sections.summary.title',
+        content: `**Zusammenfassung: Die Muskelaufbau-Pyramide**
+
+**Priorität 1: Training**
+• Progressive Überlastung ist König
+• 10-20 Sätze pro Muskelgruppe/Woche
+• Jede Muskelgruppe 2x/Woche
+• Sätze nahe am Muskelversagen (1-3 RIR)
+
+**Priorität 2: Protein**
+• 1,6-2,2 g/kg Körpergewicht täglich
+• Verteilt auf 4-5 Mahlzeiten
+• Hochwertige Quellen bevorzugen
+
+**Priorität 3: Kalorienüberschuss**
+• 200-500 kcal über Erhaltung
+• Langsam aufbauen = weniger Fett
+• Anpassen basierend auf Fortschritt
+
+**Priorität 4: Schlaf**
+• 7-9 Stunden pro Nacht
+• Qualität vor Quantität
+• Hier passiert das Wachstum
+
+**Priorität 5: Konsistenz**
+• Woche für Woche, Monat für Monat
+• Keine Geheimtricks, nur harte Arbeit
+• Geduld ist der limitierende Faktor
+
+**Was du vergessen kannst:**
+• "Anaboles Fenster" von 30 Minuten
+• Exakte Mahlzeiten-Timing
+• Teure Supplements
+• Komplizierte Periodisierung als Anfänger
+
+**Die Wahrheit:**
+Muskelaufbau ist einfach, aber nicht leicht. Die Grundlagen sind seit Jahrzehnten bekannt. Der Unterschied liegt in der konsequenten Umsetzung.`,
+      },
+    ],
+    sources: [
+      {
+        title: 'Resistance Training Volume Enhances Muscle Hypertrophy',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/27433992/',
+        institution: 'Schoenfeld et al. (2017) - Journal of Strength & Conditioning',
+      },
+      {
+        title: 'Effects of Resistance Training Frequency on Hypertrophy',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/27102172/',
+        institution: 'Schoenfeld et al. (2016) - Sports Medicine',
+      },
+      {
+        title: 'Dietary Protein and Resistance Training',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/28698222/',
+        institution: 'Morton et al. (2018) - British Journal of Sports Medicine',
+      },
+      {
+        title: 'International Society of Sports Nutrition Position Stand: Protein',
+        url: 'https://jissn.biomedcentral.com/articles/10.1186/s12970-017-0177-8',
+        institution: 'ISSN (2017)',
+      },
+      {
+        title: 'Effects of Creatine Supplementation on Performance',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/28615996/',
+        institution: 'Kreider et al. (2017) - Journal of ISSN',
+      },
+      {
+        title: 'Strength and Hypertrophy Adaptations Between Low- vs. High-Load Training',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/28834797/',
+        institution: 'Schoenfeld et al. (2017) - Journal of Strength & Conditioning',
+      },
+      {
+        title: 'Maximizing Muscle Hypertrophy: A Systematic Review',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/31260419/',
+        institution: 'Krzysztofik et al. (2019) - Biology of Sport',
+      },
+      {
+        title: 'The Mechanisms of Muscle Hypertrophy',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/20847704/',
+        institution: 'Schoenfeld (2010) - Journal of Strength & Conditioning',
+      },
+    ],
+  },
+
+  // ============================================
+  // BEWEGLICHKEIT (Flexibility & Mobility)
+  // ============================================
+  flexibility: {
+    id: 'flexibility',
+    categoryId: 'sport',
+    icon: '🧘',
+    titleKey: 'guide.articles.flexibility.title',
+    subtitleKey: 'guide.articles.flexibility.subtitle',
+    readingTime: 15,
+    sections: [
+      {
+        id: 'intro',
+        titleKey: 'guide.articles.flexibility.sections.intro.title',
+        content: `Beweglichkeit ist eine oft unterschätzte Komponente der Fitness. Sie beeinflusst nicht nur sportliche Leistung, sondern auch Alltagsbewegungen und Verletzungsprävention.
+
+Dieser Guide erklärt den Unterschied zwischen Flexibilität und Mobilität, welche Methoden wirklich funktionieren und wie du Beweglichkeitstraining sinnvoll in dein Programm integrierst.
+
+**Was du lernen wirst:**
+• Der Unterschied zwischen Flexibilität und Mobilität
+• Welche Dehnmethoden für welches Ziel
+• Mythen vs. Wissenschaft
+• Praktische Routinen für mehr Beweglichkeit`,
+      },
+      {
+        id: 'definitions',
+        titleKey: 'guide.articles.flexibility.sections.definitions.title',
+        content: `**Flexibilität vs. Mobilität – Was ist der Unterschied?**
+
+Diese Begriffe werden oft verwechselt, beschreiben aber unterschiedliche Dinge:
+
+**Flexibilität (Dehnfähigkeit)**
+• Die passive Bewegungsreichweite eines Gelenks
+• Wird durch Muskeln, Sehnen und Bänder begrenzt
+• Beispiel: Wie weit du im Sitzen nach vorne kommst, wenn jemand drückt
+
+**Mobilität (Beweglichkeit)**
+• Die aktive, kontrollierte Bewegungsreichweite
+• Kombination aus Flexibilität + Kraft + Koordination
+• Beispiel: Wie weit du dich aktiv nach vorne beugen kannst
+
+**Warum der Unterschied wichtig ist:**
+
+Viele Menschen sind flexibel, aber nicht mobil – sie können passiv in Positionen gebracht werden, haben dort aber keine Kontrolle.
+
+**Das Ziel:**
+Mobilität > Flexibilität
+
+Du brauchst nicht nur Bewegungsreichweite, sondern auch die Kraft und Kontrolle, sie zu nutzen.
+
+**Was limitiert Beweglichkeit?**
+• Muskeltonus (kann schnell verbessert werden)
+• Bindegewebe (braucht Monate)
+• Gelenkstruktur (kaum veränderbar)
+• Nervensystem (oft der limitierende Faktor!)
+
+**Wichtige Erkenntnis:**
+Das Nervensystem bestimmt, wie viel Beweglichkeit es "erlaubt". Dehntraining ist oft mehr neurologisches Training als strukturelle Veränderung.`,
+      },
+      {
+        id: 'methods',
+        titleKey: 'guide.articles.flexibility.sections.methods.title',
+        content: `**Dehnmethoden im Überblick**
+
+**1. Statisches Dehnen**
+• Position halten für 30-60 Sekunden
+• Klassisch und weit verbreitet
+• Am besten nach dem Training oder abends
+• NICHT direkt vor Krafttraining (reduziert Kraft kurzfristig)
+
+**2. Dynamisches Dehnen**
+• Kontrollierte Bewegungen durch den Bewegungsumfang
+• Ideal als Warm-up vor dem Training
+• Aktiviert Muskeln und erhöht Körpertemperatur
+• Beispiele: Beinschwingen, Armkreisen, Ausfallschritte mit Rotation
+
+**3. PNF-Dehnen (Propriozeptive Neuromuskuläre Fazilitation)**
+• Anspannen des Muskels → Entspannen → Dehnen
+• Sehr effektiv für schnelle Fortschritte
+• Nutzt neurologische Reflexe
+• Contract-Relax oder Contract-Relax-Agonist-Contract
+
+**4. Aktives Dehnen**
+• Gegenspieler-Muskel anspannen, um Dehnung zu erreichen
+• Baut Kraft in gedehnter Position auf
+• Brücke zwischen Flexibilität und Mobilität
+
+**5. Ballistische Dehnung**
+• Federnde, schwingende Bewegungen
+• Früher populär, heute umstritten
+• Höheres Verletzungsrisiko
+• Nur für fortgeschrittene Athleten sinnvoll
+
+**Was sagt die Forschung?**
+
+Meta-Analysen zeigen:
+• Alle Methoden verbessern Beweglichkeit
+• PNF ist kurzfristig am effektivsten
+• Für langfristige Anpassungen: Konsistenz wichtiger als Methode
+• 2-3x pro Woche reicht für Verbesserungen`,
+      },
+      {
+        id: 'myths',
+        titleKey: 'guide.articles.flexibility.sections.myths.title',
+        content: `**Mythen über Beweglichkeit**
+
+**Mythos 1: "Dehnen verhindert Verletzungen"**
+• Realität: Keine klare Evidenz dafür
+• Statisches Dehnen vor Sport kann sogar Verletzungsrisiko erhöhen
+• Dynamisches Aufwärmen ist effektiver für Verletzungsprävention
+
+**Mythos 2: "Dehnen verhindert Muskelkater"**
+• Realität: Studien zeigen keinen signifikanten Effekt
+• Muskelkater entsteht durch Mikrotraumata, nicht "Verkürzung"
+• Leichte Bewegung hilft mehr als Dehnen
+
+**Mythos 3: "Mehr Dehnen = Mehr Beweglichkeit"**
+• Realität: Ab einem Punkt keine weiteren Vorteile
+• 30-60 Sekunden pro Position reichen
+• Exzessives Dehnen kann Stabilität reduzieren
+
+**Mythos 4: "Muskeln verkürzen sich"**
+• Realität: Muskeln werden nicht buchstäblich kürzer
+• Das Nervensystem erhöht den Tonus bei Inaktivität
+• "Verkürzung" ist meist ein Schutzreflex
+
+**Mythos 5: "Jeder sollte einen Spagat können"**
+• Realität: Gelenkstruktur ist individuell
+• Hüftpfannenwinkel limitiert physisch
+• Nicht jedes Beweglichkeitsziel ist für jeden erreichbar
+
+**Mythos 6: "Dehnen vor dem Krafttraining ist gut"**
+• Realität: Statisches Dehnen reduziert Kraft kurzfristig um 5-8%
+• Dynamisches Aufwärmen ist besser
+• Statisches Dehnen nach dem Training oder separat
+
+**Was wirklich funktioniert:**
+• Regelmäßigkeit (3-5x/Woche)
+• Progressives Training mit Last
+• Kraft in gedehnten Positionen aufbauen
+• Geduld – echte Anpassungen brauchen Monate`,
+      },
+      {
+        id: 'practical',
+        titleKey: 'guide.articles.flexibility.sections.practical.title',
+        content: `**Praktische Umsetzung**
+
+**Beweglichkeit in den Alltag integrieren:**
+
+**Morgenroutine (5 Minuten)**
+• Cat-Cow (Katzenbuckel) – 10 Wiederholungen
+• Welt's Greatest Stretch – je 30 Sekunden pro Seite
+• Hüftkreisen – 10 pro Richtung
+• Schultermobilisation – 10 Armkreise
+
+**Vor dem Training (Dynamisches Aufwärmen)**
+• Beinschwingen (vor/zurück, seitlich) – je 10
+• Ausfallschritte mit Rotation – je 5 pro Seite
+• Armkreisen und Schulterrotation – 20 Sekunden
+• Squats zum Aufwärmen – 10-15 Wiederholungen
+
+**Nach dem Training (5-10 Minuten)**
+• Hüftbeuger-Dehnung – 60 Sekunden pro Seite
+• Brustdehnung an der Wand – 60 Sekunden pro Seite
+• Piriformis-Dehnung – 60 Sekunden pro Seite
+• Oberschenkelrückseite – 60 Sekunden pro Seite
+
+**Dedizierte Mobility-Session (15-20 Minuten)**
+• 90/90 Hip Stretch
+• Deep Squat Hold
+• Couch Stretch
+• Thoracic Spine Rotation
+• Shoulder CARs (Controlled Articular Rotations)
+
+**Fokus-Bereiche für Kraftsportler:**
+• Hüftbeuger (vom vielen Sitzen)
+• Brustmuskulatur (vom Bankdrücken)
+• Obere Brustwirbelsäule (für Überkopf-Bewegungen)
+• Sprunggelenke (für tiefe Kniebeugen)`,
+      },
+      {
+        id: 'problem-areas',
+        titleKey: 'guide.articles.flexibility.sections.problemAreas.title',
+        content: `**Häufige Problemzonen und Lösungen**
+
+**1. Hüftbeuger (Iliopsoas)**
+
+**Warum eng?** Zu viel Sitzen
+**Auswirkung:** Unterer Rückenschmerzen, eingeschränkte Hüftstreckung
+
+**Beste Übungen:**
+• Couch Stretch (90/90 an der Wand)
+• Half-Kneeling Hip Flexor Stretch
+• Rear Foot Elevated Hip Stretch
+
+**2. Oberschenkelrückseite (Hamstrings)**
+
+**Warum eng?** Sitzen, wenig aktive Nutzung
+**Auswirkung:** Eingeschränkte Vorwärtsbeuge, Rückenprobleme
+
+**Beste Übungen:**
+• Romanian Deadlift (aktive Dehnung unter Last!)
+• Seated Good Mornings
+• Standing Hamstring Stretch mit erhöhtem Fuß
+
+**3. Brustwirbelsäule**
+
+**Warum steif?** Schreibtischarbeit, Smartphone
+**Auswirkung:** Schulterbeschwerden, schlechte Haltung
+
+**Beste Übungen:**
+• Foam Roller Thoracic Extensions
+• Open Books (Rotation in Seitenlage)
+• Cat-Cow mit Betonung der BWS
+• Wall Slides
+
+**4. Sprunggelenk**
+
+**Warum eingeschränkt?** Schuhe, wenig barfuß
+**Auswirkung:** Probleme bei tiefen Kniebeugen
+
+**Beste Übungen:**
+• Knee-to-Wall Mobilization
+• Banded Ankle Mobilization
+• Deep Squat Hold mit erhöhten Fersen
+
+**5. Schultern**
+
+**Warum eingeschränkt?** Vorgebeugte Haltung, einseitiges Training
+**Auswirkung:** Probleme bei Überkopfbewegungen
+
+**Beste Übungen:**
+• Wall Angels
+• Shoulder CARs
+• Prone Y-T-W Raises
+• Band Pull-Aparts`,
+      },
+      {
+        id: 'loaded-stretching',
+        titleKey: 'guide.articles.flexibility.sections.loadedStretching.title',
+        content: `**Loaded Stretching – Dehnen mit Gewicht**
+
+Ein moderner Ansatz, der Kraft und Beweglichkeit kombiniert:
+
+**Das Konzept:**
+Anstatt passiv in einer Position zu verharren, trainierst du mit Gewicht in gedehnten Positionen. Das baut gleichzeitig Flexibilität UND Kraft auf.
+
+**Vorteile:**
+• Zeitsparender (Kraft + Beweglichkeit gleichzeitig)
+• Funktioneller (aktive Kontrolle, nicht nur passive Reichweite)
+• Sicherer (Kraft schützt das Gelenk)
+• Nachhaltiger (Nervensystem "vertraut" der Position)
+
+**Beispiele:**
+
+**Hamstrings:**
+• Romanian Deadlift mit voller Range
+• Jefferson Curls (für Fortgeschrittene!)
+
+**Hüftbeuger:**
+• Rear Foot Elevated Split Squats
+• Deficit Reverse Lunges
+
+**Adduktoren:**
+• Sumo Deadlifts
+• Cossack Squats
+
+**Brustmuskulatur:**
+• Dumbbell Flyes mit Pause unten
+• Incline Dumbbell Press mit voller Dehnung
+
+**Latissimus:**
+• Pullover
+• Lat-Stretch an der Stange
+
+**Wichtig:**
+• Langsam anfangen, Gewicht progressiv steigern
+• Volle Kontrolle in der gedehnten Position
+• Nicht in Schmerz arbeiten
+• Perfekte Technik hat Priorität`,
+      },
+      {
+        id: 'foam-rolling',
+        titleKey: 'guide.articles.flexibility.sections.foamRolling.title',
+        content: `**Foam Rolling & Self-Myofascial Release**
+
+**Was sagt die Wissenschaft?**
+
+Meta-Analysen zeigen:
+• Kurzfristige Verbesserung der Beweglichkeit (5-15 Minuten)
+• Leichte Reduktion von Muskelkater
+• Keine negativen Effekte auf Kraft
+• Langfristige Effekte unklar
+
+**Wie es wahrscheinlich wirkt:**
+• Nicht durch "Lösen von Verklebungen" (Faszien sind zu stark)
+• Eher durch neurologische Effekte
+• Temporäre Erhöhung der Schmerztoleranz
+• Parasympathische Aktivierung (Entspannung)
+
+**Praktische Anwendung:**
+
+**Vor dem Training:**
+• 30-60 Sekunden pro Muskelgruppe
+• Moderate Intensität
+• Kann als Teil des Warm-ups genutzt werden
+
+**Nach dem Training / Abends:**
+• 1-2 Minuten pro Bereich
+• Langsamer, tiefer
+• Fokus auf verspannte Bereiche
+
+**Effektive Techniken:**
+• Langsam rollen, nicht schnell
+• Bei empfindlichen Stellen pausieren
+• Mit Atemübungen kombinieren
+• Nicht direkt auf Knochen oder Gelenken
+
+**Was zu rollen:**
+• Quadrizeps und IT-Band
+• Piriformis und Gesäß
+• Oberer Rücken (nicht unterer!)
+• Waden
+
+**Was man nicht rollen sollte:**
+• Unterer Rücken (zu instabil)
+• Direkt auf Wirbelsäule
+• Bauch
+• Nacken`,
+      },
+      {
+        id: 'programming',
+        titleKey: 'guide.articles.flexibility.sections.programming.title',
+        content: `**Beweglichkeitstraining programmieren**
+
+**Wie oft?**
+• Minimum: 2-3x pro Woche für Erhalt
+• Optimal: 4-6x pro Woche für Verbesserung
+• Tägliche kurze Sessions > seltene lange Sessions
+
+**Wie lange?**
+• Kurze Sessions: 5-10 Minuten reichen für Erhalt
+• Dedizierte Sessions: 15-30 Minuten für Verbesserung
+• Pro Position: 30-120 Sekunden
+
+**Wann?**
+• **Morgens:** Dynamische Mobilität, aktivierend
+• **Vor Training:** Dynamisches Aufwärmen, sportspezifisch
+• **Nach Training:** Statisches Dehnen, beruhigend
+• **Abends:** Entspannende Routine, Stress-Abbau
+
+**Progression:**
+1. Erst Bewegungsreichweite verbessern (passiv)
+2. Dann Kontrolle aufbauen (aktiv)
+3. Dann Kraft in der Position (loaded)
+4. Dann Geschwindigkeit (dynamisch/ballistisch)
+
+**Periodisierung:**
+
+**Aufbauphase (4-6 Wochen):**
+• Fokus auf Schwachstellen
+• Häufiges, moderates Training
+• Statisches und PNF-Dehnen
+
+**Erhaltungsphase:**
+• 2-3x pro Woche reicht
+• Dynamische Mobilität vor Training
+• Kurzes Dehnen nach Training
+
+**Integration mit Krafttraining:**
+• Aufwärmen: Dynamische Mobilität (5 Min)
+• Training: Loaded Stretching wo möglich
+• Cool-down: 2-3 statische Dehnungen (5 Min)
+• Separate Session: 1-2x pro Woche wenn nötig`,
+      },
+      {
+        id: 'summary',
+        titleKey: 'guide.articles.flexibility.sections.summary.title',
+        content: `**Zusammenfassung: Beweglichkeit sinnvoll verbessern**
+
+**Die wichtigsten Prinzipien:**
+
+**1. Mobilität > Flexibilität**
+• Aktive Kontrolle ist das Ziel
+• Nicht nur passiv dehnbar, sondern funktionell nutzbar
+• Kraft in der gedehnten Position aufbauen
+
+**2. Konsistenz schlägt Intensität**
+• 5 Minuten täglich > 30 Minuten einmal pro Woche
+• Echte Anpassungen brauchen Wochen bis Monate
+• Geduld und Regelmäßigkeit sind der Schlüssel
+
+**3. Spezifität zählt**
+• Trainiere die Bewegungen, die du brauchst
+• Nicht jeder braucht einen Spagat
+• Fokussiere auf Problemzonen
+
+**4. Timing matters**
+• Dynamisch vor dem Training
+• Statisch nach dem Training oder separat
+• Niemals intensiv statisch vor Kraftleistung
+
+**Der minimale effektive Ansatz:**
+• 5 Min dynamische Mobilität vor dem Training
+• Kraftübungen durch volle Range ausführen
+• 5 Min statisches Dehnen nach dem Training
+• 1-2x pro Woche dedizierte Mobility-Session wenn nötig
+
+**Was du nicht brauchst:**
+• Stundenlange Dehn-Sessions
+• Teure Mobility-Tools
+• Extreme Beweglichkeit (außer dein Sport erfordert es)
+• Yoga-Kurse (hilfreich, aber nicht zwingend)
+
+**Der wichtigste Tipp:**
+Trainiere Kraft durch volle Bewegungsumfänge. Das allein erhält und verbessert funktionelle Beweglichkeit – ohne extra Zeitaufwand.`,
+      },
+    ],
+    sources: [
+      {
+        title: 'Stretching and Injury Prevention: A Systematic Review',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/15233597/',
+        institution: 'Thacker et al. (2004) - Medicine & Science in Sports',
+      },
+      {
+        title: 'Effect of Static Stretching on Maximal Voluntary Contraction',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/15273182/',
+        institution: 'Behm et al. (2004) - Journal of Sports Sciences',
+      },
+      {
+        title: 'Foam Rolling and Self-Myofascial Release',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/29145783/',
+        institution: 'Wiewelhove et al. (2019) - Frontiers in Physiology',
+      },
+      {
+        title: 'Acute Effects of Dynamic Stretching on Muscle Flexibility',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/22316148/',
+        institution: 'Behm & Chaouachi (2011) - Sports Medicine',
+      },
+      {
+        title: 'The Science and Physiology of Flexibility and Stretching',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/16095135/',
+        institution: 'Magnusson & Renström (2006) - Sports Medicine',
+      },
+      {
+        title: 'Effects of Stretching on Delayed Onset Muscle Soreness',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/21735398/',
+        institution: 'Herbert et al. (2011) - Cochrane Database',
+      },
+      {
+        title: 'PNF Stretching: A Systematic Review',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/22316148/',
+        institution: 'Sharman et al. (2006) - Sports Medicine',
+      },
+      {
+        title: 'Resistance Training and Flexibility',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/21969080/',
+        institution: 'Morton et al. (2011) - Journal of Strength & Conditioning',
+      },
+    ],
+  },
 };
 
 export const getGuideArticle = (articleId: string): IGuideArticle | undefined => {

@@ -13,8 +13,28 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useWorkoutStore } from '@/stores';
+import { useRunningStore, IRunningSession } from '@/stores/runningStore';
+import { useYogaStore, IYogaSessionRecord } from '@/stores/yogaStore';
 import { useTheme } from '@/contexts';
 import { RootStackParamList, IWorkout, TDirection } from '@/types';
+
+// Unified activity type for all sports
+interface IUnifiedActivity {
+  id: string;
+  type: 'workout' | 'running' | 'yoga';
+  name: string;
+  direction: TDirection;
+  finishedAt: Date;
+  duration: number; // in minutes for workout, seconds for running/yoga
+  // Workout specific
+  exercises?: number;
+  totalVolume?: number;
+  // Running specific
+  segments?: number;
+  // Yoga specific
+  poses?: number;
+  style?: string;
+}
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type WorkoutHistoryRouteProp = RouteProp<RootStackParamList, 'WorkoutHistory'>;
@@ -59,50 +79,97 @@ const getMonthYear = (date: Date): string => {
   return d.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
 };
 
-interface WorkoutItemProps {
-  workout: IWorkout;
+interface ActivityItemProps {
+  activity: IUnifiedActivity;
   onPress: () => void;
+  colors: ReturnType<typeof useTheme>['colors'];
 }
 
-const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, onPress }) => {
+const ActivityItem: React.FC<ActivityItemProps> = ({ activity, onPress, colors }) => {
   const { t } = useTranslation();
 
+  const renderStats = () => {
+    if (activity.type === 'workout') {
+      return (
+        <>
+          <View style={styles.stat}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{activity.exercises || 0}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('common.exercises')}</Text>
+          </View>
+          <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
+          <View style={styles.stat}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{formatDuration(activity.duration)}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('workoutHistory.duration')}</Text>
+          </View>
+          <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
+          <View style={styles.stat}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{formatVolume(activity.totalVolume || 0)}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('workoutHistory.volume')}</Text>
+          </View>
+        </>
+      );
+    }
+
+    if (activity.type === 'running') {
+      const durationMinutes = Math.round(activity.duration / 60);
+      return (
+        <>
+          <View style={styles.stat}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{activity.segments || 0}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Segmente</Text>
+          </View>
+          <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
+          <View style={styles.stat}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{formatDuration(durationMinutes)}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('workoutHistory.duration')}</Text>
+          </View>
+        </>
+      );
+    }
+
+    if (activity.type === 'yoga') {
+      const durationMinutes = Math.round(activity.duration / 60);
+      return (
+        <>
+          <View style={styles.stat}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{activity.poses || 0}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('workoutHistory.poses')}</Text>
+          </View>
+          <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
+          <View style={styles.stat}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{formatDuration(durationMinutes)}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('workoutHistory.duration')}</Text>
+          </View>
+        </>
+      );
+    }
+
+    return null;
+  };
+
   return (
-    <TouchableOpacity style={styles.workoutItem} onPress={onPress}>
+    <TouchableOpacity style={[styles.workoutItem, { backgroundColor: colors.card }]} onPress={onPress}>
       <View style={styles.workoutHeader}>
         <View style={styles.workoutTitleRow}>
-          <Text style={styles.workoutName}>{workout.name}</Text>
+          <Text style={[styles.workoutName, { color: colors.text }]}>{activity.name}</Text>
           <View
             style={[
               styles.directionBadge,
-              { backgroundColor: DIRECTION_COLORS[workout.direction] },
+              { backgroundColor: DIRECTION_COLORS[activity.direction] },
             ]}
           >
             <Text style={styles.directionText}>
-              {t(`directions.${workout.direction}`)}
+              {t(`directions.${activity.direction}`)}
             </Text>
           </View>
         </View>
-        <Text style={styles.workoutDate}>
-          {workout.finishedAt ? formatDate(workout.finishedAt) : ''}
+        <Text style={[styles.workoutDate, { color: colors.textSecondary }]}>
+          {formatDate(activity.finishedAt)}
         </Text>
       </View>
 
       <View style={styles.workoutStats}>
-        <View style={styles.stat}>
-          <Text style={styles.statValue}>{workout.exercises.length}</Text>
-          <Text style={styles.statLabel}>{t('common.exercises')}</Text>
-        </View>
-        <View style={styles.statDivider} />
-        <View style={styles.stat}>
-          <Text style={styles.statValue}>{formatDuration(workout.duration)}</Text>
-          <Text style={styles.statLabel}>{t('workoutHistory.duration')}</Text>
-        </View>
-        <View style={styles.statDivider} />
-        <View style={styles.stat}>
-          <Text style={styles.statValue}>{formatVolume(workout.totalVolume)}</Text>
-          <Text style={styles.statLabel}>{t('workoutHistory.volume')}</Text>
-        </View>
+        {renderStats()}
       </View>
     </TouchableOpacity>
   );
@@ -113,17 +180,19 @@ interface FilterChipProps {
   isActive: boolean;
   color?: string;
   onPress: () => void;
+  colors: ReturnType<typeof useTheme>['colors'];
 }
 
-const FilterChip: React.FC<FilterChipProps> = ({ label, isActive, color, onPress }) => (
+const FilterChip: React.FC<FilterChipProps> = ({ label, isActive, color, onPress, colors }) => (
   <TouchableOpacity
     style={[
       styles.filterChip,
+      { backgroundColor: colors.surfaceElevated },
       isActive && { backgroundColor: color || COLORS.primary },
     ]}
     onPress={onPress}
   >
-    <Text style={[styles.filterChipText, isActive && styles.filterChipTextActive]}>
+    <Text style={[styles.filterChipText, { color: colors.textSecondary }, isActive && styles.filterChipTextActive]}>
       {label}
     </Text>
   </TouchableOpacity>
@@ -134,47 +203,92 @@ export const WorkoutHistoryScreen: React.FC = () => {
   const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<WorkoutHistoryRouteProp>();
+
+  // Get data from all stores
   const getWorkoutHistory = useWorkoutStore((state) => state.getWorkoutHistory);
+  const getRunningHistory = useRunningStore((state) => state.getSessionHistory);
+  const getYogaHistory = useYogaStore((state) => state.getSessionHistory);
 
   // Get initial filter from route params
   const initialDirection = route.params?.direction;
   const [activeFilter, setActiveFilter] = useState<TDirection | null>(initialDirection || null);
 
   const sections = useMemo(() => {
-    let workouts = getWorkoutHistory();
+    // Convert workouts to unified activities
+    const workoutActivities: IUnifiedActivity[] = getWorkoutHistory()
+      .filter((w) => w.finishedAt)
+      .map((w) => ({
+        id: w.id,
+        type: 'workout' as const,
+        name: w.name,
+        direction: w.direction,
+        finishedAt: new Date(w.finishedAt!),
+        duration: w.duration,
+        exercises: w.exercises.length,
+        totalVolume: w.totalVolume,
+      }));
+
+    // Convert running sessions to unified activities
+    const runningActivities: IUnifiedActivity[] = getRunningHistory()
+      .filter((s) => s.finishedAt && s.status === 'completed')
+      .map((s) => ({
+        id: s.id,
+        type: 'running' as const,
+        name: s.workoutName,
+        direction: 'running' as TDirection,
+        finishedAt: new Date(s.finishedAt!),
+        duration: s.duration,
+        segments: s.completedSegments,
+      }));
+
+    // Convert yoga sessions to unified activities
+    const yogaActivities: IUnifiedActivity[] = getYogaHistory()
+      .filter((s) => s.finishedAt && s.status === 'completed')
+      .map((s) => ({
+        id: s.id,
+        type: 'yoga' as const,
+        name: s.sessionName,
+        direction: 'yoga' as TDirection,
+        finishedAt: new Date(s.finishedAt!),
+        duration: s.duration,
+        poses: s.completedPoses,
+        style: s.style,
+      }));
+
+    // Combine all activities
+    let allActivities = [...workoutActivities, ...runningActivities, ...yogaActivities];
 
     // Apply direction filter
     if (activeFilter) {
-      workouts = workouts.filter((w) => w.direction === activeFilter);
+      allActivities = allActivities.filter((a) => a.direction === activeFilter);
     }
 
     // Sort by date descending
-    const sorted = [...workouts].sort((a, b) => {
-      const dateA = a.finishedAt ? new Date(a.finishedAt).getTime() : 0;
-      const dateB = b.finishedAt ? new Date(b.finishedAt).getTime() : 0;
-      return dateB - dateA;
+    const sorted = allActivities.sort((a, b) => {
+      return new Date(b.finishedAt).getTime() - new Date(a.finishedAt).getTime();
     });
 
     // Group by month
-    const groups: Record<string, IWorkout[]> = {};
-    sorted.forEach((workout) => {
-      if (workout.finishedAt) {
-        const key = getMonthYear(workout.finishedAt);
-        if (!groups[key]) {
-          groups[key] = [];
-        }
-        groups[key].push(workout);
+    const groups: Record<string, IUnifiedActivity[]> = {};
+    sorted.forEach((activity) => {
+      const key = getMonthYear(activity.finishedAt);
+      if (!groups[key]) {
+        groups[key] = [];
       }
+      groups[key].push(activity);
     });
 
     return Object.entries(groups).map(([title, data]) => ({
       title,
       data,
     }));
-  }, [getWorkoutHistory, activeFilter]);
+  }, [getWorkoutHistory, getRunningHistory, getYogaHistory, activeFilter]);
 
-  const handleWorkoutPress = (workoutId: string) => {
-    navigation.navigate('WorkoutDetail', { workoutId });
+  const handleActivityPress = (activity: IUnifiedActivity) => {
+    if (activity.type === 'workout') {
+      navigation.navigate('WorkoutDetail', { workoutId: activity.id });
+    }
+    // Running and yoga details can be added later
   };
 
   const handleGoBack = () => {
@@ -210,6 +324,7 @@ export const WorkoutHistoryScreen: React.FC = () => {
             label={t('workoutHistory.all')}
             isActive={activeFilter === null}
             onPress={() => handleFilterPress(null)}
+            colors={colors}
           />
           {ALL_DIRECTIONS.map((direction) => (
             <FilterChip
@@ -218,6 +333,7 @@ export const WorkoutHistoryScreen: React.FC = () => {
               isActive={activeFilter === direction}
               color={DIRECTION_COLORS[direction]}
               onPress={() => handleFilterPress(direction)}
+              colors={colors}
             />
           ))}
         </ScrollView>
@@ -263,9 +379,10 @@ export const WorkoutHistoryScreen: React.FC = () => {
           sections={sections}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <WorkoutItem
-              workout={item}
-              onPress={() => handleWorkoutPress(item.id)}
+            <ActivityItem
+              activity={item}
+              onPress={() => handleActivityPress(item)}
+              colors={colors}
             />
           )}
           renderSectionHeader={({ section: { title } }) => (

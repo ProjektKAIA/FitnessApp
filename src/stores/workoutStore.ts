@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IWorkout, IExercise, ISet, TWorkoutStatus } from '@/types';
+import { appReviewService } from '@/services/appReview';
 
 interface WorkoutState {
   workouts: IWorkout[];
@@ -91,6 +92,9 @@ export const useWorkoutStore = create<WorkoutState>()(
           restTimerActive: false,
           restTimeRemaining: 0,
         });
+
+        // Track workout completion for app review prompt
+        appReviewService.trackWorkoutCompleted();
 
         return finishedWorkout;
       },

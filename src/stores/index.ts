@@ -28,6 +28,10 @@ export {
   useHomeworkoutStore,
   type IHomeworkoutCompletion,
 } from './homeworkoutStore';
+export {
+  useCustomWorkoutStore,
+  type CustomWorkout,
+} from './customWorkoutStore';
 export type {
   CalorieTarget,
   Gender,
