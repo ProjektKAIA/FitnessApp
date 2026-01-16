@@ -186,7 +186,7 @@ export const RunningActiveScreen: React.FC = () => {
           finishedSession,
           user?.weight
         );
-        calories = result?.calories || 0;
+        calories = result?.caloriesBurned || 0;
       } catch (error) {
         console.error('[RunningActive] Completion error:', error);
       }
