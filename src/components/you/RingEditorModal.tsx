@@ -7,35 +7,36 @@ import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from '@/constants';
 import { useTheme } from '@/contexts';
 import type { RingType, RingConfig } from '@/stores/userGoalsStore';
 
+// Apple Health inspired color palette
 export const RING_PRESETS: Record<RingType, { color: string; gradientEnd: string; icon: string }> = {
   steps: {
-    color: '#6366F1',
-    gradientEnd: '#A5B4FC',
+    color: '#FF9500',      // Apple Orange (Activity/Steps)
+    gradientEnd: '#FFCC00',
     icon: '👟',
   },
   calories: {
-    color: '#F59E0B',
-    gradientEnd: '#FCD34D',
+    color: '#FF2D55',      // Apple Pink-Red (Move Ring)
+    gradientEnd: '#FF6482',
     icon: '🔥',
   },
   activeMinutes: {
-    color: '#10B981',
-    gradientEnd: '#6EE7B7',
+    color: '#30D158',      // Apple Green (Exercise Ring)
+    gradientEnd: '#63E085',
     icon: '⏱️',
   },
   heartRate: {
-    color: '#EC4899',
-    gradientEnd: '#F9A8D4',
+    color: '#FF3B30',      // Apple Red (Heart)
+    gradientEnd: '#FF6961',
     icon: '❤️',
   },
   distance: {
-    color: '#06B6D4',
-    gradientEnd: '#67E8F9',
+    color: '#00C7BE',      // Apple Teal (Stand Ring)
+    gradientEnd: '#5EEAD4',
     icon: '📍',
   },
   water: {
-    color: '#3B82F6',
-    gradientEnd: '#93C5FD',
+    color: '#007AFF',      // Apple Blue
+    gradientEnd: '#5AC8FA',
     icon: '💧',
   },
 };
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
   },
   addRingPlus: {
     fontSize: 24,
-    color: '#6366F1',
+    color: '#64748B',
     fontWeight: '600',
   },
 });

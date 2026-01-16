@@ -946,6 +946,7 @@ const de = {
     weight: 'Gewicht',
     bloodPressure: 'Blutdruck',
     pulse: 'Puls',
+    history: 'Verlauf',
     goal: 'Ziel',
     activity: 'Aktivität',
     streak: 'Streak',
@@ -983,6 +984,15 @@ const de = {
       distance: 'Distanz',
       water: 'Wasser',
     },
+  },
+
+  // Weight History Screen
+  weightHistory: {
+    title: 'Gewichtsverlauf',
+    noEntries: 'Noch keine Gewichtseinträge vorhanden',
+    date: 'Datum',
+    weight: 'Gewicht',
+    change: 'Änderung',
   },
 
   // Contact Screen

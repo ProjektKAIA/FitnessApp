@@ -305,17 +305,24 @@ export const YouScreen: React.FC = () => {
         {/* Health Stats Grid */}
         <SectionHeader title={t('you.healthStats')} darkMode={isDark} />
         <View style={styles.statsGrid}>
-          <TouchableOpacity style={styles.metricCardTouchable} onPress={() => setShowHealthInput(true)}>
-            <MetricCard
-              icon="⚖️"
-              title={t('you.weight')}
-              value={latestHealth?.weight ?? user?.weight ?? '--'}
-              unit="kg"
-              compact
-              darkMode={isDark}
-              fillHeight
-            />
-          </TouchableOpacity>
+          <View style={styles.metricCardTouchable}>
+            <TouchableOpacity onPress={() => setShowHealthInput(true)}>
+              <MetricCard
+                icon="⚖️"
+                title={t('you.weight')}
+                value={latestHealth?.weight ?? user?.weight ?? '--'}
+                unit="kg"
+                compact
+                darkMode={isDark}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.historyButton, { backgroundColor: isDark ? 'rgba(100, 116, 139, 0.2)' : 'rgba(100, 116, 139, 0.1)' }]}
+              onPress={() => navigation.navigate('WeightHistory')}
+            >
+              <Text style={[styles.historyButtonText, { color: colors.primary }]}>{t('you.history')}</Text>
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity style={styles.metricCardTouchable} onPress={() => setShowHealthInput(true)}>
             <MetricCard
               icon="💓"
@@ -650,6 +657,17 @@ const styles = StyleSheet.create({
   metricCardTouchable: {
     flex: 1,
     minHeight: 100,
+  },
+  historyButton: {
+    marginTop: SPACING.xs,
+    paddingVertical: SPACING.xs,
+    paddingHorizontal: SPACING.sm,
+    borderRadius: BORDER_RADIUS.md,
+    alignItems: 'center',
+  },
+  historyButtonText: {
+    fontSize: FONT_SIZES.xs,
+    fontWeight: '600',
   },
   bottomSpacing: {
     height: SPACING['3xl'],

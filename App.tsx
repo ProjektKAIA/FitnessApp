@@ -24,6 +24,7 @@ import {
   WorkoutHistoryScreen,
   WorkoutDetailScreen,
   StreakDetailScreen,
+  WeightHistoryScreen,
   ConsentScreen,
   ImpressumScreen,
   PrivacyPolicyScreen,
@@ -319,6 +320,14 @@ export default function App() {
                 <Stack.Screen
                   name="StreakDetail"
                   component={StreakDetailScreen}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                />
+                <Stack.Screen
+                  name="WeightHistory"
+                  component={WeightHistoryScreen}
                   options={{
                     presentation: 'card',
                     animation: 'slide_from_right',

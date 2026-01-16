@@ -427,6 +427,7 @@ export type RootStackParamList = {
   WorkoutHistory: { direction?: TDirection } | undefined;
   WorkoutDetail: { workoutId: string };
   StreakDetail: undefined;
+  WeightHistory: undefined;
   ExerciseDetail: { exerciseId: string };
   Settings: undefined;
   Profile: undefined;

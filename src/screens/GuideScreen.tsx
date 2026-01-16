@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -25,10 +26,9 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 interface GuideCategory {
   id: string;
-  icon: string;
   titleKey: string;
   descKey: string;
-  gradient: [string, string];
+  image: string;
   items: GuideItem[];
 }
 
@@ -42,10 +42,9 @@ interface GuideItem {
 const GUIDE_CATEGORIES: GuideCategory[] = [
   {
     id: 'sport',
-    icon: '🏋️',
     titleKey: 'guide.sport.title',
     descKey: 'guide.sport.desc',
-    gradient: ['#6366F1', '#8B5CF6'],
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800',
     items: [
       { id: 'training-basics', icon: '📚', titleKey: 'guide.sport.trainingBasics', descKey: 'guide.sport.trainingBasicsDesc' },
       { id: 'muscle-building', icon: '💪', titleKey: 'guide.sport.muscleBuilding', descKey: 'guide.sport.muscleBuildingDesc' },
@@ -56,10 +55,9 @@ const GUIDE_CATEGORIES: GuideCategory[] = [
   },
   {
     id: 'health',
-    icon: '❤️',
     titleKey: 'guide.health.title',
     descKey: 'guide.health.desc',
-    gradient: ['#EF4444', '#F97316'],
+    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800',
     items: [
       { id: 'sleep', icon: '😴', titleKey: 'guide.health.sleep', descKey: 'guide.health.sleepDesc' },
       { id: 'stress', icon: '🧠', titleKey: 'guide.health.stress', descKey: 'guide.health.stressDesc' },
@@ -69,10 +67,9 @@ const GUIDE_CATEGORIES: GuideCategory[] = [
   },
   {
     id: 'nutrition',
-    icon: '🥗',
     titleKey: 'guide.nutrition.title',
     descKey: 'guide.nutrition.desc',
-    gradient: ['#10B981', '#34D399'],
+    image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800',
     items: [
       { id: 'macros', icon: '📊', titleKey: 'guide.nutrition.macros', descKey: 'guide.nutrition.macrosDesc' },
       { id: 'protein', icon: '🥩', titleKey: 'guide.nutrition.protein', descKey: 'guide.nutrition.proteinDesc' },
@@ -126,20 +123,24 @@ export const GuideScreen: React.FC = () => {
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => handleCategoryPress(category)}
+              style={styles.categoryCardWrapper}
             >
-              <LinearGradient
-                colors={category.gradient}
+              <ImageBackground
+                source={{ uri: category.image }}
                 style={styles.categoryCard}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
+                imageStyle={styles.categoryCardImage}
               >
-                <Text style={styles.categoryIcon}>{category.icon}</Text>
-                <View style={styles.categoryContent}>
-                  <Text style={styles.categoryTitle}>{t(category.titleKey)}</Text>
-                  <Text style={styles.categoryDesc}>{t(category.descKey)}</Text>
-                </View>
-                <Text style={styles.categoryArrow}>›</Text>
-              </LinearGradient>
+                <LinearGradient
+                  colors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.7)']}
+                  style={styles.categoryCardOverlay}
+                >
+                  <View style={styles.categoryContent}>
+                    <Text style={styles.categoryTitle}>{t(category.titleKey)}</Text>
+                    <Text style={styles.categoryDesc}>{t(category.descKey)}</Text>
+                  </View>
+                  <Text style={styles.categoryArrow}>›</Text>
+                </LinearGradient>
+              </ImageBackground>
             </TouchableOpacity>
 
             {/* Category Items */}
@@ -236,34 +237,40 @@ const styles = StyleSheet.create({
   categorySection: {
     marginBottom: SPACING.xl,
   },
-  categoryCard: {
+  categoryCardWrapper: {
     marginHorizontal: SPACING.lg,
     borderRadius: BORDER_RADIUS.xl,
-    padding: SPACING.lg,
+    overflow: 'hidden',
+  },
+  categoryCard: {
+    height: 120,
+  },
+  categoryCardImage: {
+    borderRadius: BORDER_RADIUS.xl,
+  },
+  categoryCardOverlay: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  categoryIcon: {
-    fontSize: 40,
-    marginRight: SPACING.md,
+    padding: SPACING.lg,
   },
   categoryContent: {
     flex: 1,
   },
   categoryTitle: {
-    fontSize: FONT_SIZES.lg,
+    fontSize: FONT_SIZES.xl,
     fontWeight: '700',
     color: COLORS.white,
   },
   categoryDesc: {
     fontSize: FONT_SIZES.sm,
-    color: 'rgba(255,255,255,0.8)',
-    marginTop: 2,
+    color: 'rgba(255,255,255,0.9)',
+    marginTop: 4,
   },
   categoryArrow: {
-    fontSize: 28,
+    fontSize: 32,
     color: COLORS.white,
-    opacity: 0.6,
+    opacity: 0.8,
   },
   itemsContainer: {
     marginTop: SPACING.sm,

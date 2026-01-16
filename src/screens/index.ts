@@ -10,6 +10,7 @@ export { WorkoutActiveScreen } from './WorkoutActiveScreen';
 export { WorkoutHistoryScreen } from './WorkoutHistoryScreen';
 export { WorkoutDetailScreen } from './WorkoutDetailScreen';
 export { StreakDetailScreen } from './StreakDetailScreen';
+export { WeightHistoryScreen } from './WeightHistoryScreen';
 export {
   ConsentScreen,
   ImpressumScreen,
