@@ -159,6 +159,9 @@ export const HealthDashboardScreen: React.FC = () => {
         }
       >
         <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Text style={[styles.backIcon, { color: colors.text }]}>{'<'}</Text>
+          </TouchableOpacity>
           <Text style={[styles.title, { color: colors.text }]}>{t('health.dashboard')}</Text>
           <TouchableOpacity onPress={navigateToSettings}>
             <Text style={styles.settingsIcon}>⚙️</Text>
@@ -227,10 +230,22 @@ const styles = StyleSheet.create({
     marginTop: SPACING.lg,
     marginBottom: SPACING.xl,
   },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backIcon: {
+    fontSize: FONT_SIZES.xl,
+    fontWeight: '600',
+  },
   title: {
     fontSize: FONT_SIZES['2xl'],
     fontWeight: '700',
     color: COLORS.gray[900],
+    flex: 1,
+    textAlign: 'center',
   },
   settingsIcon: {
     fontSize: 24,

@@ -155,7 +155,7 @@ export const HomeScreen: React.FC = () => {
           {isHealthEnabled && (
             <View style={styles.row}>
               <HealthTile
-                size="2x1"
+                size="1x1"
                 steps={todaySummary?.steps?.count ?? 0}
                 stepsGoal={healthSettings.stepsGoal}
                 calories={todaySummary?.calories?.active ?? 0}
@@ -167,6 +167,11 @@ export const HomeScreen: React.FC = () => {
                 value={stats.totalWorkouts}
                 icon="💪"
                 onPress={handleWorkoutHistoryPress}
+              />
+              <StatTile
+                label={t('you.streak')}
+                value={stats.currentStreak}
+                icon="🔥"
               />
             </View>
           )}
