@@ -321,13 +321,7 @@ export const WorkoutActiveScreen: React.FC = () => {
                     Alert.alert(
                       foundExercise.name,
                       `${t('exerciseDetail.instructions')}:\n${instructions}\n\n💡 ${t('exerciseDetail.tips')}:\n• ${tips}`,
-                      [
-                        {
-                          text: t('exerciseDetail.moreDetails'),
-                          onPress: () => navigation.navigate('ExerciseDetail', { exerciseId: foundExercise.id }),
-                        },
-                        { text: 'OK', style: 'cancel' },
-                      ]
+                      [{ text: 'OK' }]
                     );
                   } else {
                     Alert.alert(
