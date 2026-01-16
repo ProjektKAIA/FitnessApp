@@ -41,15 +41,15 @@ interface QuickYogaVideo {
   channel: string;
 }
 
-// Placeholder YouTube videos - replace with actual URLs later
+// Real YouTube yoga videos from popular channels
 const QUICK_YOGA_VIDEOS: QuickYogaVideo[] = [
   {
     id: 'video_1',
     title: '10 Min Morning Yoga',
     duration: '10:00',
     level: 'Beginner',
-    thumbnail: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800',
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder1',
+    thumbnail: 'https://i.ytimg.com/vi/4pKly2JojMw/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=4pKly2JojMw',
     channel: 'Yoga With Adriene',
   },
   {
@@ -57,8 +57,8 @@ const QUICK_YOGA_VIDEOS: QuickYogaVideo[] = [
     title: '15 Min Stress Relief Yoga',
     duration: '15:00',
     level: 'All Levels',
-    thumbnail: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800',
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder2',
+    thumbnail: 'https://i.ytimg.com/vi/hJbRpHZr_d0/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=hJbRpHZr_d0',
     channel: 'Yoga With Adriene',
   },
   {
@@ -66,18 +66,36 @@ const QUICK_YOGA_VIDEOS: QuickYogaVideo[] = [
     title: '20 Min Full Body Stretch',
     duration: '20:00',
     level: 'Beginner',
-    thumbnail: 'https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=800',
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder3',
-    channel: 'Yoga With Bird',
+    thumbnail: 'https://i.ytimg.com/vi/g_tea8ZNk5A/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=g_tea8ZNk5A',
+    channel: 'MadFit',
   },
   {
     id: 'video_4',
     title: '30 Min Power Yoga Flow',
     duration: '30:00',
     level: 'Intermediate',
-    thumbnail: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=800',
-    youtubeUrl: 'https://www.youtube.com/watch?v=placeholder4',
+    thumbnail: 'https://i.ytimg.com/vi/9kOCY0KNByw/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=9kOCY0KNByw',
     channel: 'Boho Beautiful',
+  },
+  {
+    id: 'video_5',
+    title: 'Yoga For Beginners',
+    duration: '20:00',
+    level: 'Beginner',
+    thumbnail: 'https://i.ytimg.com/vi/v7AYKMP6rOE/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=v7AYKMP6rOE',
+    channel: 'Yoga With Adriene',
+  },
+  {
+    id: 'video_6',
+    title: 'Bedtime Yoga',
+    duration: '12:00',
+    level: 'All Levels',
+    thumbnail: 'https://i.ytimg.com/vi/v7SN-d4qXx0/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=v7SN-d4qXx0',
+    channel: 'Yoga With Adriene',
   },
 ];
 

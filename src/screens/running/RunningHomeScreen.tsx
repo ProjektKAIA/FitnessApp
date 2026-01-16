@@ -7,11 +7,14 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Image,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS, SHADOWS } from '@/constants';
 import { useTheme } from '@/contexts';
@@ -26,12 +29,86 @@ import {
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
+interface RunningVideo {
+  id: string;
+  title: string;
+  duration: string;
+  level: string;
+  thumbnail: string;
+  youtubeUrl: string;
+  channel: string;
+}
+
+// Real YouTube running videos
+const RUNNING_VIDEOS: RunningVideo[] = [
+  {
+    id: 'run_video_1',
+    title: 'Proper Running Form',
+    duration: '8:00',
+    level: 'All Levels',
+    thumbnail: 'https://i.ytimg.com/vi/brFHyOtTwH4/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=brFHyOtTwH4',
+    channel: 'Global Triathlon Network',
+  },
+  {
+    id: 'run_video_2',
+    title: '5 Min Running Warm Up',
+    duration: '5:00',
+    level: 'Beginner',
+    thumbnail: 'https://i.ytimg.com/vi/c4xfhQxKlWc/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=c4xfhQxKlWc',
+    channel: 'MadFit',
+  },
+  {
+    id: 'run_video_3',
+    title: '10 Min Post Run Stretch',
+    duration: '10:00',
+    level: 'All Levels',
+    thumbnail: 'https://i.ytimg.com/vi/KSKhegJRs0o/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=KSKhegJRs0o',
+    channel: 'MadFit',
+  },
+  {
+    id: 'run_video_4',
+    title: 'Beginner Running Tips',
+    duration: '12:00',
+    level: 'Beginner',
+    thumbnail: 'https://i.ytimg.com/vi/kVnyY17VS9Y/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=kVnyY17VS9Y',
+    channel: 'The Run Experience',
+  },
+  {
+    id: 'run_video_5',
+    title: 'Runner Strength Training',
+    duration: '15:00',
+    level: 'Intermediate',
+    thumbnail: 'https://i.ytimg.com/vi/6usrL0gfPjs/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=6usrL0gfPjs',
+    channel: 'Sydney Cummings',
+  },
+  {
+    id: 'run_video_6',
+    title: 'How to Run Longer',
+    duration: '10:00',
+    level: 'Beginner',
+    thumbnail: 'https://i.ytimg.com/vi/9L2b2khySLE/maxresdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=9L2b2khySLE',
+    channel: 'The Run Experience',
+  },
+];
+
 export const RunningHomeScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp>();
 
   const quickWorkouts = RUNNING_WORKOUTS.slice(0, 4);
+
+  const handleVideoPress = (url: string) => {
+    Linking.openURL(url).catch((err) =>
+      console.error('[RunningHomeScreen] Failed to open video:', err)
+    );
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
@@ -57,6 +134,47 @@ export const RunningHomeScreen: React.FC = () => {
           <Text style={styles.heroTitle}>{t('running.heroTitle')}</Text>
           <Text style={styles.heroSubtitle}>{t('running.heroSubtitle')}</Text>
         </View>
+
+        {/* Video Section */}
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('running.videos')}</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.videosContainer}
+        >
+          {RUNNING_VIDEOS.map((video) => (
+            <TouchableOpacity
+              key={video.id}
+              style={styles.videoCard}
+              onPress={() => handleVideoPress(video.youtubeUrl)}
+              activeOpacity={0.8}
+            >
+              <Image
+                source={{ uri: video.thumbnail }}
+                style={styles.videoThumbnail}
+                resizeMode="cover"
+              />
+              <LinearGradient
+                colors={['transparent', 'rgba(0,0,0,0.8)']}
+                style={styles.videoGradient}
+              >
+                <View style={styles.videoPlayButton}>
+                  <Text style={styles.videoPlayIcon}>▶</Text>
+                </View>
+                <View style={styles.videoBadges}>
+                  <View style={styles.videoDurationBadge}>
+                    <Text style={styles.videoDurationText}>{video.duration}</Text>
+                  </View>
+                  <View style={styles.videoYoutubeBadge}>
+                    <Text style={styles.videoYoutubeText}>YouTube</Text>
+                  </View>
+                </View>
+                <Text style={styles.videoTitle} numberOfLines={2}>{video.title}</Text>
+                <Text style={styles.videoChannel}>{video.channel}</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
 
         {/* Quick Start */}
         <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('running.quickStart')}</Text>
@@ -335,5 +453,85 @@ const styles = StyleSheet.create({
   tipText: {
     fontSize: FONT_SIZES.sm,
     lineHeight: 18,
+  },
+  videosContainer: {
+    paddingBottom: SPACING.md,
+    marginBottom: SPACING.lg,
+  },
+  videoCard: {
+    width: 200,
+    height: 150,
+    borderRadius: BORDER_RADIUS.lg,
+    overflow: 'hidden',
+    marginRight: SPACING.md,
+    ...SHADOWS.md,
+  },
+  videoThumbnail: {
+    width: '100%',
+    height: '100%',
+  },
+  videoGradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '100%',
+    justifyContent: 'flex-end',
+    padding: SPACING.sm,
+  },
+  videoPlayButton: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -20,
+    marginLeft: -20,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  videoPlayIcon: {
+    fontSize: 16,
+    color: COLORS.gray[900],
+    marginLeft: 2,
+  },
+  videoBadges: {
+    flexDirection: 'row',
+    gap: SPACING.xs,
+    marginBottom: SPACING.xs,
+  },
+  videoDurationBadge: {
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    paddingHorizontal: SPACING.xs,
+    paddingVertical: 2,
+    borderRadius: BORDER_RADIUS.sm,
+  },
+  videoDurationText: {
+    color: COLORS.white,
+    fontSize: FONT_SIZES.xs,
+    fontWeight: '500',
+  },
+  videoYoutubeBadge: {
+    backgroundColor: '#FF0000',
+    paddingHorizontal: SPACING.xs,
+    paddingVertical: 2,
+    borderRadius: BORDER_RADIUS.sm,
+  },
+  videoYoutubeText: {
+    color: COLORS.white,
+    fontSize: FONT_SIZES.xs,
+    fontWeight: '600',
+  },
+  videoTitle: {
+    color: COLORS.white,
+    fontSize: FONT_SIZES.sm,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  videoChannel: {
+    color: COLORS.gray[300],
+    fontSize: FONT_SIZES.xs,
   },
 });

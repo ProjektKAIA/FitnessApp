@@ -1264,6 +1264,7 @@ const de = {
     heroTitle: 'Starte dein Lauftraining',
     heroSubtitle: 'Trainingspläne für jedes Level - vom Einsteiger bis zum Marathon',
     quickStart: 'Schnellstart',
+    videos: 'Lauf-Videos',
     min: 'Min',
     trainingPlans: 'Trainingspläne',
     allWorkouts: 'Alle Workouts anzeigen',

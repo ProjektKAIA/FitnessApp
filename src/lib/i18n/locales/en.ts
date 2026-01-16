@@ -1265,6 +1265,7 @@ const en = {
     heroSubtitle: 'Training plans for every goal',
     quickStart: 'Quick Start',
     quickStartDesc: 'Start an easy run without a plan',
+    videos: 'Running Videos',
     trainingPlans: 'Training Plans',
     quickWorkouts: 'Quick Workouts',
     min: 'min',
