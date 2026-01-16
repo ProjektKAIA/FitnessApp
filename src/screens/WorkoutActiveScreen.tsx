@@ -300,6 +300,8 @@ export const WorkoutActiveScreen: React.FC = () => {
               </View>
               <TouchableOpacity
                 style={[styles.infoButton, { backgroundColor: colors.border }]}
+                activeOpacity={0.6}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 onPress={() => {
                   // Try to find by exerciseId first (from plan), then by name
                   const libraryExercise = exercise.exerciseId
