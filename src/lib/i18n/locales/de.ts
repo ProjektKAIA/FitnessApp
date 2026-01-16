@@ -945,6 +945,7 @@ const de = {
     heartRate: 'Herzfrequenz',
     weight: 'Gewicht',
     bloodPressure: 'Blutdruck',
+    pulse: 'Puls',
     goal: 'Ziel',
     activity: 'Aktivität',
     streak: 'Streak',

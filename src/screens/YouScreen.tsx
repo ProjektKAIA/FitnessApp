@@ -313,6 +313,7 @@ export const YouScreen: React.FC = () => {
               unit="kg"
               compact
               darkMode={isDark}
+              fillHeight
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.metricCardTouchable} onPress={() => setShowHealthInput(true)}>
@@ -326,8 +327,22 @@ export const YouScreen: React.FC = () => {
               }
               compact
               darkMode={isDark}
+              fillHeight
             />
           </TouchableOpacity>
+        </View>
+        <View style={styles.statsGrid}>
+          <TouchableOpacity style={styles.metricCardTouchable} onPress={() => setShowHealthInput(true)}>
+            <MetricCard
+              icon="❤️"
+              title={t('you.pulse')}
+              value={todaySummary?.restingHeartRate?.bpm ?? '--'}
+              unit="bpm"
+              compact
+              darkMode={isDark}
+            />
+          </TouchableOpacity>
+          <View style={styles.metricCardTouchable} />
         </View>
 
         {/* Streak & Workouts */}

@@ -945,6 +945,7 @@ const en = {
     heartRate: 'Heart Rate',
     weight: 'Weight',
     bloodPressure: 'Blood Pressure',
+    pulse: 'Pulse',
     goal: 'Goal',
     activity: 'Activity',
     streak: 'Streak',
