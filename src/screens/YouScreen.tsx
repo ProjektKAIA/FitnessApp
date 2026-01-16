@@ -333,23 +333,27 @@ export const YouScreen: React.FC = () => {
         {/* Streak & Workouts */}
         <SectionHeader title={t('you.activity')} darkMode={isDark} />
         <View style={styles.statsGrid}>
-          <MetricCard
-            icon="🔥"
-            iconColor="#F59E0B"
-            title={t('you.streak')}
-            value={stats.currentStreak}
-            unit={t('progress.days')}
-            onPress={() => navigation.navigate('StreakDetail')}
-            darkMode={isDark}
-          />
-          <MetricCard
-            icon="💪"
-            title={t('you.workouts')}
-            value={stats.totalWorkouts}
-            subtitle={t('progress.allTime')}
-            onPress={() => navigation.navigate('WorkoutHistory')}
-            darkMode={isDark}
-          />
+          <View style={styles.metricCardTouchable}>
+            <MetricCard
+              icon="🔥"
+              iconColor="#F59E0B"
+              title={t('you.streak')}
+              value={stats.currentStreak}
+              unit={t('progress.days')}
+              onPress={() => navigation.navigate('StreakDetail')}
+              darkMode={isDark}
+            />
+          </View>
+          <View style={styles.metricCardTouchable}>
+            <MetricCard
+              icon="💪"
+              title={t('you.workouts')}
+              value={stats.totalWorkouts}
+              subtitle={t('progress.allTime')}
+              onPress={() => navigation.navigate('WorkoutHistory')}
+              darkMode={isDark}
+            />
+          </View>
         </View>
 
         {/* Calories Section */}
