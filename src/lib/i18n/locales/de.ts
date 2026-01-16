@@ -952,6 +952,7 @@ const de = {
     caloriesSection: 'Kalorien',
     addCalories: 'Kalorien eintragen',
     editCalorieGoal: 'Kalorienbedarf anpassen',
+    adjustGoal: 'Bedarf anpassen',
     dailyCalorieGoal: 'Täglicher Kalorienbedarf',
     dailyNeed: 'Tagesbedarf',
     consumed: 'Gegessen',

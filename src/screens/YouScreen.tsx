@@ -355,7 +355,7 @@ export const YouScreen: React.FC = () => {
         {/* Calories Section */}
         <SectionHeader
           title={t('you.caloriesSection')}
-          action={{ label: t('you.addCalories'), onPress: () => setShowCalorieInput(true) }}
+          action={{ label: t('you.adjustGoal'), onPress: handleEditCalorieGoal }}
           darkMode={isDark}
         />
         <TouchableOpacity onPress={handleEditCalorieGoal} activeOpacity={0.7}>

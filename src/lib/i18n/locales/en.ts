@@ -952,6 +952,7 @@ const en = {
     caloriesSection: 'Calories',
     addCalories: 'Add Calories',
     editCalorieGoal: 'Edit Calorie Goal',
+    adjustGoal: 'Adjust Goal',
     dailyCalorieGoal: 'Daily Calorie Goal',
     dailyNeed: 'Daily Need',
     consumed: 'Consumed',
