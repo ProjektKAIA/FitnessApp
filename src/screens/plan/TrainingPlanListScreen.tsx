@@ -76,8 +76,30 @@ export const TrainingPlanListScreen: React.FC = () => {
   };
 
   const handleStartPlan = (plan: ITrainingPlan) => {
-    // Navigiere zum Plan Detail, wo der User ein Workout auswählen kann
-    navigation.navigate('TrainingPlanDetail', { planId: plan.id });
+    // Aktiviere den Plan falls noch nicht aktiv
+    if (plan.id !== activePlanId) {
+      setActivePlan(plan.id);
+    }
+
+    // Ermittle den heutigen Tag
+    const dayIndex = new Date().getDay();
+    const dayMap: TTrainingDay[] = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    const today = dayMap[dayIndex];
+    const todayWorkout = plan.weeklySchedule[today];
+
+    if (todayWorkout) {
+      // Heute ist ein Workout geplant → direkt starten
+      navigation.navigate('WorkoutActive', { workoutId: todayWorkout.id });
+    } else {
+      // Kein Workout heute → erstes verfügbares Workout im Plan finden
+      const firstWorkout = DAYS
+        .map((day) => plan.weeklySchedule[day])
+        .find((workout) => workout !== null);
+
+      if (firstWorkout) {
+        navigation.navigate('WorkoutActive', { workoutId: firstWorkout.id });
+      }
+    }
   };
 
   const getWorkoutCount = (plan: ITrainingPlan): number => {
@@ -235,6 +257,12 @@ export const TrainingPlanListScreen: React.FC = () => {
                       onPress={(e) => { e.stopPropagation(); handleStartPlan(plan); }}
                     >
                       <Text style={styles.startButtonText}>{t('planList.start')}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.actionButton}
+                      onPress={(e) => { e.stopPropagation(); handleViewPlan(plan); }}
+                    >
+                      <Text style={styles.actionButtonText}>{t('planList.view')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.actionButton}

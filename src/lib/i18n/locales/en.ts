@@ -500,6 +500,14 @@ const en = {
     deleteMessage: 'Do you really want to delete "{{name}}"?',
     noWorkoutToday: 'No workout today',
     noWorkoutTodayMessage: 'No workout is planned for today in this plan.',
+    viewPlan: 'View Plan',
+    startAnyway: 'Start anyway',
+    view: 'View',
+  },
+
+  // Plan Detail Screen
+  planDetail: {
+    startWorkout: 'Start Workout',
   },
 
   // Plan Editor Screen

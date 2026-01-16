@@ -94,9 +94,10 @@ interface DayCardProps {
   workout: IPlannedWorkout | null;
   colors: ReturnType<typeof useTheme>['colors'];
   isDark: boolean;
+  onStartWorkout?: (workoutId: string) => void;
 }
 
-const DayCard: React.FC<DayCardProps> = ({ day, workout, colors, isDark }) => {
+const DayCard: React.FC<DayCardProps> = ({ day, workout, colors, isDark, onStartWorkout }) => {
   const { t } = useTranslation();
 
   if (!workout) {
@@ -167,6 +168,17 @@ const DayCard: React.FC<DayCardProps> = ({ day, workout, colors, isDark }) => {
             </Text>
           </View>
         )}
+
+        {onStartWorkout && (
+          <TouchableOpacity
+            style={[styles.startWorkoutButton, { backgroundColor: COLORS.success }]}
+            onPress={() => onStartWorkout(workout.id)}
+          >
+            <Text style={styles.startWorkoutButtonText}>
+              {t('planDetail.startWorkout')}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </Card>
   );
@@ -216,6 +228,14 @@ export const TrainingPlanDetailScreen: React.FC = () => {
     if (plan) {
       navigation.navigate('TrainingPlanEditor', { planId, sportType: plan.sportType });
     }
+  };
+
+  const handleStartWorkout = (workoutId: string) => {
+    // Aktiviere den Plan falls noch nicht aktiv
+    if (!isActive) {
+      setActivePlan(planId);
+    }
+    navigation.navigate('WorkoutActive', { workoutId });
   };
 
   if (!plan) {
@@ -326,6 +346,7 @@ export const TrainingPlanDetailScreen: React.FC = () => {
             workout={plan.weeklySchedule[day]}
             colors={colors}
             isDark={isDark}
+            onStartWorkout={handleStartWorkout}
           />
         ))}
 
@@ -576,5 +597,16 @@ const styles = StyleSheet.create({
   backLink: {
     fontSize: FONT_SIZES.base,
     fontWeight: '500',
+  },
+  startWorkoutButton: {
+    marginTop: SPACING.md,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.lg,
+    alignItems: 'center',
+  },
+  startWorkoutButtonText: {
+    color: COLORS.white,
+    fontSize: FONT_SIZES.base,
+    fontWeight: '600',
   },
 });
